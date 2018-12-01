@@ -18,6 +18,7 @@
         <module>acquisition</module>
         <module>enrichment</module>
         <module>storage</module>
+	<module>language</module>
     </modules>
 
 
