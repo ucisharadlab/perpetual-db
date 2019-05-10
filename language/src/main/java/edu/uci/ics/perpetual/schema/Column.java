@@ -6,24 +6,24 @@ import edu.uci.ics.perpetual.expression.*;
 import edu.uci.ics.perpetual.parser.ASTNodeAccessImpl;
 
 /**
- * A column. It can have the table name it belongs to.
+ * A column. It can have the type name it belongs to.
  */
 public final class Column extends ASTNodeAccessImpl implements Expression, MultiPartName {
 
-    private Table table;
+    private Type type;
     private String columnName;
 
     public Column() {
     }
 
-    public Column(Table table, String columnName) {
-        setTable(table);
+    public Column(Type type, String columnName) {
+        setType(type);
         setColumnName(columnName);
     }
 
     public Column(List<String> nameParts) {
         this(nameParts.size() > 1
-                ? new Table(nameParts.subList(0, nameParts.size() - 1)) : null,
+                ? new Type(nameParts.subList(0, nameParts.size() - 1)) : null,
                 nameParts.get(nameParts.size() - 1));
     }
 
@@ -31,12 +31,12 @@ public final class Column extends ASTNodeAccessImpl implements Expression, Multi
         this(null, columnName);
     }
 
-    public Table getTable() {
-        return table;
+    public Type getType() {
+        return type;
     }
 
-    public void setTable(Table table) {
-        this.table = table;
+    public void setType(Type type) {
+        this.type = type;
     }
 
     public String getColumnName() {
@@ -61,11 +61,11 @@ public final class Column extends ASTNodeAccessImpl implements Expression, Multi
     public String getName(boolean aliases) {
         StringBuilder fqn = new StringBuilder();
 
-        if (table != null) {
-            if (table.getAlias() != null && aliases) {
-                fqn.append(table.getAlias().getName());
+        if (type != null) {
+            if (type.getAlias() != null && aliases) {
+                fqn.append(type.getAlias().getName());
             } else {
-                fqn.append(table.getFullyQualifiedName());
+                fqn.append(type.getFullyQualifiedName());
             }
         }
         if (fqn.length() > 0) {

@@ -12,4 +12,7 @@ import edu.uci.ics.perpetual.statement.Statement;
 public interface JSqlParser {
 
     Statement parse(Reader statementReader) throws JSQLParserException;
+
+    Statement parse(String query) throws JSQLParserException, ParseException;
+
 }

@@ -29,7 +29,7 @@ public class SelectItemVisitorAdapter implements SelectItemVisitor {
     }
 
     @Override
-    public void visit(AllTableColumns columns) {
+    public void visit(AllTypeColumns columns) {
 
     }
 

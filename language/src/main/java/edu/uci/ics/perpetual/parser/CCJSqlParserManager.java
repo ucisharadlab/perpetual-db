@@ -20,4 +20,15 @@ public class CCJSqlParserManager implements JSqlParser {
             throw new JSQLParserException(ex);
         }
     }
+
+    @Override
+    public Statement parse(String query) throws JSQLParserException, ParseException {
+        CCJSqlParser parser = new CCJSqlParser(query);
+        try {
+            return parser.Statement();
+        } catch (Exception ex) {
+            throw new JSQLParserException(ex);
+        }
+    }
+
 }

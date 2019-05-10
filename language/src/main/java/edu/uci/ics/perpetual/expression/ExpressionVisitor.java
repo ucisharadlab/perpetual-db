@@ -40,7 +40,7 @@ public interface ExpressionVisitor {
 
     void visit(NullValue nullValue);
 
-    void visit(Function function);
+    void visit(UDFFunction UDFFunction);
 
     void visit(SignedExpression signedExpression);
 

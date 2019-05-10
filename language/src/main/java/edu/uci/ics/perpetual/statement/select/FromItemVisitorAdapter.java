@@ -21,12 +21,12 @@
  */
 package edu.uci.ics.perpetual.statement.select;
 
-import edu.uci.ics.perpetual.schema.Table;
+import edu.uci.ics.perpetual.schema.Type;
 
 public class FromItemVisitorAdapter implements FromItemVisitor {
 
     @Override
-    public void visit(Table table) {
+    public void visit(Type type) {
 
     }
 

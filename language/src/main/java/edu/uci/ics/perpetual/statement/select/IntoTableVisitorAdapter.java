@@ -21,12 +21,12 @@
  */
 package edu.uci.ics.perpetual.statement.select;
 
-import edu.uci.ics.perpetual.schema.Table;
+import edu.uci.ics.perpetual.schema.Type;
 
 public class IntoTableVisitorAdapter implements IntoTableVisitor {
 
     @Override
-    public void visit(Table tableName) {
+    public void visit(Type typeName) {
 
     }
 }

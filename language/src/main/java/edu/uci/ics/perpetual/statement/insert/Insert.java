@@ -6,7 +6,7 @@ import java.util.List;
 import edu.uci.ics.perpetual.expression.Expression;
 import edu.uci.ics.perpetual.expression.operators.relational.ItemsList;
 import edu.uci.ics.perpetual.schema.Column;
-import edu.uci.ics.perpetual.schema.Table;
+import edu.uci.ics.perpetual.schema.Type;
 import edu.uci.ics.perpetual.statement.Statement;
 import edu.uci.ics.perpetual.statement.StatementVisitor;
 import edu.uci.ics.perpetual.statement.select.PlainSelect;
@@ -19,7 +19,7 @@ import edu.uci.ics.perpetual.statement.select.SelectExpressionItem;
  */
 public class Insert implements Statement {
 
-    private Table table;
+    private Type type;
     private List<Column> columns;
     private ItemsList itemsList;
     private boolean useValues = true;
@@ -46,12 +46,12 @@ public class Insert implements Statement {
         statementVisitor.visit(this);
     }
 
-    public Table getTable() {
-        return table;
+    public Type getType() {
+        return type;
     }
 
-    public void setTable(Table name) {
-        table = name;
+    public void setType(Type name) {
+        type = name;
     }
 
     /**
@@ -196,7 +196,7 @@ public class Insert implements Statement {
             sql.append("IGNORE ");
         }
         sql.append("INTO ");
-        sql.append(table).append(" ");
+        sql.append(type).append(" ");
         if (columns != null) {
             sql.append(PlainSelect.getStringList(columns, true, true)).append(" ");
         }

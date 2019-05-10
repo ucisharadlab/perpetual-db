@@ -123,16 +123,5 @@ public final class CCJSqlParserUtil {
         }
     }
 
-    /**
-     * Parse a statement list.
-     */
-    public static Statements parseStatements(String sqls) throws JSQLParserException {
-        CCJSqlParser parser = new CCJSqlParser(new StringProvider(sqls));
-        try {
-            return parser.Statements();
-        } catch (Exception ex) {
-            throw new JSQLParserException(ex);
-        }
-    }
 
 }

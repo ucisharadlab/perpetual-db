@@ -21,48 +21,24 @@
  */
 package edu.uci.ics.perpetual.statement;
 
-import edu.uci.ics.perpetual.statement.alter.Alter;
-import edu.uci.ics.perpetual.statement.comment.Comment;
-import edu.uci.ics.perpetual.statement.create.index.CreateIndex;
-import edu.uci.ics.perpetual.statement.create.table.CreateTable;
-import edu.uci.ics.perpetual.statement.create.view.AlterView;
-import edu.uci.ics.perpetual.statement.create.view.CreateView;
-import edu.uci.ics.perpetual.statement.delete.Delete;
+
+import edu.uci.ics.perpetual.statement.add.AddAcquisitionFunction;
+import edu.uci.ics.perpetual.statement.add.AddDataSource;
+import edu.uci.ics.perpetual.statement.add.AddRequest;
+import edu.uci.ics.perpetual.statement.add.AddTag;
+import edu.uci.ics.perpetual.statement.create.type.CreateDataSourceType;
+import edu.uci.ics.perpetual.statement.create.type.CreateFunction;
+import edu.uci.ics.perpetual.statement.create.type.CreateMetadataType;
+import edu.uci.ics.perpetual.statement.create.type.CreateRawType;
 import edu.uci.ics.perpetual.statement.drop.Drop;
-import edu.uci.ics.perpetual.statement.execute.Execute;
 import edu.uci.ics.perpetual.statement.insert.Insert;
-import edu.uci.ics.perpetual.statement.merge.Merge;
-import edu.uci.ics.perpetual.statement.replace.Replace;
 import edu.uci.ics.perpetual.statement.select.Select;
-import edu.uci.ics.perpetual.statement.truncate.Truncate;
-import edu.uci.ics.perpetual.statement.update.Update;
-import edu.uci.ics.perpetual.statement.upsert.Upsert;
 import edu.uci.ics.perpetual.statement.values.ValuesStatement;
 
 public class StatementVisitorAdapter implements StatementVisitor {
 
     @Override
-    public void visit(Comment comment) {
-
-    }
-
-    @Override
-    public void visit(Commit commit) {
-
-    }
-
-    @Override
     public void visit(Select select) {
-
-    }
-
-    @Override
-    public void visit(Delete delete) {
-
-    }
-
-    @Override
-    public void visit(Update update) {
 
     }
 
@@ -72,37 +48,17 @@ public class StatementVisitorAdapter implements StatementVisitor {
     }
 
     @Override
-    public void visit(Replace replace) {
-
-    }
-
-    @Override
     public void visit(Drop drop) {
 
     }
 
     @Override
-    public void visit(Truncate truncate) {
+    public void visit(CreateMetadataType createMetadataType) {
 
     }
 
     @Override
-    public void visit(CreateIndex createIndex) {
-
-    }
-
-    @Override
-    public void visit(CreateTable createTable) {
-
-    }
-
-    @Override
-    public void visit(CreateView createView) {
-
-    }
-
-    @Override
-    public void visit(Alter alter) {
+    public void visit(CreateRawType createRawType) {
 
     }
 
@@ -114,30 +70,8 @@ public class StatementVisitorAdapter implements StatementVisitor {
     }
 
     @Override
-    public void visit(Execute execute) {
-
-    }
-
-    @Override
     public void visit(SetStatement set) {
 
-    }
-
-    @Override
-    public void visit(Merge merge) {
-
-    }
-
-    @Override
-    public void visit(AlterView alterView) {
-    }
-
-    @Override
-    public void visit(Upsert upsert) {
-    }
-
-    @Override
-    public void visit(UseStatement use) {
     }
 
     @Override
@@ -146,5 +80,35 @@ public class StatementVisitorAdapter implements StatementVisitor {
 
     @Override
     public void visit(ValuesStatement values) {
+    }
+
+    @Override
+    public void visit(AddTag addTag) {
+
+    }
+
+    @Override
+    public void visit(AddAcquisitionFunction addAcquisitionFunction) {
+
+    }
+
+    @Override
+    public void visit(AddDataSource addDataSource) {
+
+    }
+
+    @Override
+    public void visit(AddRequest addRequest) {
+
+    }
+
+    @Override
+    public void visit(CreateFunction createFunction) {
+
+    }
+
+    @Override
+    public void visit(CreateDataSourceType createDataSourceType) {
+
     }
 }

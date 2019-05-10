@@ -18,6 +18,8 @@ public class SetOperationList implements SelectBody {
     private Limit limit;
     private Offset offset;
     private Fetch fetch;
+    private int within;
+    private int epoch;
 
     @Override
     public void accept(SelectVisitor selectVisitor) {
@@ -110,6 +112,22 @@ public class SetOperationList implements SelectBody {
             buffer.append(fetch.toString());
         }
         return buffer.toString();
+    }
+
+    public int getWithin() {
+        return within;
+    }
+
+    public void setWithin(int within) {
+        this.within = within;
+    }
+
+    public int getEpoch() {
+        return epoch;
+    }
+
+    public void setEpoch(int epoch) {
+        this.epoch = epoch;
     }
 
     /**

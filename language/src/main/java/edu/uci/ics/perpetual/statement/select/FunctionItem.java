@@ -2,11 +2,11 @@
 package edu.uci.ics.perpetual.statement.select;
 
 import edu.uci.ics.perpetual.expression.Alias;
-import edu.uci.ics.perpetual.expression.Function;
+import edu.uci.ics.perpetual.expression.UDFFunction;
 
 public class FunctionItem {
 
-    private Function function;
+    private UDFFunction UDFFunction;
     private Alias alias;
 
     public Alias getAlias() {
@@ -17,16 +17,16 @@ public class FunctionItem {
         this.alias = alias;
     }
 
-    public Function getFunction() {
-        return function;
+    public UDFFunction getUDFFunction() {
+        return UDFFunction;
     }
 
-    public void setFunction(Function function) {
-        this.function = function;
+    public void setUDFFunction(UDFFunction UDFFunction) {
+        this.UDFFunction = UDFFunction;
     }
 
     @Override
     public String toString() {
-        return function + ((alias != null) ? alias.toString() : "");
+        return UDFFunction + ((alias != null) ? alias.toString() : "");
     }
 }

@@ -3,43 +3,9 @@ package edu.uci.ics.perpetual.util.deparser;
 
 import java.util.Iterator;
 import java.util.List;
-import edu.uci.ics.perpetual.expression.AllComparisonExpression;
-import edu.uci.ics.perpetual.expression.AnalyticExpression;
-import edu.uci.ics.perpetual.expression.AnyComparisonExpression;
-import edu.uci.ics.perpetual.expression.BinaryExpression;
-import edu.uci.ics.perpetual.expression.CaseExpression;
-import edu.uci.ics.perpetual.expression.CastExpression;
-import edu.uci.ics.perpetual.expression.DateTimeLiteralExpression;
-import edu.uci.ics.perpetual.expression.DateValue;
-import edu.uci.ics.perpetual.expression.DoubleValue;
-import edu.uci.ics.perpetual.expression.Expression;
-import edu.uci.ics.perpetual.expression.ExpressionVisitor;
-import edu.uci.ics.perpetual.expression.ExtractExpression;
-import edu.uci.ics.perpetual.expression.Function;
-import edu.uci.ics.perpetual.expression.HexValue;
-import edu.uci.ics.perpetual.expression.IntervalExpression;
-import edu.uci.ics.perpetual.expression.JdbcNamedParameter;
-import edu.uci.ics.perpetual.expression.JdbcParameter;
-import edu.uci.ics.perpetual.expression.JsonExpression;
-import edu.uci.ics.perpetual.expression.KeepExpression;
-import edu.uci.ics.perpetual.expression.LongValue;
-import edu.uci.ics.perpetual.expression.MySQLGroupConcat;
-import edu.uci.ics.perpetual.expression.NotExpression;
-import edu.uci.ics.perpetual.expression.NullValue;
-import edu.uci.ics.perpetual.expression.NumericBind;
-import edu.uci.ics.perpetual.expression.OracleHierarchicalExpression;
-import edu.uci.ics.perpetual.expression.OracleHint;
-import edu.uci.ics.perpetual.expression.Parenthesis;
-import edu.uci.ics.perpetual.expression.RowConstructor;
-import edu.uci.ics.perpetual.expression.SignedExpression;
-import edu.uci.ics.perpetual.expression.StringValue;
-import edu.uci.ics.perpetual.expression.TimeKeyExpression;
-import edu.uci.ics.perpetual.expression.TimeValue;
-import edu.uci.ics.perpetual.expression.TimestampValue;
-import edu.uci.ics.perpetual.expression.UserVariable;
-import edu.uci.ics.perpetual.expression.ValueListExpression;
-import edu.uci.ics.perpetual.expression.WhenClause;
-import edu.uci.ics.perpetual.expression.WindowElement;
+
+import edu.uci.ics.perpetual.expression.*;
+import edu.uci.ics.perpetual.expression.UDFFunction;
 import edu.uci.ics.perpetual.expression.operators.arithmetic.Addition;
 import edu.uci.ics.perpetual.expression.operators.arithmetic.BitwiseAnd;
 import edu.uci.ics.perpetual.expression.operators.arithmetic.BitwiseLeftShift;
@@ -75,7 +41,7 @@ import edu.uci.ics.perpetual.expression.operators.relational.RegExpMatchOperator
 import edu.uci.ics.perpetual.expression.operators.relational.RegExpMySQLOperator;
 import edu.uci.ics.perpetual.expression.operators.relational.SupportsOldOracleJoinSyntax;
 import edu.uci.ics.perpetual.schema.Column;
-import edu.uci.ics.perpetual.schema.Table;
+import edu.uci.ics.perpetual.schema.Type;
 import edu.uci.ics.perpetual.statement.select.OrderByElement;
 import edu.uci.ics.perpetual.statement.select.SelectVisitor;
 import edu.uci.ics.perpetual.statement.select.SubSelect;
@@ -391,13 +357,13 @@ public class ExpressionDeParser implements ExpressionVisitor, ItemsListVisitor {
 
     @Override
     public void visit(Column tableColumn) {
-        final Table table = tableColumn.getTable();
+        final Type type = tableColumn.getType();
         String tableName = null;
-        if (table != null) {
-            if (table.getAlias() != null) {
-                tableName = table.getAlias().getName();
+        if (type != null) {
+            if (type.getAlias() != null) {
+                tableName = type.getAlias().getName();
             } else {
-                tableName = table.getFullyQualifiedName();
+                tableName = type.getFullyQualifiedName();
             }
         }
         if (tableName != null && !tableName.isEmpty()) {
@@ -408,45 +374,45 @@ public class ExpressionDeParser implements ExpressionVisitor, ItemsListVisitor {
     }
 
     @Override
-    public void visit(Function function) {
-        if (function.isEscaped()) {
+    public void visit(UDFFunction UDFFunction) {
+        if (UDFFunction.isEscaped()) {
             buffer.append("{fn ");
         }
 
-        buffer.append(function.getName());
-        if (function.isAllColumns() && function.getParameters() == null) {
+        buffer.append(UDFFunction.getName());
+        if (UDFFunction.isAllColumns() && UDFFunction.getParameters() == null) {
             buffer.append("(*)");
-        } else if (function.getParameters() == null && function.getNamedParameters() == null) {
+        } else if (UDFFunction.getParameters() == null && UDFFunction.getNamedParameters() == null) {
             buffer.append("()");
         } else {
             boolean oldUseBracketsInExprList = useBracketsInExprList;
-            if (function.isDistinct()) {
+            if (UDFFunction.isDistinct()) {
                 useBracketsInExprList = false;
                 buffer.append("(DISTINCT ");
-            } else if (function.isAllColumns()) {
+            } else if (UDFFunction.isAllColumns()) {
                 useBracketsInExprList = false;
                 buffer.append("(ALL ");
             }
-            if(function.getNamedParameters() != null){
-                visit(function.getNamedParameters());
+            if(UDFFunction.getNamedParameters() != null){
+                visit(UDFFunction.getNamedParameters());
             }
-            if(function.getParameters() != null){
-                visit(function.getParameters());
+            if(UDFFunction.getParameters() != null){
+                visit(UDFFunction.getParameters());
             }
             useBracketsInExprList = oldUseBracketsInExprList;
-            if (function.isDistinct() || function.isAllColumns()) {
+            if (UDFFunction.isDistinct() || UDFFunction.isAllColumns()) {
                 buffer.append(")");
             }
         }
 
-        if (function.getAttribute() != null) {
-            buffer.append(".").append(function.getAttribute());
+        if (UDFFunction.getAttribute() != null) {
+            buffer.append(".").append(UDFFunction.getAttribute());
         }
-        if (function.getKeep() != null) {
-            buffer.append(" ").append(function.getKeep());
+        if (UDFFunction.getKeep() != null) {
+            buffer.append(" ").append(UDFFunction.getKeep());
         }
 
-        if (function.isEscaped()) {
+        if (UDFFunction.isEscaped()) {
             buffer.append("}");
         }
     }

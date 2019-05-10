@@ -2,7 +2,7 @@
 package edu.uci.ics.perpetual.expression;
 
 import edu.uci.ics.perpetual.parser.ASTNodeAccessImpl;
-import edu.uci.ics.perpetual.statement.create.table.ColDataType;
+import edu.uci.ics.perpetual.statement.create.type.ColDataType;
 
 /**
  *

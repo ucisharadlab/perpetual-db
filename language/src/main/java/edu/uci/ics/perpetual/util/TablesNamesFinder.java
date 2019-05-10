@@ -16,7 +16,7 @@ import edu.uci.ics.perpetual.expression.DoubleValue;
 import edu.uci.ics.perpetual.expression.Expression;
 import edu.uci.ics.perpetual.expression.ExpressionVisitor;
 import edu.uci.ics.perpetual.expression.ExtractExpression;
-import edu.uci.ics.perpetual.expression.Function;
+import edu.uci.ics.perpetual.expression.UDFFunction;
 import edu.uci.ics.perpetual.expression.HexValue;
 import edu.uci.ics.perpetual.expression.IntervalExpression;
 import edu.uci.ics.perpetual.expression.JdbcNamedParameter;
@@ -73,28 +73,25 @@ import edu.uci.ics.perpetual.expression.operators.relational.NotEqualsTo;
 import edu.uci.ics.perpetual.expression.operators.relational.RegExpMatchOperator;
 import edu.uci.ics.perpetual.expression.operators.relational.RegExpMySQLOperator;
 import edu.uci.ics.perpetual.schema.Column;
-import edu.uci.ics.perpetual.schema.Table;
+import edu.uci.ics.perpetual.schema.DataSourceType;
+import edu.uci.ics.perpetual.schema.Type;
 import edu.uci.ics.perpetual.statement.Block;
-import edu.uci.ics.perpetual.statement.Commit;
 import edu.uci.ics.perpetual.statement.SetStatement;
 import edu.uci.ics.perpetual.statement.Statement;
 import edu.uci.ics.perpetual.statement.StatementVisitor;
 import edu.uci.ics.perpetual.statement.Statements;
-import edu.uci.ics.perpetual.statement.UseStatement;
-import edu.uci.ics.perpetual.statement.alter.Alter;
-import edu.uci.ics.perpetual.statement.comment.Comment;
-import edu.uci.ics.perpetual.statement.create.index.CreateIndex;
-import edu.uci.ics.perpetual.statement.create.table.CreateTable;
-import edu.uci.ics.perpetual.statement.create.view.AlterView;
-import edu.uci.ics.perpetual.statement.create.view.CreateView;
-import edu.uci.ics.perpetual.statement.delete.Delete;
+import edu.uci.ics.perpetual.statement.add.AddAcquisitionFunction;
+import edu.uci.ics.perpetual.statement.add.AddDataSource;
+import edu.uci.ics.perpetual.statement.add.AddRequest;
+import edu.uci.ics.perpetual.statement.add.AddTag;
+import edu.uci.ics.perpetual.statement.create.type.CreateDataSourceType;
+import edu.uci.ics.perpetual.statement.create.type.CreateFunction;
+import edu.uci.ics.perpetual.statement.create.type.CreateMetadataType;
+import edu.uci.ics.perpetual.statement.create.type.CreateRawType;
 import edu.uci.ics.perpetual.statement.drop.Drop;
-import edu.uci.ics.perpetual.statement.execute.Execute;
 import edu.uci.ics.perpetual.statement.insert.Insert;
-import edu.uci.ics.perpetual.statement.merge.Merge;
-import edu.uci.ics.perpetual.statement.replace.Replace;
 import edu.uci.ics.perpetual.statement.select.AllColumns;
-import edu.uci.ics.perpetual.statement.select.AllTableColumns;
+import edu.uci.ics.perpetual.statement.select.AllTypeColumns;
 import edu.uci.ics.perpetual.statement.select.FromItemVisitor;
 import edu.uci.ics.perpetual.statement.select.Join;
 import edu.uci.ics.perpetual.statement.select.LateralSubSelect;
@@ -112,9 +109,6 @@ import edu.uci.ics.perpetual.statement.select.SubSelect;
 import edu.uci.ics.perpetual.statement.select.TableFunction;
 import edu.uci.ics.perpetual.statement.select.ValuesList;
 import edu.uci.ics.perpetual.statement.select.WithItem;
-import edu.uci.ics.perpetual.statement.truncate.Truncate;
-import edu.uci.ics.perpetual.statement.update.Update;
-import edu.uci.ics.perpetual.statement.upsert.Upsert;
 import edu.uci.ics.perpetual.statement.values.ValuesStatement;
 
 /**
@@ -201,16 +195,16 @@ public class TablesNamesFinder implements SelectVisitor, FromItemVisitor, Expres
     /**
      * Override to adapt the tableName generation (e.g. with / without schema).
      *
-     * @param table
+     * @param type
      * @return
      */
-    protected String extractTableName(Table table) {
-        return table.getFullyQualifiedName();
+    protected String extractTableName(Type type) {
+        return type.getFullyQualifiedName();
     }
 
     @Override
-    public void visit(Table tableName) {
-        String tableWholeName = extractTableName(tableName);
+    public void visit(Type typeName) {
+        String tableWholeName = extractTableName(typeName);
         if (!otherItemNames.contains(tableWholeName.toLowerCase())
                 && !tables.contains(tableWholeName)) {
             tables.add(tableWholeName);
@@ -246,8 +240,8 @@ public class TablesNamesFinder implements SelectVisitor, FromItemVisitor, Expres
 
     @Override
     public void visit(Column tableColumn) {
-        if (allowColumnProcessing && tableColumn.getTable() != null && tableColumn.getTable().getName() != null) {
-            visit(tableColumn.getTable());
+        if (allowColumnProcessing && tableColumn.getType() != null && tableColumn.getType().getName() != null) {
+            visit(tableColumn.getType());
         }
     }
 
@@ -266,8 +260,8 @@ public class TablesNamesFinder implements SelectVisitor, FromItemVisitor, Expres
     }
 
     @Override
-    public void visit(Function function) {
-        ExpressionList exprList = function.getParameters();
+    public void visit(UDFFunction UDFFunction) {
+        ExpressionList exprList = UDFFunction.getParameters();
         if (exprList != null) {
             visit(exprList);
         }
@@ -584,7 +578,7 @@ public class TablesNamesFinder implements SelectVisitor, FromItemVisitor, Expres
     }
 
     @Override
-    public void visit(AllTableColumns allTableColumns) {
+    public void visit(AllTypeColumns allTypeColumns) {
     }
 
     @Override
@@ -614,50 +608,10 @@ public class TablesNamesFinder implements SelectVisitor, FromItemVisitor, Expres
         valueList.getExpressionList().accept(this);
     }
 
-    @Override
-    public void visit(Delete delete) {
-        visit(delete.getTable());
-
-        if (delete.getJoins() != null) {
-            for (Join join : delete.getJoins()) {
-                join.getRightItem().accept(this);
-            }
-        }
-
-        if (delete.getWhere() != null) {
-            delete.getWhere().accept(this);
-        }
-    }
-
-    @Override
-    public void visit(Update update) {
-        for (Table table : update.getTables()) {
-            visit(table);
-        }
-        if (update.getExpressions() != null) {
-            for (Expression expression : update.getExpressions()) {
-                expression.accept(this);
-            }
-        }
-
-        if (update.getFromItem() != null) {
-            update.getFromItem().accept(this);
-        }
-
-        if (update.getJoins() != null) {
-            for (Join join : update.getJoins()) {
-                join.getRightItem().accept(this);
-            }
-        }
-
-        if (update.getWhere() != null) {
-            update.getWhere().accept(this);
-        }
-    }
 
     @Override
     public void visit(Insert insert) {
-        visit(insert.getTable());
+        visit(insert.getType());
         if (insert.getItemsList() != null) {
             insert.getItemsList().accept(this);
         }
@@ -667,17 +621,49 @@ public class TablesNamesFinder implements SelectVisitor, FromItemVisitor, Expres
     }
 
     @Override
-    public void visit(Replace replace) {
-        visit(replace.getTable());
-        if (replace.getExpressions() != null) {
-            for (Expression expression : replace.getExpressions()) {
-                expression.accept(this);
-            }
+    public void visit(AddTag insert) {
+        visit(insert.getType());
+        if (insert.getItemsList() != null) {
+            insert.getItemsList().accept(this);
         }
-        if (replace.getItemsList() != null) {
-            replace.getItemsList().accept(this);
+        if (insert.getSelect() != null) {
+            visit(insert.getSelect());
         }
     }
+
+    @Override
+    public void visit(AddRequest insert) {
+        visit(insert.getType());
+        if (insert.getItemsList() != null) {
+            insert.getItemsList().accept(this);
+        }
+        if (insert.getSelect() != null) {
+            visit(insert.getSelect());
+        }
+    }
+
+    @Override
+    public void visit(AddAcquisitionFunction insert) {
+        visit(insert.getType());
+        if (insert.getItemsList() != null) {
+            insert.getItemsList().accept(this);
+        }
+        if (insert.getSelect() != null) {
+            visit(insert.getSelect());
+        }
+    }
+
+    @Override
+    public void visit(AddDataSource insert) {
+        visit(insert.getType());
+        if (insert.getItemsList() != null) {
+            insert.getItemsList().accept(this);
+        }
+        if (insert.getSelect() != null) {
+            visit(insert.getSelect());
+        }
+    }
+
 
     @Override
     public void visit(Drop drop) {
@@ -685,31 +671,38 @@ public class TablesNamesFinder implements SelectVisitor, FromItemVisitor, Expres
     }
 
     @Override
-    public void visit(Truncate truncate) {
-        throw new UnsupportedOperationException(NOT_SUPPORTED_YET);
-    }
-
-    @Override
-    public void visit(CreateIndex createIndex) {
-        throw new UnsupportedOperationException(NOT_SUPPORTED_YET);
-    }
-
-    @Override
-    public void visit(CreateTable create) {
-        visit(create.getTable());
+    public void visit(CreateMetadataType create) {
+        visit(create.getType());
         if (create.getSelect() != null) {
             create.getSelect().accept(this);
         }
     }
 
     @Override
-    public void visit(CreateView createView) {
-        throw new UnsupportedOperationException(NOT_SUPPORTED_YET);
+    public void visit(CreateRawType create) {
+        visit(create.getType());
+        if (create.getSelect() != null) {
+            create.getSelect().accept(this);
+        }
     }
 
     @Override
-    public void visit(Alter alter) {
-        throw new UnsupportedOperationException(NOT_SUPPORTED_YET);
+    public void visit(CreateFunction create) {
+        visit(create.getType());
+        if (create.getSelect() != null) {
+            create.getSelect().accept(this);
+        }
+    }
+
+    @Override
+    public void visit(CreateDataSourceType create) {
+        visit(create.getType());
+        if (create.getSelect() != null) {
+            create.getSelect().accept(this);
+        }
+    }
+
+    private void visit(DataSourceType type) {
     }
 
     @Override
@@ -717,10 +710,6 @@ public class TablesNamesFinder implements SelectVisitor, FromItemVisitor, Expres
         throw new UnsupportedOperationException(NOT_SUPPORTED_YET);
     }
 
-    @Override
-    public void visit(Execute execute) {
-        throw new UnsupportedOperationException(NOT_SUPPORTED_YET);
-    }
 
     @Override
     public void visit(SetStatement set) {
@@ -740,26 +729,11 @@ public class TablesNamesFinder implements SelectVisitor, FromItemVisitor, Expres
     }
 
     @Override
-    public void visit(Merge merge) {
-        visit(merge.getTable());
-        if (merge.getUsingTable() != null) {
-            merge.getUsingTable().accept(this);
-        } else if (merge.getUsingSelect() != null) {
-            merge.getUsingSelect().accept((FromItemVisitor) this);
-        }
-    }
-
-    @Override
     public void visit(OracleHint hint) {
     }
 
     @Override
     public void visit(TableFunction valuesList) {
-    }
-
-    @Override
-    public void visit(AlterView alterView) {
-        throw new UnsupportedOperationException(NOT_SUPPORTED_YET);
     }
 
     @Override
@@ -772,26 +746,6 @@ public class TablesNamesFinder implements SelectVisitor, FromItemVisitor, Expres
     }
 
     @Override
-    public void visit(Commit commit) {
-
-    }
-
-    @Override
-    public void visit(Upsert upsert) {
-        visit(upsert.getTable());
-        if (upsert.getItemsList() != null) {
-            upsert.getItemsList().accept(this);
-        }
-        if (upsert.getSelect() != null) {
-            visit(upsert.getSelect());
-        }
-    }
-
-    @Override
-    public void visit(UseStatement use) {
-    }
-
-    @Override
     public void visit(ParenthesisFromItem parenthesis) {
         parenthesis.getFromItem().accept(this);
     }
@@ -800,19 +754,6 @@ public class TablesNamesFinder implements SelectVisitor, FromItemVisitor, Expres
     public void visit(Block block) {
         if (block.getStatements() != null) {
             visit(block.getStatements());
-        }
-    }
-
-    @Override
-    public void visit(Comment comment) {
-        if (comment.getTable() != null) {
-            visit(comment.getTable());
-        }
-        if (comment.getColumn() != null) {
-            Table table = comment.getColumn().getTable();
-            if (table != null) {
-                visit(table);
-            }
         }
     }
   

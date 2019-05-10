@@ -3,16 +3,16 @@ package edu.uci.ics.perpetual.util.deparser;
 
 import java.util.Iterator;
 
-import edu.uci.ics.perpetual.statement.create.table.ColumnDefinition;
-import edu.uci.ics.perpetual.statement.create.table.CreateTable;
-import edu.uci.ics.perpetual.statement.create.table.Index;
+import edu.uci.ics.perpetual.statement.create.type.ColumnDefinition;
+import edu.uci.ics.perpetual.statement.create.type.CreateMetadataType;
+import edu.uci.ics.perpetual.statement.create.type.Index;
 import edu.uci.ics.perpetual.statement.select.PlainSelect;
 import edu.uci.ics.perpetual.statement.select.Select;
 
 
 /**
  * A class to de-parse (that is, tranform from JSqlParser hierarchy into a string) a
- * {@link edu.uci.ics.perpetual.statement.create.table.CreateTable}
+ * {@link CreateMetadataType}
  */
 public class CreateTableDeParser {
 
@@ -32,36 +32,36 @@ public class CreateTableDeParser {
     }
 
 
-    public void deParse(CreateTable createTable) {
+    public void deParse(CreateMetadataType createMetadataType) {
         buffer.append("CREATE ");
-        if (createTable.isUnlogged()) {
+        if (createMetadataType.isUnlogged()) {
             buffer.append("UNLOGGED ");
         }
         String params = PlainSelect.
-                getStringList(createTable.getCreateOptionsStrings(), false, false);
+                getStringList(createMetadataType.getCreateOptionsStrings(), false, false);
         if (!"".equals(params)) {
             buffer.append(params).append(' ');
         }
 
         buffer.append("TABLE ");
-        if (createTable.isIfNotExists()) {
+        if (createMetadataType.isIfNotExists()) {
             buffer.append("IF NOT EXISTS ");
         }
-        buffer.append(createTable.getTable().getFullyQualifiedName());
-        if (createTable.getSelect() != null) {
+        buffer.append(createMetadataType.getType().getFullyQualifiedName());
+        if (createMetadataType.getSelect() != null) {
             buffer.append(" AS ");
-            if (createTable.isSelectParenthesis()) {
+            if (createMetadataType.isSelectParenthesis()) {
                 buffer.append("(");
             }
-            Select sel = createTable.getSelect();
+            Select sel = createMetadataType.getSelect();
             sel.accept(this.statementDeParser);
-            if (createTable.isSelectParenthesis()) {
+            if (createMetadataType.isSelectParenthesis()) {
                 buffer.append(")");
             }
         } else {
-            if (createTable.getColumnDefinitions() != null) {
+            if (createMetadataType.getColumnDefinitions() != null) {
                 buffer.append(" (");
-                for (Iterator<ColumnDefinition> iter = createTable.getColumnDefinitions().iterator(); iter.
+                for (Iterator<ColumnDefinition> iter = createMetadataType.getColumnDefinitions().iterator(); iter.
                         hasNext();) {
                     ColumnDefinition columnDefinition = iter.next();
                     buffer.append(columnDefinition.getColumnName());
@@ -79,8 +79,8 @@ public class CreateTableDeParser {
                     }
                 }
 
-                if (createTable.getIndexes() != null) {
-                    for (Iterator<Index> iter = createTable.getIndexes().iterator(); iter.hasNext();) {
+                if (createMetadataType.getIndexes() != null) {
+                    for (Iterator<Index> iter = createMetadataType.getIndexes().iterator(); iter.hasNext();) {
                         buffer.append(", ");
                         Index index = iter.next();
                         buffer.append(index.toString());
@@ -91,7 +91,7 @@ public class CreateTableDeParser {
             }
         }
 
-        params = PlainSelect.getStringList(createTable.getTableOptionsStrings(), false, false);
+        params = PlainSelect.getStringList(createMetadataType.getTypeOptionsStrings(), false, false);
         if (!"".equals(params)) {
             buffer.append(' ').append(params);
         }

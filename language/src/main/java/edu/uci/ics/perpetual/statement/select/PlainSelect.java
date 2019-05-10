@@ -4,7 +4,7 @@ package edu.uci.ics.perpetual.statement.select;
 import edu.uci.ics.perpetual.expression.Expression;
 import edu.uci.ics.perpetual.expression.OracleHierarchicalExpression;
 import edu.uci.ics.perpetual.expression.OracleHint;
-import edu.uci.ics.perpetual.schema.Table;
+import edu.uci.ics.perpetual.schema.Type;
 import edu.uci.ics.perpetual.parser.ASTNodeAccessImpl;
 
 import java.util.ArrayList;
@@ -17,9 +17,11 @@ import java.util.List;
  */
 public class PlainSelect extends ASTNodeAccessImpl implements SelectBody {
 
+    private int epoch;
+    private int within;
     private Distinct distinct = null;
     private List<SelectItem> selectItems;
-    private List<Table> intoTables;
+    private List<Type> intoTypes;
     private FromItem fromItem;
     private List<Join> joins;
     private Expression where;
@@ -36,7 +38,7 @@ public class PlainSelect extends ASTNodeAccessImpl implements SelectBody {
     private OracleHint oracleHint = null;
     private boolean oracleSiblings = false;
     private boolean forUpdate = false;
-    private Table forUpdateTable = null;
+    private Type forUpdateType = null;
     private boolean useBrackets = false;
     private Wait wait;
     private boolean mySqlSqlCalcFoundRows = false;
@@ -59,8 +61,8 @@ public class PlainSelect extends ASTNodeAccessImpl implements SelectBody {
         return fromItem;
     }
 
-    public List<Table> getIntoTables() {
-        return intoTables;
+    public List<Type> getIntoTypes() {
+        return intoTypes;
     }
 
     /**
@@ -80,8 +82,8 @@ public class PlainSelect extends ASTNodeAccessImpl implements SelectBody {
         fromItem = item;
     }
 
-    public void setIntoTables(List<Table> intoTables) {
-        this.intoTables = intoTables;
+    public void setIntoTypes(List<Type> intoTypes) {
+        this.intoTypes = intoTypes;
     }
 
     public void setSelectItems(List<SelectItem> list) {
@@ -234,12 +236,12 @@ public class PlainSelect extends ASTNodeAccessImpl implements SelectBody {
         this.forUpdate = forUpdate;
     }
 
-    public Table getForUpdateTable() {
-        return forUpdateTable;
+    public Type getForUpdateType() {
+        return forUpdateType;
     }
 
-    public void setForUpdateTable(Table forUpdateTable) {
-        this.forUpdateTable = forUpdateTable;
+    public void setForUpdateType(Type forUpdateType) {
+        this.forUpdateType = forUpdateType;
     }
 
     public OracleHint getOracleHint() {
@@ -302,9 +304,9 @@ public class PlainSelect extends ASTNodeAccessImpl implements SelectBody {
         }
         sql.append(getStringList(selectItems));
 
-        if (intoTables != null) {
+        if (intoTypes != null) {
             sql.append(" INTO ");
-            for (Iterator<Table> iter = intoTables.iterator(); iter.hasNext();) {
+            for (Iterator<Type> iter = intoTypes.iterator(); iter.hasNext();) {
                 sql.append(iter.next().toString());
                 if (iter.hasNext()) {
                     sql.append(", ");
@@ -348,8 +350,8 @@ public class PlainSelect extends ASTNodeAccessImpl implements SelectBody {
             if (isForUpdate()) {
                 sql.append(" FOR UPDATE");
 
-                if (forUpdateTable != null) {
-                    sql.append(" OF ").append(forUpdateTable);
+                if (forUpdateType != null) {
+                    sql.append(" OF ").append(forUpdateType);
                 }
 
                 if (wait != null) {
@@ -459,5 +461,21 @@ public class PlainSelect extends ASTNodeAccessImpl implements SelectBody {
 
     public boolean getMySqlSqlNoCache() {
         return this.sqlNoCacheFlag;
+    }
+
+    public int getWithin() {
+        return within;
+    }
+
+    public void setWithin(int within) {
+        this.within = within;
+    }
+
+    public int getEpoch() {
+        return epoch;
+    }
+
+    public void setEpoch(int epoch) {
+        this.epoch = epoch;
     }
 }

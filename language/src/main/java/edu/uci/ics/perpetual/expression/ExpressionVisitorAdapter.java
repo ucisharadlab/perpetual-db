@@ -28,7 +28,7 @@ import edu.uci.ics.perpetual.expression.operators.relational.JsonOperator;
 import edu.uci.ics.perpetual.expression.operators.relational.*;
 import edu.uci.ics.perpetual.schema.Column;
 import edu.uci.ics.perpetual.statement.select.AllColumns;
-import edu.uci.ics.perpetual.statement.select.AllTableColumns;
+import edu.uci.ics.perpetual.statement.select.AllTypeColumns;
 import edu.uci.ics.perpetual.statement.select.ExpressionListItem;
 import edu.uci.ics.perpetual.statement.select.FunctionItem;
 import edu.uci.ics.perpetual.statement.select.OrderByElement;
@@ -59,12 +59,12 @@ public class ExpressionVisitorAdapter implements ExpressionVisitor, ItemsListVis
     }
 
     @Override
-    public void visit(Function function) {
-        if (function.getParameters() != null) {
-            function.getParameters().accept(this);
+    public void visit(UDFFunction UDFFunction) {
+        if (UDFFunction.getParameters() != null) {
+            UDFFunction.getParameters().accept(this);
         }
-        if (function.getKeep() != null) {
-            function.getKeep().accept(this);
+        if (UDFFunction.getKeep() != null) {
+            UDFFunction.getKeep().accept(this);
         }
     }
 
@@ -435,7 +435,7 @@ public class ExpressionVisitorAdapter implements ExpressionVisitor, ItemsListVis
     @Override
     public void visit(Pivot pivot) {
         for (FunctionItem item : pivot.getFunctionItems()) {
-            item.getFunction().accept(this);
+            item.getUDFFunction().accept(this);
         }
         for (Column col : pivot.getForColumns()) {
             col.accept(this);
@@ -456,7 +456,7 @@ public class ExpressionVisitorAdapter implements ExpressionVisitor, ItemsListVis
     @Override
     public void visit(PivotXml pivot) {
         for (FunctionItem item : pivot.getFunctionItems()) {
-            item.getFunction().accept(this);
+            item.getUDFFunction().accept(this);
         }
         for (Column col : pivot.getForColumns()) {
             col.accept(this);
@@ -472,7 +472,7 @@ public class ExpressionVisitorAdapter implements ExpressionVisitor, ItemsListVis
     }
 
     @Override
-    public void visit(AllTableColumns allTableColumns) {
+    public void visit(AllTypeColumns allTypeColumns) {
 
     }
 

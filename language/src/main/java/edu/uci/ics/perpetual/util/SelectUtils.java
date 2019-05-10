@@ -26,7 +26,7 @@ import java.util.List;
 import edu.uci.ics.perpetual.JSQLParserException;
 import edu.uci.ics.perpetual.expression.Expression;
 import edu.uci.ics.perpetual.parser.CCJSqlParserUtil;
-import edu.uci.ics.perpetual.schema.Table;
+import edu.uci.ics.perpetual.schema.Type;
 import edu.uci.ics.perpetual.statement.select.AllColumns;
 import edu.uci.ics.perpetual.statement.select.Join;
 import edu.uci.ics.perpetual.statement.select.PlainSelect;
@@ -51,53 +51,53 @@ public final class SelectUtils {
     }
 
     /**
-     * Builds select expr1, expr2 from table.
+     * Builds select expr1, expr2 from type.
      *
-     * @param table
+     * @param type
      * @param expr
      * @return
      */
-    public static Select buildSelectFromTableAndExpressions(Table table, Expression... expr) {
+    public static Select buildSelectFromTableAndExpressions(Type type, Expression... expr) {
         SelectItem[] list = new SelectItem[expr.length];
         for (int i = 0; i < expr.length; i++) {
             list[i] = new SelectExpressionItem(expr[i]);
         }
-        return buildSelectFromTableAndSelectItems(table, list);
+        return buildSelectFromTableAndSelectItems(type, list);
     }
 
     /**
-     * Builds select expr1, expr2 from table.
+     * Builds select expr1, expr2 from type.
      *
-     * @param table
+     * @param type
      * @param expr
      * @return
      * @throws edu.uci.ics.perpetual.JSQLParserException
      */
-    public static Select buildSelectFromTableAndExpressions(Table table, String... expr) throws JSQLParserException {
+    public static Select buildSelectFromTableAndExpressions(Type type, String... expr) throws JSQLParserException {
         SelectItem[] list = new SelectItem[expr.length];
         for (int i = 0; i < expr.length; i++) {
             list[i] = new SelectExpressionItem(CCJSqlParserUtil.parseExpression(expr[i]));
         }
-        return buildSelectFromTableAndSelectItems(table, list);
+        return buildSelectFromTableAndSelectItems(type, list);
     }
 
-    public static Select buildSelectFromTableAndSelectItems(Table table, SelectItem... selectItems) {
+    public static Select buildSelectFromTableAndSelectItems(Type type, SelectItem... selectItems) {
         Select select = new Select();
         PlainSelect body = new PlainSelect();
         body.addSelectItems(selectItems);
-        body.setFromItem(table);
+        body.setFromItem(type);
         select.setSelectBody(body);
         return select;
     }
 
     /**
-     * Builds select * from table.
+     * Builds select * from type.
      *
-     * @param table
+     * @param type
      * @return
      */
-    public static Select buildSelectFromTable(Table table) {
-        return buildSelectFromTableAndSelectItems(table, new AllColumns());
+    public static Select buildSelectFromTable(Type type) {
+        return buildSelectFromTableAndSelectItems(type, new AllColumns());
     }
 
     /**
@@ -133,14 +133,14 @@ public final class SelectUtils {
 
     /**
      * Adds a simple join to a select statement. The introduced join is returned for more
-     * configuration settings on it (e.g. left join, right join).
+     * configuration edu.uci.ics.perpetual.settings on it (e.g. left join, right join).
      *
      * @param select
-     * @param table
+     * @param type
      * @param onExpression
      * @return
      */
-    public static Join addJoin(Select select, final Table table, final Expression onExpression) {
+    public static Join addJoin(Select select, final Type type, final Expression onExpression) {
         if (select.getSelectBody() instanceof PlainSelect) {
             PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
             List<Join> joins = plainSelect.getJoins();
@@ -149,7 +149,7 @@ public final class SelectUtils {
                 plainSelect.setJoins(joins);
             }
             Join join = new Join();
-            join.setRightItem(table);
+            join.setRightItem(type);
             join.setOnExpression(onExpression);
             joins.add(join);
             return join;

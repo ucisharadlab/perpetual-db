@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>statistics</artifactId>
+    <artifactId>edu.uci.ics.perpetual.statistics</artifactId>
 
 
 </project>

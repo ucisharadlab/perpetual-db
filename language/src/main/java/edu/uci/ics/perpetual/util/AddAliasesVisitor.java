@@ -43,7 +43,7 @@ public class AddAliasesVisitor implements SelectVisitor, SelectItemVisitor {
     }
 
     @Override
-    public void visit(AllTableColumns allTableColumns) {
+    public void visit(AllTypeColumns allTypeColumns) {
         throw new UnsupportedOperationException(NOT_SUPPORTED_YET);
     }
 

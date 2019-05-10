@@ -2,7 +2,7 @@
 package edu.uci.ics.perpetual.statement.drop;
 
 import java.util.List;
-import edu.uci.ics.perpetual.schema.Table;
+import edu.uci.ics.perpetual.schema.Type;
 
 import edu.uci.ics.perpetual.statement.Statement;
 import edu.uci.ics.perpetual.statement.StatementVisitor;
@@ -11,7 +11,7 @@ import edu.uci.ics.perpetual.statement.select.PlainSelect;
 public class Drop implements Statement {
 
     private String type;
-    private Table name;
+    private Type name;
     private List<String> parameters;
     private boolean ifExists = false;
 
@@ -20,7 +20,7 @@ public class Drop implements Statement {
         statementVisitor.visit(this);
     }
 
-    public Table getName() {
+    public Type getName() {
         return name;
     }
 
@@ -32,7 +32,7 @@ public class Drop implements Statement {
         return type;
     }
 
-    public void setName(Table string) {
+    public void setName(Type string) {
         name = string;
     }
 

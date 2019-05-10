@@ -71,7 +71,7 @@ public abstract class ConnectExpressionsVisitor implements SelectVisitor, Select
     }
 
     @Override
-    public void visit(AllTableColumns allTableColumns) {
+    public void visit(AllTypeColumns allTypeColumns) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

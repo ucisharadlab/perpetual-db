@@ -94,9 +94,9 @@ public class SelectDeParser implements SelectVisitor, SelectItemVisitor, FromIte
             }
         }
 
-        if (plainSelect.getIntoTables() != null) {
+        if (plainSelect.getIntoTypes() != null) {
             buffer.append(" INTO ");
-            for (Iterator<Table> iter = plainSelect.getIntoTables().iterator(); iter.hasNext();) {
+            for (Iterator<Type> iter = plainSelect.getIntoTypes().iterator(); iter.hasNext();) {
                 visit(iter.next());
                 if (iter.hasNext()) {
                     buffer.append(", ");
@@ -157,8 +157,8 @@ public class SelectDeParser implements SelectVisitor, SelectItemVisitor, FromIte
         }
         if (plainSelect.isForUpdate()) {
             buffer.append(" FOR UPDATE");
-            if (plainSelect.getForUpdateTable() != null) {
-                buffer.append(" OF ").append(plainSelect.getForUpdateTable());
+            if (plainSelect.getForUpdateType() != null) {
+                buffer.append(" OF ").append(plainSelect.getForUpdateType());
             }
             if (plainSelect.getWait() != null) {
                 // wait's toString will do the formatting for us
@@ -171,8 +171,8 @@ public class SelectDeParser implements SelectVisitor, SelectItemVisitor, FromIte
     }
 
     @Override
-    public void visit(AllTableColumns allTableColumns) {
-        buffer.append(allTableColumns.getTable().getFullyQualifiedName()).append(".*");
+    public void visit(AllTypeColumns allTypeColumns) {
+        buffer.append(allTypeColumns.getType().getFullyQualifiedName()).append(".*");
     }
 
     @Override
@@ -211,17 +211,17 @@ public class SelectDeParser implements SelectVisitor, SelectItemVisitor, FromIte
     }
 
     @Override
-    public void visit(Table tableName) {
-        buffer.append(tableName.getFullyQualifiedName());
-        Alias alias = tableName.getAlias();
+    public void visit(Type typeName) {
+        buffer.append(typeName.getFullyQualifiedName());
+        Alias alias = typeName.getAlias();
         if (alias != null) {
             buffer.append(alias);
         }
-        Pivot pivot = tableName.getPivot();
+        Pivot pivot = typeName.getPivot();
         if (pivot != null) {
             pivot.accept(this);
         }
-        MySQLIndexHint indexHint = tableName.getIndexHint();
+        MySQLIndexHint indexHint = typeName.getIndexHint();
         if (indexHint != null) {
             buffer.append(indexHint);
         }
