@@ -561,6 +561,7 @@ AddAcquisitionFunction AddAcquisitionFunction():
     {
         insert.setName(name.image);
         insert.setPath(path.image);
+        insert.setDataSourceType(type);
         return insert;
     }
 }
@@ -601,6 +602,7 @@ AddDataSource AddDataSource():
         insert.setId(Integer.parseInt(id.image));
         insert.setFunctionName(functionName.image);
         insert.setParams(params.image);
+        insert.setDataSourceType(type);
         return insert;
     }
 }

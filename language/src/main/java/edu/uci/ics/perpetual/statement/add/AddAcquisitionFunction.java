@@ -4,6 +4,7 @@ package edu.uci.ics.perpetual.statement.add;
 import edu.uci.ics.perpetual.expression.Expression;
 import edu.uci.ics.perpetual.expression.operators.relational.ItemsList;
 import edu.uci.ics.perpetual.schema.Column;
+import edu.uci.ics.perpetual.schema.DataSourceType;
 import edu.uci.ics.perpetual.schema.Type;
 import edu.uci.ics.perpetual.statement.Statement;
 import edu.uci.ics.perpetual.statement.StatementVisitor;
@@ -20,6 +21,7 @@ import java.util.List;
  */
 public class AddAcquisitionFunction implements Statement {
 
+    private DataSourceType dataSourceType;
     private String name;
     private String path;
     private Type type;
@@ -268,5 +270,13 @@ public class AddAcquisitionFunction implements Statement {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public DataSourceType getDataSourceType() {
+        return dataSourceType;
+    }
+
+    public void setDataSourceType(DataSourceType dataSourceType) {
+        this.dataSourceType = dataSourceType;
     }
 }
