@@ -1,11 +1,43 @@
 package edu.uci.ics.perpetual.state;
 
-import java.util.list;
+import java.util.List;
 
 public final class ObjectState{
-	private int objectID;
+	private int objectId;
 	private List<Integer> functionBitmap;
 	private List<String> functionResultList;  // For deterministic functions
-	private List<float> functionProbResultList; // For probabilistic functions
+	private List<Double> functionProbResultList; // For probabilistic functions
+	
+	
+	public ObjectState(){
+			
+	}
+	
+	public int objectId() {
+		return objectId;
+	}
+	
+	public List<Integer> getFunctionBitmap() {
+		return this.functionBitmap;
+	}
+	public void setFunctionBitmap(List<Integer> functionBitmap) {
+		this.functionBitmap = functionBitmap;
+	}
+	
+	public List<String> getFunctionResultList() {
+		return this.functionResultList;
+	}
+	public void setFunctionResultList(List<String> functionResultList) {
+		this.functionResultList = functionResultList;
+	}
+	
+	public List<Double> getFunctionProbResultList() {
+		return this.functionProbResultList;
+	}
+	public void setFunctionProbResultList(List<Double> functionProbResultList) {
+		this.functionProbResultList = functionProbResultList;
+	}
+	
+
 	
 }
