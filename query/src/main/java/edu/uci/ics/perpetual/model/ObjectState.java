@@ -1,4 +1,4 @@
-package edu.uci.ics.perpetual.state;
+package edu.uci.ics.perpetual.model;
 
 import java.util.List;
 
