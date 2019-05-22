@@ -24,7 +24,7 @@ public class TIPPERSTestCase {
     public void test() throws ParseException, JSQLParserException {
 
         // Create Types
-//        pClient.runStatement("Create Metadata Type")
+//      pClient.runStatement("Create Metadata Type")
         pClient.runStatement("CREATE DATA SOURCE TYPE wifi_sensor('{id:int, name:string, ip:string, port:int)}'");
         pClient.runStatement("CREATE RAW TYPE wifi_observation(timestamp, device_mac, wifi_ap)");
         pClient.runStatement("ADD FOR wifi_sensor ACQUISITION FUNCTION('wifi_source_func', '.../acqFunc.jar')");
