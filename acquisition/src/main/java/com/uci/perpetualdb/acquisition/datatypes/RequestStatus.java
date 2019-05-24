@@ -4,5 +4,6 @@ public enum RequestStatus {
     SUCCESS,
     ERROR,
     INPROGRESS,
-    NEW;
+    NEW,
+    SCHEDULED
 }
