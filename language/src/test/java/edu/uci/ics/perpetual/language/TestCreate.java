@@ -1,7 +1,6 @@
 package edu.uci.ics.perpetual.language;
 
 import edu.uci.ics.perpetual.JSQLParserException;
-import edu.uci.ics.perpetual.parser.CCJSqlParser;
 import edu.uci.ics.perpetual.parser.CCJSqlParserManager;
 import edu.uci.ics.perpetual.parser.ParseException;
 import edu.uci.ics.perpetual.statement.Statement;

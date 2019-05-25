@@ -1,11 +1,14 @@
 
 package edu.uci.ics.perpetual.util.deparser;
 
-import java.util.*;
 import edu.uci.ics.perpetual.expression.*;
-import edu.uci.ics.perpetual.schema.*;
+import edu.uci.ics.perpetual.schema.Column;
+import edu.uci.ics.perpetual.schema.Type;
 import edu.uci.ics.perpetual.statement.select.*;
 import edu.uci.ics.perpetual.statement.values.ValuesStatement;
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * A class to de-parse (that is, tranform from JSqlParser hierarchy into a string) a

@@ -1,11 +1,11 @@
 
 package edu.uci.ics.perpetual.expression.operators.relational;
 
-import java.util.Arrays;
-import java.util.List;
-
 import edu.uci.ics.perpetual.expression.Expression;
 import edu.uci.ics.perpetual.statement.select.PlainSelect;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A list of expressions, as in SELECT A FROM TAB WHERE B IN (expr1,expr2,expr3)

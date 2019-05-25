@@ -1,8 +1,8 @@
 package com.uci.perpetualdb.acquisition.requestmanagement;
 
-import com.uci.perpetualdb.acquisition.utils.JavaUtils;
 import com.uci.perpetualdb.acquisition.datatypes.Producer;
 import com.uci.perpetualdb.acquisition.datatypes.Request;
+import com.uci.perpetualdb.acquisition.utils.JavaUtils;
 
 import java.util.TimerTask;
 

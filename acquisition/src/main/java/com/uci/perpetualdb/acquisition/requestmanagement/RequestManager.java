@@ -1,7 +1,6 @@
 package com.uci.perpetualdb.acquisition.requestmanagement;
 
 import com.uci.perpetualdb.acquisition.datatypes.Request;
-import com.uci.perpetualdb.acquisition.datatypes.RequestStatus;
 
 import java.util.ArrayList;
 import java.util.List;

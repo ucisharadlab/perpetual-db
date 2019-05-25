@@ -1,12 +1,12 @@
 
 package edu.uci.ics.perpetual.statement.drop;
 
-import java.util.List;
 import edu.uci.ics.perpetual.schema.Type;
-
 import edu.uci.ics.perpetual.statement.Statement;
 import edu.uci.ics.perpetual.statement.StatementVisitor;
 import edu.uci.ics.perpetual.statement.select.PlainSelect;
+
+import java.util.List;
 
 public class Drop implements Statement {
 

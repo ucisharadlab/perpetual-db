@@ -1,9 +1,11 @@
 
 package edu.uci.ics.perpetual.schema;
 
-import java.util.List;
-import edu.uci.ics.perpetual.expression.*;
+import edu.uci.ics.perpetual.expression.Expression;
+import edu.uci.ics.perpetual.expression.ExpressionVisitor;
 import edu.uci.ics.perpetual.parser.ASTNodeAccessImpl;
+
+import java.util.List;
 
 /**
  * A column. It can have the type name it belongs to.

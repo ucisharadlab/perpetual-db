@@ -6,7 +6,6 @@ import edu.uci.ics.perpetual.parser.CCJSqlParserManager;
 import edu.uci.ics.perpetual.parser.ParseException;
 import edu.uci.ics.perpetual.statement.Statement;
 
-import javax.management.Query;
 import java.util.Scanner;
 
 public class PerpetualCMDClient extends Thread {
