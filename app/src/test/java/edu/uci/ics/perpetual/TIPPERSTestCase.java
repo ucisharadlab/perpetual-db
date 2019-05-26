@@ -36,6 +36,10 @@ public class TIPPERSTestCase {
         pClient.runStatement("ADD FOR wifi_observation TAG Person(char)");
         pClient.runStatement("ADD FOR wifi_observation TAG BuildingLocation(char)");
         pClient.runStatement("ADD FOR wifi_observation TAG RegionLocation(char)");
+        pClient.runStatement("ADD FOR wifi_observation TAG RoomLocation(char)");
+        pClient.runStatement("ADD FOR wifi_observation TAG Office(char)");
+
+
 
         // Create Functions
         pClient.runStatement("CREATE FUNCTION getPersonFromWifi(wifi_observation, ../func1.jar) RETURNS Person COST 20");
@@ -43,6 +47,10 @@ public class TIPPERSTestCase {
                 "RETURNS BuildingLocation COST 40");
         pClient.runStatement("CREATE FUNCTION getRegionLocationFromWifi(wifi_observation, BuildingLocation, ../func3.jar) " +
                 "RETURN RegionLocation COST 30");
+        pClient.runStatement("CREATE FUNCTION getRegionLocationFromWifi(wifi_observation, BuildingLocation, RegionLocation," +
+                " ../func4.jar) RETURN RegionLocation COST 60");
+        pClient.runStatement("CREATE FUNCTION getPersonFromWifi(Person, ../func5.jar) RETURNS Office COST 20");
+
 
         // Create Requests
         pClient.runStatement("ADD Request(1, 1, '04/08/2019 12:00:00', '04/08/2019 14:00', 20, 'pull')");
