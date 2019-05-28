@@ -4,6 +4,7 @@ package edu.uci.ics.perpetual.statement.add;
 import edu.uci.ics.perpetual.expression.Expression;
 import edu.uci.ics.perpetual.expression.operators.relational.ItemsList;
 import edu.uci.ics.perpetual.schema.Column;
+import edu.uci.ics.perpetual.schema.DataSourceType;
 import edu.uci.ics.perpetual.schema.Type;
 import edu.uci.ics.perpetual.statement.Statement;
 import edu.uci.ics.perpetual.statement.StatementVisitor;
@@ -20,6 +21,7 @@ import java.util.List;
  */
 public class AddDataSource implements Statement {
 
+    private DataSourceType dataSourceType;
     private int id;
     private String functionName;
     private String name;
@@ -286,5 +288,13 @@ public class AddDataSource implements Statement {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public DataSourceType getDataSourceType() {
+        return dataSourceType;
+    }
+
+    public void setDataSourceType(DataSourceType dataSourceType) {
+        this.dataSourceType = dataSourceType;
     }
 }

@@ -6,6 +6,8 @@ import edu.uci.ics.perpetual.parser.CCJSqlParserManager;
 import edu.uci.ics.perpetual.parser.ParseException;
 import edu.uci.ics.perpetual.statement.Statement;
 
+import javax.management.Query;
+import java.util.List;
 import java.util.Scanner;
 
 public class PerpetualCMDClient extends Thread {
@@ -33,6 +35,10 @@ public class PerpetualCMDClient extends Thread {
         }
 
     }
+
+    public void runStatement(String stmt) {}
+
+    public List<String> runQuery(String query) {  return null;}
 
 
 }
