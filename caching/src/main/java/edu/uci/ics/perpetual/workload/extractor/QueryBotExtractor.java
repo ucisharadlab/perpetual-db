@@ -1,6 +1,8 @@
 package edu.uci.ics.perpetual.workload.extractor;
 
 import edu.uci.ics.perpetual.statement.Statement;
+import edu.uci.ics.perpetual.statement.StatementVisitor;
+import edu.uci.ics.perpetual.types.DataObjectType;
 import edu.uci.ics.perpetual.workload.parser.IWorkloadParser;
 import edu.uci.ics.perpetual.workload.parser.QueryBotWorkloadParser;
 

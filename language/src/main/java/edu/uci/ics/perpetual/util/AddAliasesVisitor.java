@@ -1,12 +1,10 @@
 
 package edu.uci.ics.perpetual.util;
 
-import edu.uci.ics.perpetual.expression.Alias;
+import java.util.*;
+import edu.uci.ics.perpetual.expression.*;
 import edu.uci.ics.perpetual.statement.select.*;
 import edu.uci.ics.perpetual.statement.values.ValuesStatement;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Add aliases to every column and expression selected by a select - statement. Existing aliases are

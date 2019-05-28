@@ -1,11 +1,11 @@
 
 package edu.uci.ics.perpetual.statement.select;
 
-import edu.uci.ics.perpetual.statement.Statement;
-import edu.uci.ics.perpetual.statement.StatementVisitor;
-
 import java.util.Iterator;
 import java.util.List;
+
+import edu.uci.ics.perpetual.statement.Statement;
+import edu.uci.ics.perpetual.statement.StatementVisitor;
 
 public class Select implements Statement {
 

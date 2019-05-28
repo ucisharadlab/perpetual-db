@@ -1,7 +1,12 @@
 
 package edu.uci.ics.perpetual.util.deparser;
 
-import edu.uci.ics.perpetual.statement.*;
+import java.util.Iterator;
+import edu.uci.ics.perpetual.statement.Block;
+import edu.uci.ics.perpetual.statement.SetStatement;
+import edu.uci.ics.perpetual.statement.Statement;
+import edu.uci.ics.perpetual.statement.StatementVisitor;
+import edu.uci.ics.perpetual.statement.Statements;
 import edu.uci.ics.perpetual.statement.add.AddAcquisitionFunction;
 import edu.uci.ics.perpetual.statement.add.AddDataSource;
 import edu.uci.ics.perpetual.statement.add.AddRequest;
@@ -15,8 +20,6 @@ import edu.uci.ics.perpetual.statement.insert.Insert;
 import edu.uci.ics.perpetual.statement.select.Select;
 import edu.uci.ics.perpetual.statement.select.WithItem;
 import edu.uci.ics.perpetual.statement.values.ValuesStatement;
-
-import java.util.Iterator;
 
 public class StatementDeParser implements StatementVisitor {
 

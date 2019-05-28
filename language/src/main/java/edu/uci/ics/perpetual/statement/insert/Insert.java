@@ -1,6 +1,8 @@
 
 package edu.uci.ics.perpetual.statement.insert;
 
+import java.util.List;
+
 import edu.uci.ics.perpetual.expression.Expression;
 import edu.uci.ics.perpetual.expression.operators.relational.ItemsList;
 import edu.uci.ics.perpetual.schema.Column;
@@ -10,8 +12,6 @@ import edu.uci.ics.perpetual.statement.StatementVisitor;
 import edu.uci.ics.perpetual.statement.select.PlainSelect;
 import edu.uci.ics.perpetual.statement.select.Select;
 import edu.uci.ics.perpetual.statement.select.SelectExpressionItem;
-
-import java.util.List;
 
 /**
  * The insert statement. Every column name in <code>columnNames</code> matches an item in

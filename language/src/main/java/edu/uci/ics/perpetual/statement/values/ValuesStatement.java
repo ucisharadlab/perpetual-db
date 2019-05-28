@@ -1,14 +1,13 @@
 
 package edu.uci.ics.perpetual.statement.values;
 
+import java.util.List;
 import edu.uci.ics.perpetual.expression.Expression;
 import edu.uci.ics.perpetual.statement.Statement;
 import edu.uci.ics.perpetual.statement.StatementVisitor;
 import edu.uci.ics.perpetual.statement.select.PlainSelect;
 import edu.uci.ics.perpetual.statement.select.SelectBody;
 import edu.uci.ics.perpetual.statement.select.SelectVisitor;
-
-import java.util.List;
 
 /**
  * The replace statement.

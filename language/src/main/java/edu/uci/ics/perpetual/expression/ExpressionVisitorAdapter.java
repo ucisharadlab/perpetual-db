@@ -24,9 +24,22 @@ package edu.uci.ics.perpetual.expression;
 import edu.uci.ics.perpetual.expression.operators.arithmetic.*;
 import edu.uci.ics.perpetual.expression.operators.conditional.AndExpression;
 import edu.uci.ics.perpetual.expression.operators.conditional.OrExpression;
+import edu.uci.ics.perpetual.expression.operators.relational.JsonOperator;
 import edu.uci.ics.perpetual.expression.operators.relational.*;
 import edu.uci.ics.perpetual.schema.Column;
-import edu.uci.ics.perpetual.statement.select.*;
+import edu.uci.ics.perpetual.statement.select.AllColumns;
+import edu.uci.ics.perpetual.statement.select.AllTypeColumns;
+import edu.uci.ics.perpetual.statement.select.ExpressionListItem;
+import edu.uci.ics.perpetual.statement.select.FunctionItem;
+import edu.uci.ics.perpetual.statement.select.OrderByElement;
+import edu.uci.ics.perpetual.statement.select.Pivot;
+import edu.uci.ics.perpetual.statement.select.PivotVisitor;
+import edu.uci.ics.perpetual.statement.select.PivotXml;
+import edu.uci.ics.perpetual.statement.select.SelectExpressionItem;
+import edu.uci.ics.perpetual.statement.select.SelectItemVisitor;
+import edu.uci.ics.perpetual.statement.select.SelectVisitor;
+import edu.uci.ics.perpetual.statement.select.SubSelect;
+import edu.uci.ics.perpetual.statement.select.WithItem;
 
 public class ExpressionVisitorAdapter implements ExpressionVisitor, ItemsListVisitor, PivotVisitor, SelectItemVisitor {
 

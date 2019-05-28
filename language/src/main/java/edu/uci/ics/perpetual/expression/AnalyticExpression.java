@@ -1,11 +1,11 @@
 
 package edu.uci.ics.perpetual.expression;
 
-import edu.uci.ics.perpetual.expression.operators.relational.ExpressionList;
 import edu.uci.ics.perpetual.parser.ASTNodeAccessImpl;
 import edu.uci.ics.perpetual.statement.select.OrderByElement;
 
 import java.util.List;
+import edu.uci.ics.perpetual.expression.operators.relational.ExpressionList;
 
 /**
  * Analytic function. The name of the function is variable but the parameters following the special

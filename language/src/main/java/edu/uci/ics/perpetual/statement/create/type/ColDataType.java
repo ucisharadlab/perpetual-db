@@ -1,10 +1,10 @@
 
 package edu.uci.ics.perpetual.statement.create.type;
 
-import edu.uci.ics.perpetual.statement.select.PlainSelect;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.uci.ics.perpetual.statement.select.PlainSelect;
 
 public class ColDataType {
 

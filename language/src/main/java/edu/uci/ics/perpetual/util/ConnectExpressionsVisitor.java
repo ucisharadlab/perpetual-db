@@ -1,13 +1,10 @@
 
 package edu.uci.ics.perpetual.util;
 
-import edu.uci.ics.perpetual.expression.Alias;
-import edu.uci.ics.perpetual.expression.BinaryExpression;
+import java.util.*;
+import edu.uci.ics.perpetual.expression.*;
 import edu.uci.ics.perpetual.statement.select.*;
 import edu.uci.ics.perpetual.statement.values.ValuesStatement;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Connect all selected expressions with a binary expression. Out of select a,b from table one gets
