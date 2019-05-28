@@ -1,13 +1,13 @@
 
 package edu.uci.ics.perpetual.statement.create.type;
 
+import java.util.List;
+
 import edu.uci.ics.perpetual.schema.Type;
 import edu.uci.ics.perpetual.statement.Statement;
 import edu.uci.ics.perpetual.statement.StatementVisitor;
 import edu.uci.ics.perpetual.statement.select.PlainSelect;
 import edu.uci.ics.perpetual.statement.select.Select;
-
-import java.util.List;
 
 /**
  * A "CREATE METADATA TYPE" statement

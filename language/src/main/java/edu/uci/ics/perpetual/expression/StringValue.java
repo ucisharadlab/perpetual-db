@@ -1,10 +1,9 @@
 
 package edu.uci.ics.perpetual.expression;
 
-import edu.uci.ics.perpetual.parser.ASTNodeAccessImpl;
-
 import java.util.Arrays;
 import java.util.List;
+import edu.uci.ics.perpetual.parser.ASTNodeAccessImpl;
 
 /**
  * A string as in 'example_string'

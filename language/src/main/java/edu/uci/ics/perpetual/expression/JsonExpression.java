@@ -21,11 +21,11 @@
  */
 package edu.uci.ics.perpetual.expression;
 
-import edu.uci.ics.perpetual.parser.ASTNodeAccessImpl;
-import edu.uci.ics.perpetual.schema.Column;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.uci.ics.perpetual.parser.ASTNodeAccessImpl;
+import edu.uci.ics.perpetual.schema.Column;
 
 /**
  *

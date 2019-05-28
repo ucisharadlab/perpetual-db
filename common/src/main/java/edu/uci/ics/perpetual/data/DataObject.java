@@ -3,6 +3,7 @@ package edu.uci.ics.perpetual.data;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import edu.uci.ics.perpetual.types.DataObjectType;
+import edu.uci.ics.perpetual.types.IType;
 
 public class DataObject {
     private static JsonParser parser = new JsonParser();

@@ -21,12 +21,15 @@
  */
 package edu.uci.ics.perpetual.util.cnfexpression;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.Stack;
 import edu.uci.ics.perpetual.expression.BinaryExpression;
 import edu.uci.ics.perpetual.expression.Expression;
 import edu.uci.ics.perpetual.expression.NotExpression;
 import edu.uci.ics.perpetual.expression.operators.relational.LikeExpression;
-
-import java.util.*;
 
 /**
  * This class handles the conversion from a normal expression tree into

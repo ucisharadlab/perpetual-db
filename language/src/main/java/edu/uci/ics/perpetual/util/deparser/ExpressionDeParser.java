@@ -1,20 +1,51 @@
 
 package edu.uci.ics.perpetual.util.deparser;
 
+import java.util.Iterator;
+import java.util.List;
+
 import edu.uci.ics.perpetual.expression.*;
-import edu.uci.ics.perpetual.expression.operators.arithmetic.*;
+import edu.uci.ics.perpetual.expression.UDFFunction;
+import edu.uci.ics.perpetual.expression.operators.arithmetic.Addition;
+import edu.uci.ics.perpetual.expression.operators.arithmetic.BitwiseAnd;
+import edu.uci.ics.perpetual.expression.operators.arithmetic.BitwiseLeftShift;
+import edu.uci.ics.perpetual.expression.operators.arithmetic.BitwiseOr;
+import edu.uci.ics.perpetual.expression.operators.arithmetic.BitwiseRightShift;
+import edu.uci.ics.perpetual.expression.operators.arithmetic.BitwiseXor;
+import edu.uci.ics.perpetual.expression.operators.arithmetic.Concat;
+import edu.uci.ics.perpetual.expression.operators.arithmetic.Division;
+import edu.uci.ics.perpetual.expression.operators.arithmetic.Modulo;
+import edu.uci.ics.perpetual.expression.operators.arithmetic.Multiplication;
+import edu.uci.ics.perpetual.expression.operators.arithmetic.Subtraction;
 import edu.uci.ics.perpetual.expression.operators.conditional.AndExpression;
 import edu.uci.ics.perpetual.expression.operators.conditional.OrExpression;
-import edu.uci.ics.perpetual.expression.operators.relational.*;
+import edu.uci.ics.perpetual.expression.operators.relational.Between;
+import edu.uci.ics.perpetual.expression.operators.relational.EqualsTo;
+import edu.uci.ics.perpetual.expression.operators.relational.ExistsExpression;
+import edu.uci.ics.perpetual.expression.operators.relational.ExpressionList;
+import edu.uci.ics.perpetual.expression.operators.relational.NamedExpressionList;
+import edu.uci.ics.perpetual.expression.operators.relational.GreaterThan;
+import edu.uci.ics.perpetual.expression.operators.relational.GreaterThanEquals;
+import edu.uci.ics.perpetual.expression.operators.relational.InExpression;
+import edu.uci.ics.perpetual.expression.operators.relational.IsNullExpression;
+import edu.uci.ics.perpetual.expression.operators.relational.ItemsListVisitor;
+import edu.uci.ics.perpetual.expression.operators.relational.JsonOperator;
+import edu.uci.ics.perpetual.expression.operators.relational.LikeExpression;
+import edu.uci.ics.perpetual.expression.operators.relational.Matches;
+import edu.uci.ics.perpetual.expression.operators.relational.MinorThan;
+import edu.uci.ics.perpetual.expression.operators.relational.MinorThanEquals;
+import edu.uci.ics.perpetual.expression.operators.relational.MultiExpressionList;
+import edu.uci.ics.perpetual.expression.operators.relational.NotEqualsTo;
+import edu.uci.ics.perpetual.expression.operators.relational.OldOracleJoinBinaryExpression;
+import edu.uci.ics.perpetual.expression.operators.relational.RegExpMatchOperator;
+import edu.uci.ics.perpetual.expression.operators.relational.RegExpMySQLOperator;
+import edu.uci.ics.perpetual.expression.operators.relational.SupportsOldOracleJoinSyntax;
 import edu.uci.ics.perpetual.schema.Column;
 import edu.uci.ics.perpetual.schema.Type;
 import edu.uci.ics.perpetual.statement.select.OrderByElement;
 import edu.uci.ics.perpetual.statement.select.SelectVisitor;
 import edu.uci.ics.perpetual.statement.select.SubSelect;
 import edu.uci.ics.perpetual.statement.select.WithItem;
-
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * A class to de-parse (that is, tranform from JSqlParser hierarchy into a string) an

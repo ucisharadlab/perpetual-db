@@ -1,9 +1,9 @@
 
 package edu.uci.ics.perpetual.statement.create.type;
 
-import edu.uci.ics.perpetual.statement.select.PlainSelect;
-
 import java.util.List;
+
+import edu.uci.ics.perpetual.statement.select.PlainSelect;
 
 /**
  * A column definition in a CREATE TABLE statement.<br>

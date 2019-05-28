@@ -1,13 +1,13 @@
 
 package edu.uci.ics.perpetual.util.deparser;
 
+import java.util.Iterator;
+
 import edu.uci.ics.perpetual.statement.create.type.ColumnDefinition;
 import edu.uci.ics.perpetual.statement.create.type.CreateMetadataType;
 import edu.uci.ics.perpetual.statement.create.type.Index;
 import edu.uci.ics.perpetual.statement.select.PlainSelect;
 import edu.uci.ics.perpetual.statement.select.Select;
-
-import java.util.Iterator;
 
 
 /**

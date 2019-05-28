@@ -21,12 +21,12 @@
  */
 package edu.uci.ics.perpetual.util.cnfexpression;
 
+import java.util.List;
+
 import edu.uci.ics.perpetual.expression.Expression;
 import edu.uci.ics.perpetual.expression.ExpressionVisitor;
 import edu.uci.ics.perpetual.expression.NullValue;
 import edu.uci.ics.perpetual.parser.ASTNodeAccessImpl;
-
-import java.util.List;
 
 /**
  * This is a helper class that mainly used for handling the CNF conversion.

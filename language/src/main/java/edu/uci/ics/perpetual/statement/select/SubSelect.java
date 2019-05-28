@@ -1,15 +1,14 @@
 
 package edu.uci.ics.perpetual.statement.select;
 
+import java.util.Iterator;
+import java.util.List;
 import edu.uci.ics.perpetual.expression.Alias;
 import edu.uci.ics.perpetual.expression.Expression;
 import edu.uci.ics.perpetual.expression.ExpressionVisitor;
 import edu.uci.ics.perpetual.expression.operators.relational.ItemsList;
 import edu.uci.ics.perpetual.expression.operators.relational.ItemsListVisitor;
 import edu.uci.ics.perpetual.parser.ASTNodeAccessImpl;
-
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * A subselect followed by an optional alias.

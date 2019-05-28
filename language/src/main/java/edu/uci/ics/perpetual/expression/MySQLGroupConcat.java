@@ -39,12 +39,11 @@
  */
 package edu.uci.ics.perpetual.expression;
 
+import java.util.List;
 import edu.uci.ics.perpetual.expression.operators.relational.ExpressionList;
 import edu.uci.ics.perpetual.parser.ASTNodeAccessImpl;
 import edu.uci.ics.perpetual.statement.select.OrderByElement;
 import edu.uci.ics.perpetual.statement.select.PlainSelect;
-
-import java.util.List;
 
 /**
  *
