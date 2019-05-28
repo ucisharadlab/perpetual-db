@@ -2,7 +2,6 @@
 package edu.uci.ics.perpetual.expression.operators.relational;
 
 import edu.uci.ics.perpetual.expression.BinaryExpression;
-import static edu.uci.ics.perpetual.expression.operators.relational.SupportsOldOracleJoinSyntax.ORACLE_PRIOR_START;
 
 public abstract class OldOracleJoinBinaryExpression extends BinaryExpression implements SupportsOldOracleJoinSyntax {
 

@@ -1,6 +1,5 @@
 package edu.uci.ics.perpetual.types;
 
-import edu.uci.ics.perpetual.data.DataObject;
 import edu.uci.ics.perpetual.functions.TaggingFunction;
 
 import java.util.List;

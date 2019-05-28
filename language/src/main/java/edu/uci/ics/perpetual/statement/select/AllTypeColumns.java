@@ -4,8 +4,9 @@ package edu.uci.ics.perpetual.statement.select;
 /**
  * All the columns of a type (as in "SELECT TableName.* FROM ...")
  */
+
 import edu.uci.ics.perpetual.parser.ASTNodeAccessImpl;
-import edu.uci.ics.perpetual.schema.*;
+import edu.uci.ics.perpetual.schema.Type;
 
 public class AllTypeColumns extends ASTNodeAccessImpl implements SelectItem {
 

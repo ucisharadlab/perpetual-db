@@ -21,22 +21,15 @@
  */
 package edu.uci.ics.perpetual.util;
 
-import java.util.ArrayList;
-import java.util.List;
 import edu.uci.ics.perpetual.JSQLParserException;
 import edu.uci.ics.perpetual.expression.Expression;
 import edu.uci.ics.perpetual.parser.CCJSqlParserUtil;
 import edu.uci.ics.perpetual.schema.Type;
-import edu.uci.ics.perpetual.statement.select.AllColumns;
-import edu.uci.ics.perpetual.statement.select.Join;
-import edu.uci.ics.perpetual.statement.select.PlainSelect;
-import edu.uci.ics.perpetual.statement.select.Select;
-import edu.uci.ics.perpetual.statement.select.SelectExpressionItem;
-import edu.uci.ics.perpetual.statement.select.SelectItem;
-import edu.uci.ics.perpetual.statement.select.SelectVisitor;
-import edu.uci.ics.perpetual.statement.select.SetOperationList;
-import edu.uci.ics.perpetual.statement.select.WithItem;
+import edu.uci.ics.perpetual.statement.select.*;
 import edu.uci.ics.perpetual.statement.values.ValuesStatement;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Utility function for select statements.

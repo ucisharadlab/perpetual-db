@@ -1,10 +1,10 @@
 
 package edu.uci.ics.perpetual.statement.create.type;
 
-import java.util.List;
-
 import edu.uci.ics.perpetual.schema.Type;
 import edu.uci.ics.perpetual.statement.select.PlainSelect;
+
+import java.util.List;
 
 /**
  * Foreign Key Index

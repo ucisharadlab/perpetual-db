@@ -1,20 +1,20 @@
 
 package edu.uci.ics.perpetual.util.deparser;
 
-import java.util.Iterator;
-
 import edu.uci.ics.perpetual.expression.Expression;
 import edu.uci.ics.perpetual.expression.ExpressionVisitor;
 import edu.uci.ics.perpetual.expression.operators.relational.ExpressionList;
-import edu.uci.ics.perpetual.expression.operators.relational.NamedExpressionList;
 import edu.uci.ics.perpetual.expression.operators.relational.ItemsListVisitor;
 import edu.uci.ics.perpetual.expression.operators.relational.MultiExpressionList;
+import edu.uci.ics.perpetual.expression.operators.relational.NamedExpressionList;
 import edu.uci.ics.perpetual.schema.Column;
 import edu.uci.ics.perpetual.statement.insert.Insert;
 import edu.uci.ics.perpetual.statement.select.SelectExpressionItem;
 import edu.uci.ics.perpetual.statement.select.SelectVisitor;
 import edu.uci.ics.perpetual.statement.select.SubSelect;
 import edu.uci.ics.perpetual.statement.select.WithItem;
+
+import java.util.Iterator;
 
 /**
  * A class to de-parse (that is, tranform from JSqlParser hierarchy into a string) an

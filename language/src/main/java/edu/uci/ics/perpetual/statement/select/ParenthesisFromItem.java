@@ -1,7 +1,7 @@
 
 package edu.uci.ics.perpetual.statement.select;
 
-import edu.uci.ics.perpetual.expression.*;
+import edu.uci.ics.perpetual.expression.Alias;
 
 /**
  * It represents an expression like "(" expression ")"

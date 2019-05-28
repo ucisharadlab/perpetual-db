@@ -1,12 +1,12 @@
 
 package edu.uci.ics.perpetual.parser;
 
-import java.io.InputStream;
-import java.io.Reader;
 import edu.uci.ics.perpetual.JSQLParserException;
 import edu.uci.ics.perpetual.expression.Expression;
 import edu.uci.ics.perpetual.statement.Statement;
-import edu.uci.ics.perpetual.statement.Statements;
+
+import java.io.InputStream;
+import java.io.Reader;
 
 /**
  * Toolfunctions to start and use JSqlParser.
