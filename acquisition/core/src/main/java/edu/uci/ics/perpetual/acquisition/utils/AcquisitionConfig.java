@@ -1,8 +1,8 @@
 package acquisition.utils;
 
-import static acquisition.utils.JavaUtils.loadConfigs;
-
 import java.util.Map;
+
+import static acquisition.utils.JavaUtils.loadConfigs;
 
 public class AcquisitionConfig {
 

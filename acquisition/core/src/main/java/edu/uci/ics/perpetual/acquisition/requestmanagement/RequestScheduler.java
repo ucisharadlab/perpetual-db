@@ -1,8 +1,8 @@
 package acquisition.requestmanagement;
 
+import acquisition.utils.ScheduledStopTask;
 import datatypes.Request;
 import datatypes.RequestStatus;
-import acquisition.utils.ScheduledStopTask;
 import edu.uci.ics.perpetual.IngestionThread;
 
 import java.util.Date;

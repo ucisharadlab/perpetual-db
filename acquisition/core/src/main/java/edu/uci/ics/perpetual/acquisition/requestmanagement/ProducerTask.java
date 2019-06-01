@@ -1,8 +1,8 @@
 package acquisition.requestmanagement;
 
+import acquisition.utils.JavaUtils;
 import datatypes.Producer;
 import datatypes.Request;
-import acquisition.utils.JavaUtils;
 
 import java.util.TimerTask;
 
