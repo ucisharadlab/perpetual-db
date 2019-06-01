@@ -1,5 +1,6 @@
 package edu.uci.ics.perpetual.acquisition.requestmanagement;
 
+import edu.uci.ics.perpetual.acquisition.datatypes.DataSource;
 import edu.uci.ics.perpetual.acquisition.utils.ScheduledStopTask;
 import edu.uci.ics.perpetual.acquisition.datatypes.Request;
 import edu.uci.ics.perpetual.acquisition.datatypes.RequestStatus;
@@ -12,16 +13,18 @@ public class RequestScheduler {
 
     public void scheduleRequest(Request request) throws Exception{
         // TODO if Policy.isAcquisitionAllowed(request)
-        ProducerTask task = new ProducerTask(request);
-        ScheduledStopTask stoppingTask = new ScheduledStopTask(task);
-        Timer timer = new Timer("Timer");
-        // TODO LOG
-        // TODO Inform Ingestion Engine scheduled
+        for(DataSource source : request.getDataSources()){
+            ProducerTask task = new ProducerTask(request,source);
+            ScheduledStopTask stoppingTask = new ScheduledStopTask(task);
+            Timer timer = new Timer("Timer");
+            // TODO LOG
+            long currentTime = new Date().getTime();
+            timer.schedule(task, request.getStartTime() - currentTime) ;
+            timer.schedule(stoppingTask, request.getEndTime() - currentTime);
+        }
+        // Inform Ingestion Engine scheduled
         IngestionThread ingestion = new IngestionThread(request.getReqId(),request.getResolution());
-        long currentTime = new Date().getTime();
-        timer.schedule(task, request.getStartTime() - currentTime) ;
         ingestion.run();
-        timer.schedule(stoppingTask, request.getEndTime() - currentTime);
         request.setStatus(RequestStatus.SCHEDULED);
         // TODO LOG
     }

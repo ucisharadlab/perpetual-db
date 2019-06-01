@@ -7,9 +7,10 @@ import java.util.Properties;
 public abstract class Producer {
 
     Request request;
+    DataSource source;
     KafkaProducer<Object, Object> producer;
 
-    public Producer(Request request){
+    public Producer(Request request, DataSource source){
         // shared kafka initialization
         Properties configs = new Properties();
         configs.put("bootstrap.servers", configs.get("bootstrap.servers")); // set kafka host and server
@@ -18,6 +19,8 @@ public abstract class Producer {
         configs.put("key.serializer", configs.get("key.serializer"));   // set serializer
         configs.put("value.serializer", configs.get("value.serializer")); // set serializer
 
+        this.request = request;
+        this.source = source;
         // Generate Kafka Producer
         producer = new KafkaProducer<Object, Object>(configs);
     }
