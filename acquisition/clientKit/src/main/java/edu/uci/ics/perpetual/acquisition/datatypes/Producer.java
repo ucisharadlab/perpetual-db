@@ -20,8 +20,6 @@ public abstract class Producer {
 
         // Generate Kafka Producer
         producer = new KafkaProducer<Object, Object>(configs);
-        producer.flush();
-        producer.close();
     }
 
     public void sendMessage(long idx , Object object){
@@ -29,4 +27,9 @@ public abstract class Producer {
     }
 
     public abstract void fetch();
+
+    public void close(){
+        producer.flush();
+        producer.close();
+    }
 }

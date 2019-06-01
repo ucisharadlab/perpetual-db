@@ -13,17 +13,23 @@ public class ProducerTask extends TimerTask {
     }
     private Request request;
 
+    private Producer producer;
     @Override
     public void run() {
         try{
-            Producer producer = (Producer) JavaUtils.getObjectOfClass(request.getAcquisitionFunction().getPath(), request.getAcquisitionFunction().getName(), new Object[]{request});
+            producer = (Producer) JavaUtils.getObjectOfClass(request.getAcquisitionFunction().getPath(), request.getAcquisitionFunction().getName(), new Object[]{request});
             // TODO LOG
             producer.fetch();
+
         } catch(Exception e){
             // TODO LOG SCHEDULE FAILED
         }
 
     }
 
-
+    @Override
+    public boolean cancel() {
+        producer.close();
+        return super.cancel();
+    }
 }
