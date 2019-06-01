@@ -1,8 +1,14 @@
 package com.uci.perpetualdb.acquisition.utils;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
 
 public class JavaUtils {
 
@@ -23,5 +29,24 @@ public class JavaUtils {
         }
         return null;
     }
+
+    public static Map<String,String> loadConfigs(){
+        Map<String,String> configs = new HashMap <>();
+        InputStream inputStream = JavaUtils.class.getClassLoader().getResourceAsStream("config.properties");
+        try {
+            Properties pr = new Properties();
+            pr.load(inputStream);
+            Iterator<String> it = pr.stringPropertyNames().iterator();
+            while (it.hasNext())
+            {
+                String key = it.next();
+                configs.put(key,pr.getProperty(key));
+            }
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        }
+        return configs;
+    }
+
 
 }

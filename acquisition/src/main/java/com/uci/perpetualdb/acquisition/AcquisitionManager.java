@@ -1,7 +1,10 @@
 package com.uci.perpetualdb.acquisition;
 
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -32,8 +35,14 @@ public class AcquisitionManager {
         // TODO implement function - get complete data structure updated by various consumers.
         consumer = new KafkaConsumer<Object, Object>( kafkaConfigs);    // consumer
         consumer.subscribe(Arrays.asList(requestId));      // topic
-
-        return null;
+        ConsumerRecords<Object, Object> records  = consumer.poll(100);
+        ArrayList<Object> data = new ArrayList<Object>();
+        for (ConsumerRecord<Object, Object> record : records)
+        {
+            data.add( record.value() );
+        }
+        consumer.close();
+        return data;
     }
 
 }

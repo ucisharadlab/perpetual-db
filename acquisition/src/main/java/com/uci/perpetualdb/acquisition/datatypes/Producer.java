@@ -1,6 +1,7 @@
 package com.uci.perpetualdb.acquisition.datatypes;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerRecord;
 
 import java.util.Properties;
 public abstract class Producer {
@@ -29,8 +30,8 @@ public abstract class Producer {
     static {
 
     }
-    public void sendMessage(Object object){
-        // TODO  pass object to kafka
+    public void sendMessage(long idx , Object object){
+        producer.send( new ProducerRecord <Object,Object>( request.getReqId() + "",idx, object ));
     }
 
     public abstract void fetch();

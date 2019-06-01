@@ -1,8 +1,8 @@
 package com.uci.perpetualdb.acquisition.utils;
 
-import java.util.Map;
-
 import static com.uci.perpetualdb.acquisition.utils.JavaUtils.loadConfigs;
+
+import java.util.Map;
 
 public class AcquisitionConfig {
 

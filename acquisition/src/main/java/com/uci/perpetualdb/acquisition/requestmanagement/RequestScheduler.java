@@ -3,6 +3,7 @@ package com.uci.perpetualdb.acquisition.requestmanagement;
 import com.uci.perpetualdb.acquisition.datatypes.Request;
 import com.uci.perpetualdb.acquisition.datatypes.RequestStatus;
 import com.uci.perpetualdb.acquisition.utils.ScheduledStopTask;
+import edu.uci.ics.perpetual.IngestionThread;
 
 import java.util.Date;
 import java.util.Timer;
@@ -16,6 +17,7 @@ public class RequestScheduler {
         Timer timer = new Timer("Timer");
         // TODO LOG
         // TODO Inform Ingestion Engine scheduled
+        IngestionThread ingestion = new IngestionThread(request.getReqId(),request.getResolution());
         long currentTime = new Date().getTime();
         timer.schedule(task, request.getStartTime() - currentTime) ;
         timer.schedule(stoppingTask, request.getEndTime() - currentTime);
