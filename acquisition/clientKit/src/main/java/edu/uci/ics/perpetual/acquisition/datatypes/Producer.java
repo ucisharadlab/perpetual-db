@@ -1,4 +1,4 @@
-package datatypes;
+package edu.uci.ics.perpetual.acquisition.datatypes;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;

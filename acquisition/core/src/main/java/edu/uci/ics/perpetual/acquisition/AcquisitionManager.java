@@ -1,4 +1,4 @@
-package acquisition;
+package edu.uci.ics.perpetual.acquisition;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;

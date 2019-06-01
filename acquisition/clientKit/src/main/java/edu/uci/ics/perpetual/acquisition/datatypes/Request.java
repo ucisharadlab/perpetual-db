@@ -1,4 +1,4 @@
-package datatypes;
+package edu.uci.ics.perpetual.acquisition.datatypes;
 
 import java.util.List;
 

@@ -1,8 +1,8 @@
-package acquisition.utils;
+package edu.uci.ics.perpetual.acquisition.utils;
 
 import java.util.Map;
 
-import static acquisition.utils.JavaUtils.loadConfigs;
+import static edu.uci.ics.perpetual.acquisition.utils.JavaUtils.loadConfigs;
 
 public class AcquisitionConfig {
 

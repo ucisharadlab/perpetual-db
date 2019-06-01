@@ -1,8 +1,8 @@
-package acquisition.requestmanagement;
+package edu.uci.ics.perpetual.acquisition.requestmanagement;
 
-import acquisition.utils.ScheduledStopTask;
-import datatypes.Request;
-import datatypes.RequestStatus;
+import edu.uci.ics.perpetual.acquisition.utils.ScheduledStopTask;
+import edu.uci.ics.perpetual.acquisition.datatypes.Request;
+import edu.uci.ics.perpetual.acquisition.datatypes.RequestStatus;
 import edu.uci.ics.perpetual.IngestionThread;
 
 import java.util.Date;

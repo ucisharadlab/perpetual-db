@@ -1,5 +1,6 @@
-package datatypes;
+package edu.uci.ics.perpetual.acquisition.datatypes;
 
+import edu.uci.ics.perpetual.acquisition.datatypes.DataSourceType;
 public class AcquisitionFunction {
     DataSourceType forType;
     String name;

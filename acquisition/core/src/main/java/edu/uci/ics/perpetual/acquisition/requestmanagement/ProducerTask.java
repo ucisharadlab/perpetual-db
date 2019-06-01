@@ -1,8 +1,8 @@
-package acquisition.requestmanagement;
+package edu.uci.ics.perpetual.acquisition.requestmanagement;
 
-import acquisition.utils.JavaUtils;
-import datatypes.Producer;
-import datatypes.Request;
+import edu.uci.ics.perpetual.acquisition.utils.JavaUtils;
+import edu.uci.ics.perpetual.acquisition.datatypes.Producer;
+import edu.uci.ics.perpetual.acquisition.datatypes.Request;
 
 import java.util.TimerTask;
 

@@ -1,5 +1,5 @@
-package datatypes;
-
+package edu.uci.ics.perpetual.acquisition.datatypes;
+import edu.uci.ics.perpetual.acquisition.datatypes.RawType;
 public class DataSourceType {
     int dsTypeId;
     String dsTypeParams;

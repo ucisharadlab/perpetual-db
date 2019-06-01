@@ -1,4 +1,4 @@
-package acquisition.kafka;
+package edu.uci.ics.perpetual.acquisition.kafka;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

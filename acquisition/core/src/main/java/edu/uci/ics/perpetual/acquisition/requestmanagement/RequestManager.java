@@ -1,6 +1,6 @@
-package acquisition.requestmanagement;
+package edu.uci.ics.perpetual.acquisition.requestmanagement;
 
-import datatypes.Request;
+import edu.uci.ics.perpetual.acquisition.datatypes.Request;
 
 import java.util.ArrayList;
 import java.util.List;
