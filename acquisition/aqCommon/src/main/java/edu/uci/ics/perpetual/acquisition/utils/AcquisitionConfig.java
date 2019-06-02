@@ -14,6 +14,7 @@ public class AcquisitionConfig {
         }
         catch(Exception e){
             System.out.print("ERROR: Failed to load Configurations!!!");
+            e.printStackTrace();
             throw new RuntimeException("ERROR: Failed to load Configurations!!!");
         }
     }

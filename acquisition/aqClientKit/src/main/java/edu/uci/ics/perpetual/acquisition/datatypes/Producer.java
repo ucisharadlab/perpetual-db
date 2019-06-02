@@ -1,15 +1,20 @@
 package edu.uci.ics.perpetual.acquisition.datatypes;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import static edu.uci.ics.perpetual.acquisition.utils.AcquisitionConfig.config;
 
+import java.io.IOException;
+import java.util.Map;
 import java.util.Properties;
 public abstract class Producer {
 
-    Request request;
-    DataSource source;
-    KafkaProducer<Object, Object> producer;
+    protected Request request;
+    protected DataSource source;
+    private KafkaProducer<Object, Object> producer;
 
     public Producer(Request request, DataSource source){
         // shared kafka initialization
@@ -30,11 +35,17 @@ public abstract class Producer {
         producer.send( new ProducerRecord <Object,Object>( request.getReqId() + "",idx, object ));
     }
 
-    public abstract void fetch();
+    public abstract void fetch() throws Exception;
 
     public void close(){
         System.out.println("Stopping the Kafka Producer topicL " + request.getReqId());
         producer.flush();
         producer.close();
     }
+
+    protected Map<String,Object> getMapFromJSON(String json) throws JsonParseException, JsonMappingException, IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(json, Map.class);
+    }
+
 }

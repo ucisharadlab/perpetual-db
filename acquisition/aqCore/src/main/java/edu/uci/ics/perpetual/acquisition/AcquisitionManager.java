@@ -23,7 +23,7 @@ public class AcquisitionManager {
         // Setting environment variables.
         kafkaConfigs.put("bootstrap.servers", config.get("bootstrap.servers"));     // kafka server host and port
         kafkaConfigs.put("key.deserializer", config.get("key.deserializer"));    // key deserializer
-        kafkaConfigs.put("value.deserializer", config.get("value.deerializer"));  // value deserializer
+        kafkaConfigs.put("value.deserializer", config.get("value.deserializer"));  // value deserializer
 
     }
     public static AcquisitionManager getInstance(){

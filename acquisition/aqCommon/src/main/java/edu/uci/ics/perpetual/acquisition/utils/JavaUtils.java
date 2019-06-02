@@ -25,14 +25,15 @@ public class JavaUtils {
                     JavaUtils.class.getClassLoader()
             );
             Class classToLoad = Class.forName(className, true, child);
-            return classToLoad.getConstructor().newInstance(constructorArgs);
+            return classToLoad.getConstructors()[0].newInstance( constructorArgs );
+            //return classToLoad.getConstructor().newInstance(constructorArgs);
         }
         return null;
     }
 
     public static Map<String,String> loadConfigs(){
         Map<String,String> configs = new HashMap <>();
-        InputStream inputStream = JavaUtils.class.getClassLoader().getResourceAsStream("config.properties");
+        InputStream inputStream = JavaUtils.class.getClassLoader().getResourceAsStream("acquisition.properties");
         try {
             Properties pr = new Properties();
             pr.load(inputStream);
@@ -43,6 +44,7 @@ public class JavaUtils {
                 configs.put(key,pr.getProperty(key));
             }
         } catch (IOException e) {
+            e.printStackTrace();
             throw new IllegalArgumentException(e.getMessage());
         }
         return configs;
