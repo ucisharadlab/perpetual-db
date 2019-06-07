@@ -1,6 +1,7 @@
 package edu.uci.ics.perpetual.ingestion;
 
 import com.google.gson.JsonElement;
+import edu.uci.ics.perpetual.acquisition.AcquisitionManager;
 import edu.uci.ics.perpetual.data.DataObject;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.HashSet;
 public class IngestionThread implements Runnable {
     private final String requestId;
     private long checkTimeInterval;
+    private AcquisitionManager aquisitionMgr = AcquisitionManager.getInstance();
     private HashSet<JsonElement> seenTimeStamps = new HashSet<JsonElement>();
 
     public IngestionThread(String requestId, long checkTimeInterval){
@@ -19,7 +21,7 @@ public class IngestionThread implements Runnable {
     public void run() {
         while(true){
             long startTime = System.currentTimeMillis();
-            ArrayList<DataObject> objects = null;
+            ArrayList<DataObject> objects = (ArrayList)aquisitionMgr.getData(this.requestId);
             if(objects == null){
                 break;
             }
