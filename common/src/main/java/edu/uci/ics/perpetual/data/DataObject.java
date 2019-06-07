@@ -1,5 +1,6 @@
 package edu.uci.ics.perpetual.data;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import edu.uci.ics.perpetual.types.DataObjectType;
@@ -21,5 +22,9 @@ public class DataObject {
 
     public DataObjectType getType() {
         return type;
+    }
+
+    public JsonElement getTimeStamp(){
+        return object.get("timestamp");
     }
 }
