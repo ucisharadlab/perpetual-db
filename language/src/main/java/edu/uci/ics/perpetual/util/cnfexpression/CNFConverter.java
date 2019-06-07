@@ -26,10 +26,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
-import edu.uci.ics.perpetual.expression.BinaryExpression;
-import edu.uci.ics.perpetual.expression.Expression;
-import edu.uci.ics.perpetual.expression.NotExpression;
-import edu.uci.ics.perpetual.expression.operators.relational.LikeExpression;
+import edu.uci.ics.perpetual.expressions.BinaryExpression;
+import edu.uci.ics.perpetual.expressions.Expression;
+import edu.uci.ics.perpetual.expressions.NotExpression;
+import edu.uci.ics.perpetual.expressions.operators.relational.LikeExpression;
 
 /**
  * This class handles the conversion from a normal expression tree into

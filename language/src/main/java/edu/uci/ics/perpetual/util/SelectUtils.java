@@ -24,7 +24,7 @@ package edu.uci.ics.perpetual.util;
 import java.util.ArrayList;
 import java.util.List;
 import edu.uci.ics.perpetual.JSQLParserException;
-import edu.uci.ics.perpetual.expression.Expression;
+import edu.uci.ics.perpetual.expressions.Expression;
 import edu.uci.ics.perpetual.parser.CCJSqlParserUtil;
 import edu.uci.ics.perpetual.schema.Type;
 import edu.uci.ics.perpetual.statement.select.AllColumns;

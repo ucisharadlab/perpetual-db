@@ -1,12 +1,12 @@
 
 package edu.uci.ics.perpetual.statement.select;
 
-import edu.uci.ics.perpetual.expression.operators.relational.ExpressionList;
-import edu.uci.ics.perpetual.expression.operators.relational.MultiExpressionList;
+import edu.uci.ics.perpetual.expressions.operators.relational.ExpressionList;
+import edu.uci.ics.perpetual.expressions.operators.relational.MultiExpressionList;
 
 import java.util.Iterator;
 import java.util.List;
-import edu.uci.ics.perpetual.expression.Alias;
+import edu.uci.ics.perpetual.expressions.Alias;
 
 /**
  * This is a container for a values item within a select statement. It holds some syntactical stuff

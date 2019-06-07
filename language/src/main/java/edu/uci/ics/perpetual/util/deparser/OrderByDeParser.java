@@ -21,7 +21,7 @@
  */
 package edu.uci.ics.perpetual.util.deparser;
 
-import edu.uci.ics.perpetual.expression.ExpressionVisitor;
+import edu.uci.ics.perpetual.expressions.ExpressionVisitor;
 import edu.uci.ics.perpetual.statement.select.OrderByElement;
 
 import java.util.Iterator;

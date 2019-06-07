@@ -1,8 +1,8 @@
 
 package edu.uci.ics.perpetual.statement.select;
 
-import edu.uci.ics.perpetual.expression.Alias;
-import edu.uci.ics.perpetual.expression.Expression;
+import edu.uci.ics.perpetual.expressions.Alias;
+import edu.uci.ics.perpetual.expressions.Expression;
 import edu.uci.ics.perpetual.parser.ASTNodeAccessImpl;
 
 /**

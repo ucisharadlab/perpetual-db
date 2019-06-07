@@ -1,7 +1,7 @@
 
 package edu.uci.ics.perpetual.statement.select;
 
-import edu.uci.ics.perpetual.expression.Alias;
+import edu.uci.ics.perpetual.expressions.Alias;
 
 /**
  * A lateral subselect followed by an alias.
