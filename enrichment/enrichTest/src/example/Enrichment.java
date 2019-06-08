@@ -1,7 +1,7 @@
-package example;
 
 import com.google.gson.JsonObject;
 import edu.uci.ics.perpetual.data.DataObject;
+
 public class Enrichment {
 
 
