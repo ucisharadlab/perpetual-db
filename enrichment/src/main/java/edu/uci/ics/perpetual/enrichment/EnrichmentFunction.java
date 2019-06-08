@@ -18,7 +18,7 @@ public class EnrichmentFunction {
         try {
             URLClassLoader child = new URLClassLoader (new URL[] {new URL(pathToJar)});
 
-            classToLoad = Class.forName("Enrichment", true, child);
+            classToLoad = Class.forName("edu.uci.ics.perpetual.enrichment.Enrichment", true, child);
             method = classToLoad.getDeclaredMethod("enrich", DataObject.class);
             enrichmentInstance = classToLoad.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
