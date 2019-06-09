@@ -1,32 +1,32 @@
 package edu.uci.ics.perpetual.acquisition.requestmanagement;
 
-import edu.uci.ics.perpetual.acquisition.datatypes.DataSource;
+import edu.uci.ics.perpetual.acquisition.datatypes.AcquisitionRequest;
 import edu.uci.ics.perpetual.acquisition.utils.ScheduledStopTask;
-import edu.uci.ics.perpetual.acquisition.datatypes.Request;
 import edu.uci.ics.perpetual.acquisition.datatypes.RequestStatus;
-import edu.uci.ics.perpetual.IngestionThread;
-
-import java.util.Date;
+import java.util.HashMap;
 import java.util.Timer;
 
 public class RequestScheduler {
 
-    public static void scheduleRequest(Request request) throws Exception{
-        // TODO if Policy.isAcquisitionAllowed(request)
-        for(DataSource source : request.getDataSources()){
-            ProducerTask task = new ProducerTask(request,source);
-            ScheduledStopTask stoppingTask = new ScheduledStopTask(task, request.getReqId()+"-stop-task");
-            Timer timer = new Timer("Timer");
-            // TODO LOG
-            System.out.println("Scheduling request: " + request.getReqId() +  " datasource: "+ source.getDsInstanceName() + " datasourceType: "+ source.getDsName());
-            long currentTime = new Date().getTime();
-            timer.schedule(task, request.getStartTime() - currentTime) ;
-            timer.schedule(stoppingTask, request.getEndTime() - currentTime);
+    public static void scheduleRequest(AcquisitionRequest request) throws Exception{
+       // TODO LOG
+        System.out.println("ACQUISITION ENGINE: Scheduling request: " + request.getRequestId()  + " datasource: "+ request.getDataSourceId());
+        try {
+            HashMap<String, String> params = request.getAcquisitionFunctionParameters();
+            ProducerTask task = new ProducerTask(request);
+            Timer timer = new Timer();
+            Long startTime = Long.parseLong( params.get( "startTime" ) )  - System.currentTimeMillis();
+            Long endTime = Long.parseLong( params.get( "endTime" ) )  - System.currentTimeMillis();
+            timer.schedule( task, startTime);
+            ScheduledStopTask stoppingTask = new ScheduledStopTask(task,request, request.getRequestId()+"-stop-task");
+            timer.schedule(stoppingTask,endTime);
+            System.out.println("ACQUISITION ENGINE: Scheduled request: " + request.getRequestId()  + " datasource: "+ request.getDataSourceId());
+            request.setStatus(RequestStatus.SCHEDULED);
+        }catch(Exception e){
+            e.printStackTrace();
+            System.out.println("ACQUISITION ENGINE: Request Schedule Failed: " + request.getRequestId()  + " datasource: "+ request.getDataSourceId());
+            request.setStatus(RequestStatus.ERROR);
         }
-        // Inform Ingestion Engine scheduled
-        IngestionThread ingestion = new IngestionThread(request.getReqId(),request.getResolution());
-        ingestion.run();
-        request.setStatus(RequestStatus.SCHEDULED);
         // TODO LOG
     }
 

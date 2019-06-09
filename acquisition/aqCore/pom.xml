@@ -58,5 +58,11 @@
             <groupId>edu.uci.ics.perpetualdb</groupId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <artifactId>schema</artifactId>
+            <groupId>edu.uci.ics.perpetualdb</groupId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
 </project>
