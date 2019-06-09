@@ -1,10 +1,11 @@
 package edu.uci.ics.perpetual.acquisition.requestmanagement;
 
-import edu.uci.ics.perpetual.IngestionThread;
 import edu.uci.ics.perpetual.acquisition.datatypes.AcquisitionRequest;
+import edu.uci.ics.perpetual.acquisition.datatypes.Producer;
 import edu.uci.ics.perpetual.acquisition.datatypes.RequestStatus;
 import edu.uci.ics.perpetual.acquisition.utils.JavaUtils;
-import edu.uci.ics.perpetual.acquisition.datatypes.Producer;
+import edu.uci.ics.perpetual.ingestion.IngestionThread;
+
 import java.util.TimerTask;
 
 public class ProducerTask extends TimerTask {
@@ -40,7 +41,7 @@ public class ProducerTask extends TimerTask {
 
     private void startConsumerThread() {
         IngestionThread ingestionTask = new IngestionThread(request.getRequestId(),Long.parseLong(request.getAcquisitionFunctionParameters().get("resolution")));
-        Thread th = new Thread(  ingestionTask);
+        Thread th = new Thread(ingestionTask);
         th.start();
         System.out.println("ACQUISITION ENGINE: Ingestion thread spawned!");
     }

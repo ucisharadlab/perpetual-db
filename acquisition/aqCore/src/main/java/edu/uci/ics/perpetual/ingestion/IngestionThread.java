@@ -1,15 +1,18 @@
 package edu.uci.ics.perpetual.ingestion;
 
 import com.google.gson.JsonElement;
+import edu.uci.ics.perpetual.acquisition.AcquisitionManager;
 import edu.uci.ics.perpetual.data.DataObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
 public class IngestionThread implements Runnable {
     private final int requestId;
     private long checkTimeInterval;
-    private HashSet<JsonElement> seenTimeStamps = new HashSet<JsonElement>();
+    private AcquisitionManager aquisitionMgr = AcquisitionManager.getInstance();
+    private HashSet<JsonElement> seenTimeStamps = new HashSet<>();
 
     public IngestionThread(int requestId, long checkTimeInterval){
         this.requestId = requestId;
@@ -17,21 +20,22 @@ public class IngestionThread implements Runnable {
     }
 
     public void run() {
-        while(true){
-            long startTime = System.currentTimeMillis();
-            ArrayList<DataObject> objects = null;
-            if(objects == null){
-                break;
-            }
-            processObjects(objects);
-            clean();
-            long endTime = System.currentTimeMillis();
-            try {
+        try {
+            while(true){
+                long startTime = System.currentTimeMillis();
+                ArrayList<DataObject> objects = aquisitionMgr.getData(this.requestId);
+                if(objects == null){
+                    break;
+                }
+                processObjects(objects);
+                clean();
+                long endTime = System.currentTimeMillis();
                 Thread.sleep(checkTimeInterval - (endTime - startTime));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
+        } catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 
     private void processObjects(ArrayList<DataObject> objects){
