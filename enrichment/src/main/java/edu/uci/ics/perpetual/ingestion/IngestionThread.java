@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class IngestionThread implements Runnable {
-    private final String requestId;
+    private final int requestId;
     private long checkTimeInterval;
     private HashSet<JsonElement> seenTimeStamps = new HashSet<JsonElement>();
 
-    public IngestionThread(String requestId, long checkTimeInterval){
+    public IngestionThread(int requestId, long checkTimeInterval){
         this.requestId = requestId;
         this.checkTimeInterval = checkTimeInterval;
     }

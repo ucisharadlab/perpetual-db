@@ -7,35 +7,31 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 public class EnrichmentFunction {
+    private String functionName = null;
+    private Method method;
+    private Object enrichmentInstance;
 
-    public final String functionName = null;
-    Class classToLoad;
-    Method method;
-    Object enrichmentInstance;
+    public EnrichmentFunction(){
+
+    }
+
     private EnrichmentFunction(String pathToJar){
-
-
         try {
             URLClassLoader child = new URLClassLoader (new URL[] {new URL(pathToJar)});
-
-            classToLoad = Class.forName("edu.uci.ics.perpetual.enrichment.Enrichment", true, child);
+            Class classToLoad = Class.forName("edu.uci.ics.perpetual.enrichment.Enrichment", true, child);
             method = classToLoad.getDeclaredMethod("enrich", DataObject.class);
             enrichmentInstance = classToLoad.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
     public static EnrichmentFunction getEnrichmentFunction(String pathToJar){
-
         return new EnrichmentFunction(pathToJar);
     }
 
 
     public DataObject execute(DataObject dataObject) {
-
         try {
             return (DataObject) method.invoke(enrichmentInstance, dataObject);
         } catch (Exception e) {
