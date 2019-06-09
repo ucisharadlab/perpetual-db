@@ -68,5 +68,10 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.9.8</version>
         </dependency>
+        <dependency>
+            <artifactId>common</artifactId>
+            <groupId>edu.uci.ics.perpetualdb</groupId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     </project>

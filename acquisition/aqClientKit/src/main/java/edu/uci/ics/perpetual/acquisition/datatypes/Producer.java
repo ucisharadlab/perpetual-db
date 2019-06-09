@@ -12,11 +12,10 @@ import java.util.Map;
 import java.util.Properties;
 public abstract class Producer {
 
-    protected Request request;
-    protected DataSource source;
+    protected AcquisitionRequest request;
     private KafkaProducer<Object, Object> producer;
 
-    public Producer(Request request, DataSource source){
+    public Producer(AcquisitionRequest request){
         // shared kafka initialization
         Properties configs = new Properties();
         configs.put("bootstrap.servers", config.get("bootstrap.servers")); // set kafka host and server
@@ -24,21 +23,23 @@ public abstract class Producer {
         configs.put("block.on.buffer.full", config.get("block.on.buffer.full"));
         configs.put("key.serializer", config.get("key.serializer"));   // set serializer
         configs.put("value.serializer", config.get("value.serializer")); // set serializer
+        configs.put("value.serializer.encoding","UTF8");
+
 
         this.request = request;
-        this.source = source;
         // Generate Kafka Producer
         producer = new KafkaProducer<Object, Object>(configs);
     }
 
     public void sendMessage(long idx , Object object){
-        producer.send( new ProducerRecord <Object,Object>( request.getReqId() + "",idx, object ));
+        System.out.println("Sending: "+ object);
+        producer.send( new ProducerRecord <Object,Object>( request.getRequestId() + "",idx, object ));
     }
 
     public abstract void fetch() throws Exception;
 
     public void close(){
-        System.out.println("Stopping the Kafka Producer topicL " + request.getReqId());
+        System.out.println("Stopping the Kafka Producer topicL " + request.getRequestId());
         producer.flush();
         producer.close();
     }

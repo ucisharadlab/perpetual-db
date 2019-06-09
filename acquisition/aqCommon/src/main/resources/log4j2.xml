@@ -1,6 +1,6 @@
 <Configuration status="ERROR">
     <Appenders>
-        <Console name="stdout" target="SYSTEM_OUT">
+        <Console acquisitionName="stdout" target="SYSTEM_OUT">
             <PatternLayout pattern="[%d] (%c) - %p %m %n"/>
         </Console>
     </Appenders>
@@ -8,10 +8,10 @@
         <Root level="error">
             <AppenderRef ref="stdout"/>
         </Root>
-        <Logger name="org.apache.kafka.clients" level="warn" additivity="false">
+        <Logger acquisitionName="org.apache.kafka.clients" level="warn" additivity="false">
             <AppenderRef ref="stdout"/>
         </Logger>
-        <Logger name="acquisition" level="trace" additivity="false">
+        <Logger acquisitionName="acquisition" level="trace" additivity="false">
             <AppenderRef ref="stdout"/>
         </Logger>
     </Loggers>
