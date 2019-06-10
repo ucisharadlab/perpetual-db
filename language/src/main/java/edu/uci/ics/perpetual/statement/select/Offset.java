@@ -1,9 +1,9 @@
 
 package edu.uci.ics.perpetual.statement.select;
 
-import edu.uci.ics.perpetual.expression.Expression;
-import edu.uci.ics.perpetual.expression.JdbcNamedParameter;
-import edu.uci.ics.perpetual.expression.JdbcParameter;
+import edu.uci.ics.perpetual.expressions.Expression;
+import edu.uci.ics.perpetual.expressions.JdbcNamedParameter;
+import edu.uci.ics.perpetual.expressions.JdbcParameter;
 
 /**
  * An offset clause in the form OFFSET offset or in the form OFFSET offset (ROW | ROWS)

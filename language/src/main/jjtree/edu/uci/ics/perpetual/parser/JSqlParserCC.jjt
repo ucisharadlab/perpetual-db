@@ -22,10 +22,10 @@ PARSER_BEGIN(CCJSqlParser)
 
 package edu.uci.ics.perpetual.parser;
 
-import edu.uci.ics.perpetual.expression.*;
-import edu.uci.ics.perpetual.expression.operators.arithmetic.*;
-import edu.uci.ics.perpetual.expression.operators.conditional.*;
-import edu.uci.ics.perpetual.expression.operators.relational.*;
+import edu.uci.ics.perpetual.expressions.*;
+import edu.uci.ics.perpetual.expressions.operators.arithmetic.*;
+import edu.uci.ics.perpetual.expressions.operators.conditional.*;
+import edu.uci.ics.perpetual.expressions.operators.relational.*;
 import edu.uci.ics.perpetual.schema.*;
 import edu.uci.ics.perpetual.statement.*;
 import edu.uci.ics.perpetual.statement.add.*;
@@ -1045,11 +1045,11 @@ List<SelectItem> SelectItemsList():
 SelectExpressionItem SelectExpressionItem():
 {
     SelectExpressionItem selectExpressionItem = null;
-    Expression expression = null;
+    Expression expressions = null;
     Alias alias = null;
 }
 {
-     expression=SimpleExpression() { selectExpressionItem = new SelectExpressionItem(); selectExpressionItem.setExpression(expression); }
+     expressions=SimpleExpression() { selectExpressionItem = new SelectExpressionItem(); selectExpressionItem.setExpression(expressions); }
              [alias=Alias() { selectExpressionItem.setAlias(alias); }] { return selectExpressionItem; }
 }
 
@@ -2538,14 +2538,14 @@ CastExpression CastExpression():
 {
     CastExpression retval = new CastExpression();
     ColDataType type = null;
-    Expression expression = null;
+    Expression expressions = null;
     boolean    useCastKeyword;
 }
 {
-    <K_CAST> "(" expression=SimpleExpression() <K_AS> type=ColDataType() ")" { retval.setUseCastKeyword(true); }
+    <K_CAST> "(" expressions=SimpleExpression() <K_AS> type=ColDataType() ")" { retval.setUseCastKeyword(true); }
 
     {
-        retval.setLeftExpression(expression);
+        retval.setLeftExpression(expressions);
         retval.setType(type);
         return retval;
     }

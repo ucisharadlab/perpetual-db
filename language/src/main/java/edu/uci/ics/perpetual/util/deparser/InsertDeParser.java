@@ -3,12 +3,12 @@ package edu.uci.ics.perpetual.util.deparser;
 
 import java.util.Iterator;
 
-import edu.uci.ics.perpetual.expression.Expression;
-import edu.uci.ics.perpetual.expression.ExpressionVisitor;
-import edu.uci.ics.perpetual.expression.operators.relational.ExpressionList;
-import edu.uci.ics.perpetual.expression.operators.relational.NamedExpressionList;
-import edu.uci.ics.perpetual.expression.operators.relational.ItemsListVisitor;
-import edu.uci.ics.perpetual.expression.operators.relational.MultiExpressionList;
+import edu.uci.ics.perpetual.expressions.Expression;
+import edu.uci.ics.perpetual.expressions.ExpressionVisitor;
+import edu.uci.ics.perpetual.expressions.operators.relational.ExpressionList;
+import edu.uci.ics.perpetual.expressions.operators.relational.NamedExpressionList;
+import edu.uci.ics.perpetual.expressions.operators.relational.ItemsListVisitor;
+import edu.uci.ics.perpetual.expressions.operators.relational.MultiExpressionList;
 import edu.uci.ics.perpetual.schema.Column;
 import edu.uci.ics.perpetual.statement.insert.Insert;
 import edu.uci.ics.perpetual.statement.select.SelectExpressionItem;
@@ -31,7 +31,7 @@ public class InsertDeParser implements ItemsListVisitor {
 
     /**
      * @param expressionVisitor a {@link ExpressionVisitor} to de-parse
-     * {@link edu.uci.ics.perpetual.expression.Expression}s. It has to share the same<br>
+     * {@link edu.uci.ics.perpetual.expressions.Expression}s. It has to share the same<br>
      * StringBuilder (buffer parameter) as this object in order to work
      * @param selectVisitor a {@link SelectVisitor} to de-parse {@link edu.uci.ics.perpetual.statement.select.Select}s. It
      * has to share the same<br>

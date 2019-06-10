@@ -39,7 +39,7 @@
  */
 package edu.uci.ics.perpetual.statement;
 
-import edu.uci.ics.perpetual.expression.Expression;
+import edu.uci.ics.perpetual.expressions.Expression;
 
 /**
  *

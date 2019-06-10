@@ -4,7 +4,7 @@ package edu.uci.ics.perpetual.schema;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import edu.uci.ics.perpetual.expression.*;
+import edu.uci.ics.perpetual.expressions.*;
 import edu.uci.ics.perpetual.parser.ASTNodeAccessImpl;
 import edu.uci.ics.perpetual.statement.select.*;
 

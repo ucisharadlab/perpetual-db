@@ -1,8 +1,8 @@
 package edu.uci.ics.perpetual.rule.list;
 
 import edu.uci.ics.perpetual.action.IAction;
+import edu.uci.ics.perpetual.data.DataObject;
 import edu.uci.ics.perpetual.predicate.IPredicate;
-import edu.uci.ics.perpetual.predicate.SimplePredicate;
 import edu.uci.ics.perpetual.types.DataObjectType;
 
 public class Rule {
@@ -31,6 +31,10 @@ public class Rule {
     public Rule(DataObjectType type, IAction action) {
         this.type = type;
         this.action = action;
+    }
+
+    public Rule() {
+
     }
 
     public DataObjectType getType() {
@@ -64,6 +68,13 @@ public class Rule {
     public void setPriority(int priority) {
         this.priority = priority;
     }
+
+    public boolean match(DataObject dataObject) {
+
+        return false;
+
+    }
+
 
     public String toString() {
 

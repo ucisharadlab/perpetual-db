@@ -3,7 +3,7 @@ package edu.uci.ics.perpetual.statement.select;
 
 import java.util.List;
 
-import edu.uci.ics.perpetual.expression.Expression;
+import edu.uci.ics.perpetual.expressions.Expression;
 import edu.uci.ics.perpetual.parser.ASTNodeAccessImpl;
 import edu.uci.ics.perpetual.schema.Column;
 

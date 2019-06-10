@@ -1,5 +1,7 @@
 package edu.uci.ics.perpetual.rulegen;
 
+import edu.uci.ics.perpetual.rule.IRuleStore;
+import edu.uci.ics.perpetual.rule.list.ListRule;
 import edu.uci.ics.perpetual.statistics.IStats;
 import edu.uci.ics.perpetual.workload.clusterer.IClusteredInfo;
 import edu.uci.ics.perpetual.workload.extractor.IExtractInfo;
@@ -15,11 +17,13 @@ public class QueryBotRuleGen implements IRuleGen {
     }
 
     public QueryBotRuleGen(IExtractInfo workloadInfo, IStats stats) {
-
     }
 
     public QueryBotRuleGen(IClusteredInfo workloadInfo) {
-
     }
 
+    @Override
+    public ListRule generateRules() {
+        return null;
+    }
 }

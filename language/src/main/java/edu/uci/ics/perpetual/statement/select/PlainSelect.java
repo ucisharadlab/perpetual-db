@@ -1,9 +1,9 @@
 
 package edu.uci.ics.perpetual.statement.select;
 
-import edu.uci.ics.perpetual.expression.Expression;
-import edu.uci.ics.perpetual.expression.OracleHierarchicalExpression;
-import edu.uci.ics.perpetual.expression.OracleHint;
+import edu.uci.ics.perpetual.expressions.Expression;
+import edu.uci.ics.perpetual.expressions.OracleHierarchicalExpression;
+import edu.uci.ics.perpetual.expressions.OracleHint;
 import edu.uci.ics.perpetual.schema.Type;
 import edu.uci.ics.perpetual.parser.ASTNodeAccessImpl;
 

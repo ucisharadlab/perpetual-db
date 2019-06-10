@@ -1,8 +1,8 @@
 
 package edu.uci.ics.perpetual.statement.select;
 
-import edu.uci.ics.perpetual.expression.Alias;
-import edu.uci.ics.perpetual.expression.operators.relational.ExpressionList;
+import edu.uci.ics.perpetual.expressions.Alias;
+import edu.uci.ics.perpetual.expressions.operators.relational.ExpressionList;
 
 public class ExpressionListItem {
 

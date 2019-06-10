@@ -23,9 +23,9 @@ package edu.uci.ics.perpetual.util.cnfexpression;
 
 import java.util.List;
 
-import edu.uci.ics.perpetual.expression.Expression;
-import edu.uci.ics.perpetual.expression.ExpressionVisitor;
-import edu.uci.ics.perpetual.expression.NullValue;
+import edu.uci.ics.perpetual.expressions.Expression;
+import edu.uci.ics.perpetual.expressions.ExpressionVisitor;
+import edu.uci.ics.perpetual.expressions.NullValue;
 import edu.uci.ics.perpetual.parser.ASTNodeAccessImpl;
 
 /**

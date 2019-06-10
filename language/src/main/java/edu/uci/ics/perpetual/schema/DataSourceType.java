@@ -1,13 +1,8 @@
 
 package edu.uci.ics.perpetual.schema;
 
-import edu.uci.ics.perpetual.expression.Alias;
-import edu.uci.ics.perpetual.expression.MySQLIndexHint;
+import edu.uci.ics.perpetual.expressions.MySQLIndexHint;
 import edu.uci.ics.perpetual.parser.ASTNodeAccessImpl;
-import edu.uci.ics.perpetual.statement.select.FromItem;
-import edu.uci.ics.perpetual.statement.select.FromItemVisitor;
-import edu.uci.ics.perpetual.statement.select.IntoTableVisitor;
-import edu.uci.ics.perpetual.statement.select.Pivot;
 
 import java.util.ArrayList;
 import java.util.Collections;

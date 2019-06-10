@@ -21,7 +21,7 @@
  */
 package edu.uci.ics.perpetual.statement.select;
 
-import edu.uci.ics.perpetual.expression.JdbcParameter;
+import edu.uci.ics.perpetual.expressions.JdbcParameter;
 
 /**
  * A skip clause in the form [SKIP row_count]
