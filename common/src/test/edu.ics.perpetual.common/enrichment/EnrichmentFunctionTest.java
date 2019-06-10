@@ -14,6 +14,7 @@ public class EnrichmentFunctionTest {
     @Test
     public void test001() {
         String pathToJar = "src/test/edu/uci/ics/perpetual/common/enrichment/Enrichment.jar";
+//        pathToJar = "/Users/omidkv/IdeaProjects/spring19-cs221-project/perpetual-db/common/src/test/edu.ics.perpetual.common/enrichment/Enrichment.jar";
         File file = new File(pathToJar);
         EnrichmentFunction function = EnrichmentFunction.getEnrichmentFunction("file://" + file.getAbsolutePath());
         DataObject dO = new DataObject("{value1 : 1, value2 : 2}", new DataObjectType());
