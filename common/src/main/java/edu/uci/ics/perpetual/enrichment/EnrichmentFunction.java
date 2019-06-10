@@ -7,13 +7,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 public class EnrichmentFunction {
-    private String functionName = null;
     private Method method;
     private Object enrichmentInstance;
-
-    public EnrichmentFunction(){
-
-    }
 
     private EnrichmentFunction(String pathToJar){
         try {
