@@ -1,5 +1,6 @@
 package edu.uci.ics.perpetual.enrichment;
 
+import com.google.gson.JsonObject;
 import edu.uci.ics.perpetual.data.DataObject;
 
 import java.lang.reflect.Method;
@@ -15,10 +16,10 @@ public class EnrichmentFunction {
 
     }
 
-    private EnrichmentFunction(String pathToJar){
+    private EnrichmentFunction(String functionName, String pathToJar){
         try {
             URLClassLoader child = new URLClassLoader (new URL[] {new URL(pathToJar)});
-            Class classToLoad = Class.forName("edu.uci.ics.perpetual.enrichment.Enrichment", true, child);
+            Class classToLoad = Class.forName("edu.uci.ics.perpetual.enrichment." + functionName, true, child);
             method = classToLoad.getDeclaredMethod("enrich", DataObject.class);
             enrichmentInstance = classToLoad.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
@@ -26,17 +27,18 @@ public class EnrichmentFunction {
         }
     }
 
-    public static EnrichmentFunction getEnrichmentFunction(String pathToJar){
-        return new EnrichmentFunction(pathToJar);
+    public static EnrichmentFunction getEnrichmentFunction(String functionName, String pathToJar){
+        return new EnrichmentFunction(functionName, pathToJar);
     }
 
 
-    public DataObject execute(DataObject dataObject) {
+    public void execute(DataObject dataObject) {
         try {
-            return (DataObject) method.invoke(enrichmentInstance, dataObject);
+            JsonObject object = dataObject.getObject();
+            String result = (String) method.invoke(enrichmentInstance, object);
+            object.addProperty(functionName, result);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
     }
 }

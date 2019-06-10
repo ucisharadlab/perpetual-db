@@ -1,11 +1,10 @@
 package edu.uci.ics.perpetual.enrichment;
 
-import edu.uci.ics.perpetual.data.DataObject;
+import com.google.gson.JsonObject;
 
 public class Enrichment{
 
-    public DataObject enrich(DataObject dataObject) {
-        dataObject.getObject().addProperty("Test", "Success");
-        return dataObject;
+    public void enrich(JsonObject object) {
+        return "Success";
     }
 }
