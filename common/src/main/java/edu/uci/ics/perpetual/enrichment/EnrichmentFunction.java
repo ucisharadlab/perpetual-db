@@ -1,5 +1,6 @@
 package edu.uci.ics.perpetual.enrichment;
 
+import com.google.gson.JsonObject;
 import edu.uci.ics.perpetual.data.DataObject;
 
 import java.lang.reflect.Method;
@@ -7,31 +8,33 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 public class EnrichmentFunction {
+    private String functionName;
     private Method method;
     private Object enrichmentInstance;
 
-    private EnrichmentFunction(String pathToJar){
+    private EnrichmentFunction(String pathToJar) {
         try {
-            URLClassLoader child = new URLClassLoader (new URL[] {new URL(pathToJar)});
-            Class classToLoad = Class.forName("edu.uci.ics.perpetual.common.enrichment.Enrichment", true, child);
-            method = classToLoad.getDeclaredMethod("enrich", DataObject.class);
+            String functionName = pathToJar.substring(pathToJar.lastIndexOf('/') + 1, pathToJar.lastIndexOf(".jar"));
+            this.functionName = functionName;
+            URLClassLoader child = new URLClassLoader(new URL[] { new URL(pathToJar) });
+            Class classToLoad = Class.forName("edu.uci.ics.perpetual.common.enrichment." + functionName, true, child);
+            method = classToLoad.getDeclaredMethod("enrich", JsonObject.class);
             enrichmentInstance = classToLoad.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static EnrichmentFunction getEnrichmentFunction(String pathToJar){
+    public static EnrichmentFunction getEnrichmentFunction(String pathToJar) {
         return new EnrichmentFunction(pathToJar);
     }
 
-
-    public DataObject execute(DataObject dataObject) {
+    public void execute(DataObject dataObject) {
         try {
-            return (DataObject) method.invoke(enrichmentInstance, dataObject);
+            String result = (String) method.invoke(enrichmentInstance, dataObject.getObject());
+            dataObject.getObject().addProperty(functionName, result);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
     }
 }
