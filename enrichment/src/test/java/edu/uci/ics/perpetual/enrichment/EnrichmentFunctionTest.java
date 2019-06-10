@@ -13,7 +13,7 @@ public class EnrichmentFunctionTest {
 
     @Test
     public void test001() {
-        String pathToJar = "src/test/java/edu/uci/ics/perpetual/enrichment/resources/EnrichmentFunctionTest/Test001.jar";
+        String pathToJar = "src/test/java/edu/uci/ics/perpetual/enrichment/resources/EnrichmentFunctionTest/Enrichment.jar";
         File file = new File(pathToJar);
         EnrichmentFunction function = EnrichmentFunction.getEnrichmentFunction("file://" + file.getAbsolutePath());
         DataObject dO = new DataObject("{value1 : 1, value2 : 2}", new DataObjectType());
