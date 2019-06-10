@@ -1,4 +1,4 @@
-package edu.uci.ics.perpetual.common;
+package edu.uci.ics.perpetual.common.enrichment;
 
 import edu.uci.ics.perpetual.data.DataObject;
 
