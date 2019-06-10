@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class QueryBotExtractor {
+public class QueryBotExtractor implements IExtractor {
 
     public IWorkloadParser workloadParser;
 
@@ -20,6 +20,7 @@ public class QueryBotExtractor {
 
     }
 
+    @Override
     public QueryBotExtractInfo extractAll() {
 
         QueryBotExtractInfo qbInfo = new QueryBotExtractInfo();

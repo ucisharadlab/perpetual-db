@@ -11,7 +11,7 @@ public class RedisConnectionManager {
 
     // One connection to one host (localhost) should be enough for now
     // We can add a connection pool later if necessary
-    public static RedisConnection getConnection() {
+    public static RedisConnection<String, String> getConnection() {
         if (connection == null) {
             redisClient = new RedisClient(
                     RedisURI.create("redis://localhost:" + PORT_NUM));
