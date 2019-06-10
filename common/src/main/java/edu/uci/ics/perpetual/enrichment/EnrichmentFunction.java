@@ -17,7 +17,7 @@ public class EnrichmentFunction {
             String functionName = pathToJar.substring(pathToJar.lastIndexOf('/') + 1, pathToJar.lastIndexOf(".jar"));
             this.functionName = functionName;
             URLClassLoader child = new URLClassLoader(new URL[] { new URL(pathToJar) });
-            Class classToLoad = Class.forName("edu.uci.ics.perpetual.common.enrichment." + functionName, true, child);
+            Class classToLoad = Class.forName(functionName, true, child);
             method = classToLoad.getDeclaredMethod("enrich", JsonObject.class);
             enrichmentInstance = classToLoad.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
