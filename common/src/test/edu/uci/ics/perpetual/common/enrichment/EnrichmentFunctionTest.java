@@ -15,7 +15,6 @@ public class EnrichmentFunctionTest {
     public void test001() {
         String pathToJar = "src/test/edu/uci/ics/perpetual/common/enrichment/Enrichment.jar";
         File file = new File(pathToJar);
-        System.out.println(file.getAbsolutePath());
         EnrichmentFunction function = EnrichmentFunction.getEnrichmentFunction("file://" + file.getAbsolutePath());
         DataObject dO = new DataObject("{value1 : 1, value2 : 2}", new DataObjectType());
         DataObject d1 = function.execute(dO);
