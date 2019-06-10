@@ -1,4 +1,4 @@
-package edu.uci.ics.perpetual.enrichment;
+package edu.uci.ics.perpetual.common.enrichment;
 
 import edu.uci.ics.perpetual.data.DataObject;
 import edu.uci.ics.perpetual.enrichment.EnrichmentFunction;
@@ -13,8 +13,9 @@ public class EnrichmentFunctionTest {
 
     @Test
     public void test001() {
-        String pathToJar = "src/test/java/edu/uci/ics/perpetual/enrichment/resources/EnrichmentFunctionTest/Test001.jar";
+        String pathToJar = "src/test/edu/uci/ics/perpetual/common/enrichment/Enrichment.jar";
         File file = new File(pathToJar);
+        System.out.println(file.getAbsolutePath());
         EnrichmentFunction function = EnrichmentFunction.getEnrichmentFunction("file://" + file.getAbsolutePath());
         DataObject dO = new DataObject("{value1 : 1, value2 : 2}", new DataObjectType());
         DataObject d1 = function.execute(dO);

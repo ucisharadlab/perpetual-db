@@ -1,7 +1,8 @@
-import edu.uci.ics.perpetual.data.DataObject;
-import edu.uci.ics.perpetual.enrichment.EnrichmentFunction;
+package edu.uci.ics.perpetual.common.enrichment;
 
-public class Test001 extends EnrichmentFunction {
+import edu.uci.ics.perpetual.data.DataObject;
+
+public class Enrichment{
 
     public DataObject enrich(DataObject dataObject) {
         dataObject.getObject().addProperty("Test", "Success");
