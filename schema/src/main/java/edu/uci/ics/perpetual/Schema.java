@@ -2,6 +2,7 @@ package edu.uci.ics.perpetual;
 
 import edu.uci.ics.perpetual.function.TaggingFunction;
 import edu.uci.ics.perpetual.types.*;
+import edu.uci.ics.perpetual.util.PrettyPrintingMap;
 
 import java.util.HashMap;
 
@@ -80,9 +81,77 @@ public class Schema {
         return enrichmentFunctions.containsKey(funcName);
     }
 
-    void addFcuntion(TaggingFunction function) {
+    void addFunction(TaggingFunction function) {
         enrichmentFunctions.put(function.getFunctionName(), function);
     }
     // endregion
+
+    public HashMap<String, MetadataType> getMetadataMap() {
+        return metadataMap;
+    }
+
+    public void setMetadataMap(HashMap<String, MetadataType> metadataMap) {
+        this.metadataMap = metadataMap;
+    }
+
+    public HashMap<String, RawType> getRawMap() {
+        return rawMap;
+    }
+
+    public void setRawMap(HashMap<String, RawType> rawMap) {
+        this.rawMap = rawMap;
+    }
+
+    public HashMap<String, DataSourceType> getDataSourceMap() {
+        return dataSourceMap;
+    }
+
+    public void setDataSourceMap(HashMap<String, DataSourceType> dataSourceMap) {
+        this.dataSourceMap = dataSourceMap;
+    }
+
+    public HashMap<String, EnrichmentTag> getTagMap() {
+        return tagMap;
+    }
+
+    public void setTagMap(HashMap<String, EnrichmentTag> tagMap) {
+        this.tagMap = tagMap;
+    }
+
+    public HashMap<String, TaggingFunction> getEnrichmentFunctions() {
+        return enrichmentFunctions;
+    }
+
+    public void setEnrichmentFunctions(HashMap<String, TaggingFunction> enrichmentFunctions) {
+        this.enrichmentFunctions = enrichmentFunctions;
+    }
+
+
+    public String toString() {
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Metadata Types\n-------------------------------------------\n");
+        sb.append(new PrettyPrintingMap(metadataMap));
+        sb.append("\n-------------------------------------------------\n\n");
+
+        sb.append("Raw Types\n-------------------------------------------\n");
+        sb.append(new PrettyPrintingMap(rawMap));
+        sb.append("\n-------------------------------------------------\n\n");
+
+        sb.append("Data Source Types\n-------------------------------------------\n");
+        sb.append(new PrettyPrintingMap(dataSourceMap));
+        sb.append("\n-------------------------------------------------\n\n");
+
+        sb.append("Tags\n-------------------------------------------\n");
+        sb.append(new PrettyPrintingMap(tagMap));
+        sb.append("\n-------------------------------------------------\n\n");
+
+        sb.append("Enrichment Functions\n-------------------------------------------\n");
+        sb.append(new PrettyPrintingMap(enrichmentFunctions));
+        sb.append("\n-------------------------------------------------\n\n");
+
+        return sb.toString();
+
+    }
 
 }

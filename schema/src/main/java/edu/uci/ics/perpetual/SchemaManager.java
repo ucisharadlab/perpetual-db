@@ -1,5 +1,6 @@
 package edu.uci.ics.perpetual;
 
+import edu.uci.ics.perpetual.function.TaggingFunction;
 import edu.uci.ics.perpetual.parser.JsonParser;
 import edu.uci.ics.perpetual.schema.IType;
 import edu.uci.ics.perpetual.schema.Tag;
@@ -164,6 +165,9 @@ public class SchemaManager {
                 List<Tag> paramTags = createFunction.getTags();
 
                 String returnTagName = createFunction.getReturnTag().getName();
+                TaggingFunction function = new TaggingFunction(createFunction.getFunction().getName(),
+                        createFunction.getTags(), createFunction.getType().getName(), createFunction.getCost());
+                schema.addFunction(function);
 
 //                TaggingFunction function = new TaggingFunction(createFunction.getFunction().getName());
 //                function.addParameter(createFunction.getType().getName());
@@ -201,7 +205,7 @@ public class SchemaManager {
 
                 String dataType = addTag.getColumnDefinition().getColDataType().getDataType();
 
-                schema.addTag(new EnrichmentTag(tagName, dataType));
+                schema.addTag(new EnrichmentTag(tagName, dataType, addTag.getType().getName()));
                 relation.connect(parentName, tagName);
             }
         });
@@ -211,6 +215,10 @@ public class SchemaManager {
     // region setter, only used during initialization
     private void setSchema(Schema schema) {
         this.schema = schema;
+    }
+
+    public Schema getSchema() {
+        return this.schema;
     }
 
     private void setRelation(Relation relation) {

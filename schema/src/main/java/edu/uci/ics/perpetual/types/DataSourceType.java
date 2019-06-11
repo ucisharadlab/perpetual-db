@@ -71,4 +71,14 @@ public class DataSourceType {
         return parameters;
     }
     // endregion
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+//        sb.append(name).append(": ");
+        for (String param: parameters.getParamList()) {
+            sb.append(String.format("%s, ", param));
+        }
+        return sb.toString();
+
+    }
 }

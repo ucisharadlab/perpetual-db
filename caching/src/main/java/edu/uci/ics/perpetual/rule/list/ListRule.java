@@ -29,6 +29,16 @@ public class ListRule implements IRuleStore {
         this.rules = rules;
     }
 
+    public String toString() {
+
+        StringBuilder sb = new StringBuilder();
+        for (Rule rule: rules) {
+            sb.append(rule).append("\n");
+        }
+
+        return sb.toString();
+
+    }
 
 
 }

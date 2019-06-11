@@ -24,4 +24,15 @@ public class RawType implements IType {
         return attributes;
     }
     // endregion
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+//        sb.append(name).append(": ");
+        for (Attribute att: attributes) {
+            sb.append(String.format("(%s,%s),", att.getKey(), att.getValue()));
+        }
+
+        return sb.toString();
+
+    }
 }

@@ -11,9 +11,12 @@ public class EnrichmentTag implements IType {
 
     private String type;
 
-    public EnrichmentTag(String name, String type) {
+    private String rawType;
+
+    public EnrichmentTag(String name, String type, String rawType) {
         this.name = name;
         this.type = type;
+        this.rawType = rawType;
     }
 
     // region getter
@@ -25,4 +28,12 @@ public class EnrichmentTag implements IType {
         return type;
     }
     // endregion
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+//        sb.append(name).append(" : ");
+        sb.append(rawType);
+        return sb.toString();
+
+    }
 }
