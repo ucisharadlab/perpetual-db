@@ -35,7 +35,8 @@ public class CachingManager {
     }
 
     private void init() {
-        ruleGen.run();
+        Thread ruleGenThread = new Thread(ruleGen);
+        ruleGenThread.start();
     }
 
 

@@ -29,6 +29,14 @@ public class EnrichmentTag implements IType {
     }
     // endregion
 
+    public String getRawType() {
+        return rawType;
+    }
+
+    public void setRawType(String rawType) {
+        this.rawType = rawType;
+    }
+
     public String toString() {
         StringBuilder sb = new StringBuilder();
 //        sb.append(name).append(" : ");

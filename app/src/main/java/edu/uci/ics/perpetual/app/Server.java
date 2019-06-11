@@ -24,7 +24,7 @@ public class Server {
         System.out.println("Starting Acquisition and Enrichment Engine ...........................\n");
 //        cachingManager = CachingManagerFactory.getCachingManager();
 
-        System.out.println("Server Initialization Complete ...........................\n\n\n");
+        System.out.println("Server Initialization Complete ...........................\n\n");
 
         cmdClient = new PerpetualCMDClient(schemaManager, cachingManager);
         cmdClient.start();

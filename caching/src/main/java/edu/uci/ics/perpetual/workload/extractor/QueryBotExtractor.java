@@ -46,7 +46,7 @@ public class QueryBotExtractor implements IExtractor {
 
         for (String type: types) {
             if (type.contains("."))
-                type = type.split(".")[1];
+                type = type.split("\\.")[1];
             doTypesCountMap.put(type, doTypesCountMap.getOrDefault(type, 0) + 1);
         }
     }

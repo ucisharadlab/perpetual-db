@@ -19,10 +19,7 @@ import edu.uci.ics.perpetual.workload.extractor.QueryBotExtractInfo;
 import edu.uci.ics.perpetual.workload.extractor.QueryBotExtractor;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class QueryBotRuleGen implements IRuleGen, Runnable  {
@@ -33,13 +30,13 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
     private final int TOP_TAGS = 2;
     private ListRule ruleStore;
     private final String TYPE_STR = "type";
+    private final String DUMMY_ENRICH_FUNC = "/home/peeyush/Downloads/perpetual-db/common/src/test/edu/uci/ics/perpetual/common/enrichment/Enrichment.jar";
 
     public QueryBotRuleGen(WorkloadManager workloadManager, Schema schema) {
         workloadManager.run();
         this.exInfo = (QueryBotExtractInfo) workloadManager.getExtractInfo();
         System.out.print(exInfo);
         this.schema = schema;
-        ruleStore = new ListRule();
     }
 
     public QueryBotRuleGen(IExtractInfo workloadInfo, IStats stats) {
@@ -51,41 +48,47 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
     @Override
     public ListRule generateRules() {
 
-        List<String> topRawTypes = getTopRawTypes(TOP_TYPES);
+        ruleStore = new ListRule();
+        try {
+            List<String> topRawTypes = getTopRawTypes(TOP_TYPES);
 
-        for (String type: topRawTypes) {
+            for (String type : topRawTypes) {
 
-            List<String> topTags = getTopTagsForRawType(type, TOP_TAGS);
+                List<String> topTags = getTopTagsForRawType(type, TOP_TAGS);
 
-            DataObjectType dataObjectType = new DataObjectType();
-            dataObjectType.setName(type);
+                DataObjectType dataObjectType = new DataObjectType();
+                dataObjectType.setName(type);
 
-            List<Expression> expressions = new ArrayList<>();
-            expressions.add(new Expression<>(TYPE_STR, ComparisionOperator.EQ, type));
-            ExpressionPredicate predicate = new ExpressionPredicate(
-                    LogicalOperator.AND,
-                    expressions);
+                List<Expression> expressions = new ArrayList<>();
+                expressions.add(new Expression<>(TYPE_STR, ComparisionOperator.EQ, type));
+                ExpressionPredicate predicate = new ExpressionPredicate(
+                        LogicalOperator.AND,
+                        expressions);
 
-            for (String tag:topTags) {
+                for (String tag : topTags) {
 
-                List<EnrichmentFunction> functions = new ArrayList<>();
-                functions.add(new EnrichmentFunction());
+                    List<EnrichmentFunction> functions = new ArrayList<>();
+                    functions.add(EnrichmentFunction.getEnrichmentFunction(DUMMY_ENRICH_FUNC));
 
-                StaticAction action = new StaticAction(functions);
+                    StaticAction action = new StaticAction(functions);
 
-                Rule rule = new Rule();
-                rule.setType(dataObjectType);
-                rule.setPredicate(predicate);
-                rule.setAction(action);
-                ruleStore.addRule(rule);
+                    Rule rule = new Rule();
+                    rule.setType(dataObjectType);
+                    rule.setPredicate(predicate);
+                    rule.setAction(action);
+                    ruleStore.addRule(rule);
+                }
+
             }
-
+            return ruleStore;
+        } catch (Exception e) {
+            System.out.println("No Rules Generated\n\n");
+//            e.printStackTrace();
         }
         return ruleStore;
-
     }
 
-    public List<String> getTopRawTypes(int N) {
+    private List<String> getTopRawTypes(int N) {
 
         List<Map.Entry<String, Integer>> types = new ArrayList<>(exInfo.getTypeInfo().entrySet());
         types.sort((a,b) -> b.getValue() - a.getValue());
@@ -98,23 +101,25 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
 
     }
 
-    public List<String> getTopTagsForRawType(String rawType, int N) {
+    private List<String> getTopTagsForRawType(String rawType, int N) {
 
         List<String> tags = schema.getTagMap().entrySet().stream()
-                .filter(a->a.getValue().getType().equalsIgnoreCase(rawType))
+                .filter(a->a.getValue().getRawType().equalsIgnoreCase(rawType))
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
-        List<Map.Entry<String, Integer>> extractedTags = new ArrayList<>();
+        Set<Map.Entry<String, Integer>> extractedTags = new HashSet<>();
         exInfo.getTagInfo().forEach(
-                (key, value) -> value.entrySet().stream()
-                        .filter(b -> tags.contains(b.getKey()))
-                        .map(extractedTags::add)
+                (key, value) -> value.entrySet().forEach( a-> {
+                    if (tags.contains(a.getKey())) extractedTags.add(a);
+                })
+
         );
 
-        extractedTags.sort((a,b) -> b.getValue() - a.getValue());
+        List<Map.Entry<String, Integer>> extractedTagsList = new ArrayList<>(extractedTags);
+        extractedTagsList.sort((a,b) -> b.getValue() - a.getValue());
 
-        return extractedTags.stream()
+        return extractedTagsList.stream()
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList())
                 .subList(0, N);
@@ -125,10 +130,12 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
     @Override
     public void run() {
         while (true) {
-
             generateRules();
-
-
+            try {
+                Thread.sleep(10000000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
