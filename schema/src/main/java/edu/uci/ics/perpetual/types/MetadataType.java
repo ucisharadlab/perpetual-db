@@ -1,15 +1,13 @@
 package edu.uci.ics.perpetual.types;
 
-import edu.uci.ics.perpetual.table.Attribute;
-
-import java.util.List;
+import java.util.HashMap;
 
 public class MetadataType {
     private String name;
 
-    private List<Attribute> attributes;
+    private HashMap<String, String> attributes;
 
-    public MetadataType(String name, List<Attribute> attributes) {
+    public MetadataType(String name, HashMap<String, String> attributes) {
         this.name = name;
         this.attributes = attributes;
     }
@@ -19,7 +17,7 @@ public class MetadataType {
         return name;
     }
 
-    public List<Attribute> getAttributes() {
+    public HashMap<String, String> getAttributes() {
         return attributes;
     }
 

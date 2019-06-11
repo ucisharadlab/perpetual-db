@@ -1,9 +1,6 @@
 package edu.uci.ics.perpetual.types;
 
-import edu.uci.ics.perpetual.table.Attribute;
-import edu.uci.ics.perpetual.table.Parameters;
-import javafx.util.Pair;
-
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -11,64 +8,73 @@ public class DataSourceType {
     private String name;
 
     // should I expend this to a hashmap ?
-    private Parameters parameters;
+    private List<String> paramList;
 
-    private HashMap<Integer, Pair<String, List<Attribute>>> sources;
+    private RawType returnType;
 
     private HashMap<String, String> sourceFunctions;
 
-    public DataSourceType(String name, List<String> params) {
+    public DataSourceType(String name, List<String> paramList, RawType returnType) {
         this.name = name;
-        this.parameters = new Parameters(params);
-        this.sources = new HashMap<>();
+        this.paramList = paramList;
+        this.returnType = returnType;
         this.sourceFunctions = new HashMap<>();
     }
 
+    public DataSourceType(String name, List<String> paramList, RawType returnType, HashMap<String, String> sourceFunctions) {
+        this.name = name;
+        this.paramList = paramList;
+        this.returnType = returnType;
+        if (sourceFunctions == null) {
+            sourceFunctions = new HashMap<>();
+        }
+        this.sourceFunctions = sourceFunctions;
+    }
+
     // region check param scheme for new source
-    public boolean checkParams(List<Attribute> sourceParams) {
+    public boolean checkParams(Collection<String> sourceParams) {
         // the following is a stream operation that checks
-        // there is a one-to-one mapping between 'keys of Attribute' and 'this.params'.
+        // there should be an one-to-one mapping between 'keys of Attribute' and 'this.params'.
         long nonExistCount = sourceParams.stream()
-                .map(Attribute::getKey)
-                .map(key -> parameters.hasParameter(key))
+                .map(key -> paramList.contains(key))
                 .filter(r -> !r)
                 .count();
         return nonExistCount == 0;
     }
     // endregion
 
-    // region existence checking
-    public boolean hasSource(int sourceId) {
-        return sources.containsKey(sourceId);
-    }
-
-    public boolean hasSourceFunctions(String funcName) {
-        return sourceFunctions.containsKey(funcName);
-    }
-    // endregion
-
-    // region add source and acquisition function
-    public void addSource(int id, String name, List<Attribute> sourceParams) {
-        sources.put(id, new Pair<>(name, sourceParams));
+    // region Acquisition Function
+    public boolean hasAcquisitionFunction(String funcName) {
+        return sourceFunctions.containsKey(funcName.toUpperCase());
     }
 
     public void addAcquisitionFunction(String funcName, String funcPath) {
+        // duplication is not a use case, but
         // if there is duplicate, just replace the old value
-        sourceFunctions.put(funcName, funcPath);
+        sourceFunctions.put(funcName.toUpperCase(), funcPath);
+    }
+
+    public String getAcquisitionFunctionPath(String funcName) {
+        return sourceFunctions.get(funcName.toUpperCase());
     }
     // endregion
 
-    // region getter
-    public String getSourceName(int sourceId) {
-        return sources.get(sourceId).getKey();
+    // region Getter
+    public List<String> getParamList() {
+        return paramList;
+    }
+
+    public HashMap<String, String> getSourceFunctions() {
+        return sourceFunctions;
     }
 
     public String getName() {
         return name;
     }
 
-    public Parameters getParameters() {
-        return parameters;
+    public RawType getReturnType() {
+        return returnType;
     }
+
     // endregion
 }

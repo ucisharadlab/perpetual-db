@@ -1,25 +1,75 @@
 package edu.uci.ics.perpetual;
 
+import edu.uci.ics.perpetual.parser.CCJSqlParserManager;
+import edu.uci.ics.perpetual.parser.ParseException;
+import edu.uci.ics.perpetual.request.SqlRequest;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 public class TestAll {
+    private static SchemaManager schemaManager;
+    private static CCJSqlParserManager parser;
+
+    @BeforeClass
+    public static void setUp(){
+        schemaManager = SchemaManager.getInstance();
+        parser = new CCJSqlParserManager();
+    }
+
+    @Test
+    public void testCreateAll() {
+        schemaManager = SchemaManager.getInstance();
+
+        // CREATE
+        execute("CREATE RAW TYPE wifi_observation(device_mac CHAR, timestamp DATE);");
+        execute("CREATE DATASOURCE TYPE wifi_sensor('{ip:\"1.1.1.1\", port:2000}') GENERATES wifi_observation;");
+        execute("ADD FOR wifi_observation TAG(persons char);");
+        execute("ADD FOR wifi_observation TAG(device_mac char);");
+        execute("ADD FOR wifi_observation TAG(buildingLocations char);");
+        execute("ADD FOR wifi_observation TAG(regionLocations char);");
+        execute("ADD FOR wifi_observation TAG(roomLocations char);");
+        execute("ADD FOR wifi_observation TAG(office char);");
+        execute("ADD FOR wifi_observation TAG(affinities char);");
+
+        // Function UDF
+        execute("CREATE FUNCTION getPersonFromMac(wifi_observation, device_mac) RETURNS persons Cost 50");
+        execute("CREATE FUNCTION getBuildingLocation(wifi_observation) RETURNS buildingLocations Cost 50");
+        execute("CREATE FUNCTION getRegionLocation(wifi_observation) RETURNS regionLocations Cost 50");
+        execute("CREATE FUNCTION getRoomLocation(wifi_observation) RETURNS roomLocations Cost 50");
+        execute("CREATE FUNCTION getOffice(wifi_observation) RETURNS office Cost 50");
+        execute("CREATE FUNCTION getAffinity(wifi_observation, device_mac) RETURNS affinities Cost 50");
+
+        // Add DataSource
+        System.out.println(1);
+    }
+
+    @Test
+    public void testAdd() {
+        testCreateAll();
+
+        execute("ADD FOR wifi_sensor ACQUISITION FUNCTION('CameraSource', '.../func.jar');");
+        execute("ADD FOR wifi_sensor DATASOURCE(1, 'Hall Camera', 'CameraSource', '{ip:\"127.1.1.1\", port:1111}');");
+
+        System.out.println(1);
+    }
+
+    @Test
+    public void testRetrieveSaved() {
+        schemaManager = SchemaManager.getInstance();
+
+        System.out.println(1);
+    }
 
 
+    private void execute(String sql) {
+        try {
+            SqlRequest request = new SqlRequest(parser.parse(sql));
+            schemaManager.accept(request);
+            if (!request.getStatus().isSuccess()) {
+                System.out.println(request.getStatus().getErrMsg());
+            }
+        } catch (JSQLParserException | ParseException e) {
+            e.printStackTrace();
+        }
+    }
 }
-
-
-/**
- CREATE DATA SOURCE TYPE wifi_sensor(id, name, ip, port)
- CREATE RAW TYPE  wifi_observation(device_mac, timestamp, wifi_ap)
- ADD FOR wifi_observation TAG Person(persons)
- ADD FOR wifi_observation TAG BuildingLocation(buildinglocations)
- ADD FOR wifi_observation TAG RegionLocation(regionlocations)
- ADD FOR wifi_observation TAG RoomLocation(roomlocations)
- ADD FOR wifi_observation TAG Office(office)
- ADD FOR wifi_observation TAG Affinity(affinities)
- UDF Function:
- CREATE FUNCTION getPersonFromMac(device_mac) RETURNS Person Cost
- CREATE FUNCTION getRoomLocation(device_mac, timestamp) RETURNS RoomLocation;
- CREATE FUNCTION getRegionLocation(device_mac, timestamp) RETURNS RegionLocation;
- CREATE FUNCTION getBuildingLocation(device_mac, timestamp) RETURNS BuildingLocation;
- CREATE FUNCTION getOffice(device_mac) RETURNS Office;
- CREATE FUNCTION getAffinity(device_mac, device_mac, timestamp) RETURNS Affinity;
-*/
