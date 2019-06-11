@@ -12,17 +12,20 @@ public class Relation {
     }
 
     public void connect(String parentName, String childName) {
-        if (!relationships.containsKey(parentName)) {
-            relationships.put(parentName, new HashSet<>());
+        String key = parentName.toUpperCase();
+        if (!relationships.containsKey(key)) {
+            relationships.put(key, new HashSet<>());
         }
-        relationships.get(parentName).add(childName);
+        relationships.get(key).add(childName);
     }
 
     public boolean existRelation(String parentName, String childName) {
-        return relationships.containsKey(parentName) && relationships.get(parentName).contains(childName);
+        String parent = parentName.toUpperCase();
+        String child = childName.toLowerCase();
+        return relationships.containsKey(parent) && relationships.get(parent).contains(child);
     }
 
     public Set<String> childOf(String parent) {
-        return relationships.get(parent);
+        return relationships.get(parent.toUpperCase());
     }
 }

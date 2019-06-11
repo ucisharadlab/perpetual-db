@@ -31,10 +31,18 @@ public class CacheRequest extends Request {
     public String getRawTypeName() {
         return rawTypeName;
     }
+
+    public List<String> getAllRawTypes() {
+        return allRawTypes;
+    }
+
+    public HashMap<String, ArrayList<String>> getTagFunctionMapping() {
+        return tagFunctionMapping;
+    }
+
     // endregion
 
     // region Setter
-
     public void setAllRawTypes(List<String> allRawTypes) {
         this.allRawTypes = allRawTypes;
     }

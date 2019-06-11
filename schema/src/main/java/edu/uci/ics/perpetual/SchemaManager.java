@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class SchemaManager {
 
@@ -51,13 +52,18 @@ public class SchemaManager {
     // region Cache Handler
     public void accept(CacheRequest request) {
         if (request.isFindAll()) {
-            request.setAllRawTypes(new ArrayList<>(schema.getRawMap().keySet()));
+
+            List<String> result = schema.getRawMap().values().stream()
+                    .map(RawType::getName).collect(Collectors.toList());
+
+            request.setAllRawTypes(result);
             request.setStatus(RequestStatus.success());
         } else {
             String typeName = request.getRawTypeName();
             if (!schema.existRawType(typeName)) {
                 RequestStatus status = new RequestStatus();
                 status.setErrMsg(String.format("Raw Type '%s' does not exist", typeName));
+                request.setStatus(status);
                 return;
             }
 
