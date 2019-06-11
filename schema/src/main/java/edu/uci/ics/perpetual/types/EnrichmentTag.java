@@ -19,6 +19,11 @@ public class EnrichmentTag implements IType {
         this.rawType = rawType;
     }
 
+    public EnrichmentTag(String name, String type) {
+        this.name = name;
+        this.type = type;
+    }
+
     // region getter
     public String getName() {
         return name;

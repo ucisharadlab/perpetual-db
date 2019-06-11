@@ -1,8 +1,7 @@
 package edu.uci.ics.perpetual.function;
 
 import edu.uci.ics.perpetual.schema.Tag;
-import edu.uci.ics.perpetual.table.Parameters;
-import edu.uci.ics.perpetual.types.RawType;
+
 
 import java.util.List;
 

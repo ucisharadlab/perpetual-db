@@ -6,6 +6,7 @@ import edu.uci.ics.perpetual.SchemaManager;
 import edu.uci.ics.perpetual.handler.QueryHandler;
 import edu.uci.ics.perpetual.parser.CCJSqlParserManager;
 import edu.uci.ics.perpetual.parser.ParseException;
+import edu.uci.ics.perpetual.request.SqlRequest;
 import edu.uci.ics.perpetual.statement.Statement;
 
 import javax.management.Query;
@@ -46,7 +47,7 @@ public class PerpetualCMDClient extends Thread {
 
             try {
                 Statement stmt = parser.parse(query);
-                schemaManager.accept(stmt);
+                schemaManager.accept(new SqlRequest(stmt));
                 System.out.println("Command Successful\n");
                 QueryHandler queryHandler = new QueryHandler(stmt);
 
