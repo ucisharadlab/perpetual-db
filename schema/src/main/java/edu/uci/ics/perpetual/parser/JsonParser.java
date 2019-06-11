@@ -13,9 +13,9 @@ public class JsonParser {
 
     public static JsonObject toJsonObject(String jsonString) {
         if (pattern == null) {
-            pattern = Pattern.compile("\\w[\\w\\d]*:[^:]+(?=,|$)");
+            pattern = Pattern.compile("\\s*\\w[\\w\\d\\s]*:[^:]+(?=,|$)");
         }
-        // remove '{' and '}' toJsonObject string
+        // remove ''{' and ''}' from jsonString
         String json = jsonString.trim().substring(2, jsonString.length() - 2);
 
         JsonObject jsonObject = new JsonObject();
@@ -24,7 +24,7 @@ public class JsonParser {
 
         while (m.find()) {
             String[] pair = json.substring(m.start(), m.end()).split(":");
-            jsonObject.addProperty(pair[0].trim(), pair[1].trim());
+            jsonObject.addProperty(pair[0].trim(), StringUtils.removeQuote(pair[1].trim()));
         }
 
         return jsonObject;
@@ -34,9 +34,9 @@ public class JsonParser {
         HashMap<String, String> map = new HashMap<>();
 
         if (pattern == null) {
-            pattern = Pattern.compile("\\w[\\w\\d]*:[^:]+(?=,|$)");
+            pattern = Pattern.compile("\\s*\\w[\\w\\d\\s]*:[^:]+(?=,|$)");
         }
-        // remove '{' and '}' toJsonObject string
+        // remove ''{' and ''}' from jsonString
         String json = jsonString.trim().substring(2, jsonString.length() - 2);
 
         Matcher m = pattern.matcher(json);
@@ -47,9 +47,9 @@ public class JsonParser {
                 throw new IllegalArgumentException("Incorrect Json format");
             }
             if (map.containsKey(pair[0])) {
-                throw new IllegalArgumentException(String.format("key '%s' has seen before", pair[0]));
+                throw new IllegalArgumentException(String.format("key '%s' has seen before", pair[0].trim()));
             }
-            map.put(pair[0], StringUtils.removeQuote(pair[1]));
+            map.put(pair[0].trim(), StringUtils.removeQuote(pair[1].trim()));
         }
 
         return map;
@@ -59,9 +59,9 @@ public class JsonParser {
         List<String> keys = new ArrayList<>();
 
         if (pattern == null) {
-            pattern = Pattern.compile("\\w[\\w\\d]*:[^:]+(?=,|$)");
+            pattern = Pattern.compile("\\s*\\w[\\w\\d\\s]*:[^:]+(?=,|$)");
         }
-        // remove '{' and '}' toJsonObject string
+        // remove ''{' and ''}' from jsonString
         String json = jsonString.trim().substring(2, jsonString.length() - 2);
 
         Matcher m = pattern.matcher(json);
@@ -72,9 +72,9 @@ public class JsonParser {
                 throw new IllegalArgumentException("Incorrect Json format");
             }
             if (keys.contains(pair[0])) {
-                throw new IllegalArgumentException(String.format("key '%s' has seen before", pair[0]));
+                throw new IllegalArgumentException(String.format("key '%s' has seen before", pair[0].trim()));
             }
-            keys.add(pair[0]);
+            keys.add(pair[0].trim());
         }
 
         return keys;
