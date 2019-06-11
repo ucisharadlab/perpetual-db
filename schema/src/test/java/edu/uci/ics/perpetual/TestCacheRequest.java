@@ -5,6 +5,7 @@ import edu.uci.ics.perpetual.parser.ParseException;
 import edu.uci.ics.perpetual.request.AcquisitionRequest;
 import edu.uci.ics.perpetual.request.CacheRequest;
 import edu.uci.ics.perpetual.request.SqlRequest;
+import javafx.util.Pair;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -60,17 +61,17 @@ public class TestCacheRequest {
 
         assertTrue(request.getStatus().isSuccess());
 
-        HashMap<String, ArrayList<String>> tagFunctionMapping = request.getTagFunctionMapping();
+        HashMap<String, ArrayList<Pair<String, Integer>>> tagFunctionMapping = request.getTagFunctionMapping();
 
         assertEquals(
                 new HashSet<>(Arrays.asList("persons", "buildingLocations", "regionLocations", "roomLocations", "office", "affinities")),
                 tagFunctionMapping.keySet());
-        assertEquals(Arrays.asList("getPersonFromMac"), tagFunctionMapping.get("persons"));
-        assertEquals(Arrays.asList("getBuildingLocation"), tagFunctionMapping.get("buildingLocations"));
-        assertEquals(Arrays.asList("getRegionLocation"), tagFunctionMapping.get("regionLocations"));
-        assertEquals(Arrays.asList("getRoomLocation"), tagFunctionMapping.get("roomLocations"));
-        assertEquals(Arrays.asList("getOffice"), tagFunctionMapping.get("office"));
-        assertEquals(Arrays.asList("getAffinity"), tagFunctionMapping.get("affinities"));
+        assertEquals(Arrays.asList(new Pair<>("getPersonFromMac", 50)), tagFunctionMapping.get("persons"));
+        assertEquals(Arrays.asList(new Pair<>("getBuildingLocation", 50)), tagFunctionMapping.get("buildingLocations"));
+        assertEquals(Arrays.asList(new Pair<>("getRegionLocation", 50)), tagFunctionMapping.get("regionLocations"));
+        assertEquals(Arrays.asList(new Pair<>("getRoomLocation", 50)), tagFunctionMapping.get("roomLocations"));
+        assertEquals(Arrays.asList(new Pair<>("getOffice", 50)), tagFunctionMapping.get("office"));
+        assertEquals(Arrays.asList(new Pair<>("getAffinity", 50)), tagFunctionMapping.get("affinities"));
 
         assertNull(request.getAllRawTypes());
     }

@@ -13,6 +13,7 @@ import edu.uci.ics.perpetual.statement.add.AddTag;
 import edu.uci.ics.perpetual.statement.create.type.*;
 import edu.uci.ics.perpetual.types.*;
 import edu.uci.ics.perpetual.util.StringUtils;
+import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,7 +69,7 @@ public class SchemaManager {
             }
 
             // Tag Name, and List<String> list of functions names that generate the tag
-            HashMap<String, ArrayList<String>> tagFunctionMapping = new HashMap<>();
+            HashMap<String, ArrayList<Pair<String, Integer>>> tagFunctionMapping = new HashMap<>();
 
             // retrieve all tags that parent is typeName
             Set<String> tags = relation.childOf(typeName);
@@ -81,7 +82,8 @@ public class SchemaManager {
                         // initialized new ArrayList
                         tagFunctionMapping.put(returnTag, new ArrayList<>());
                     }
-                    tagFunctionMapping.get(returnTag).add(function.getFunctionName());
+                    Pair<String, Integer> resultPair = new Pair<>(function.getFunctionName(), function.getCost());
+                    tagFunctionMapping.get(returnTag).add(resultPair);
                 }
             }
             request.setTagFunctionMapping(tagFunctionMapping);

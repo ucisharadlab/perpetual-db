@@ -1,5 +1,7 @@
 package edu.uci.ics.perpetual.request;
 
+import javafx.util.Pair;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +12,7 @@ public class CacheRequest extends Request {
 
     private List<String> allRawTypes;
 
-    private HashMap<String, ArrayList<String>> tagFunctionMapping;
+    private HashMap<String, ArrayList<Pair<String, Integer>>> tagFunctionMapping;
 
     private String rawTypeName;
 
@@ -36,7 +38,7 @@ public class CacheRequest extends Request {
         return allRawTypes;
     }
 
-    public HashMap<String, ArrayList<String>> getTagFunctionMapping() {
+    public HashMap<String, ArrayList<Pair<String, Integer>>> getTagFunctionMapping() {
         return tagFunctionMapping;
     }
 
@@ -47,7 +49,7 @@ public class CacheRequest extends Request {
         this.allRawTypes = allRawTypes;
     }
 
-    public void setTagFunctionMapping(HashMap<String, ArrayList<String>> tagFunctionMapping) {
+    public void setTagFunctionMapping(HashMap<String, ArrayList<Pair<String, Integer>>> tagFunctionMapping) {
         this.tagFunctionMapping = tagFunctionMapping;
     }
 // endregion
