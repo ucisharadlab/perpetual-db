@@ -13,7 +13,7 @@ public class TestJsonParser {
      */
     @Test
     public void test() {
-        String json = "{ip:'1.1.1.1', port:2000}";
+        String json = "{ip:\"1.1.1.1\", port:2000}";
 
         JsonObject object = JsonParser.toJsonObject(json);
 

@@ -7,7 +7,9 @@ import edu.uci.ics.perpetual.request.CacheRequest;
 import edu.uci.ics.perpetual.request.SqlRequest;
 import javafx.util.Pair;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,6 +19,7 @@ import java.util.HashSet;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestCacheRequest {
     private static SchemaManager schemaManager;
     private static CCJSqlParserManager parser;
@@ -30,7 +33,7 @@ public class TestCacheRequest {
         schemaManager.accept(request);
 
         assertTrue(request.getStatus().isSuccess());
-        assertEquals(new HashSet<>(Arrays.asList("wifi_observation")), new HashSet<>(request.getAllRawTypes()));
+        assertEquals(new HashSet<>(Arrays.asList("Tweet", "wifi_observation")), new HashSet<>(request.getAllRawTypes()));
         assertNull(request.getTagFunctionMapping());
     }
 

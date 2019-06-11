@@ -16,7 +16,7 @@ public class JsonParser {
             pattern = Pattern.compile("\\w[\\w\\d]*:[^:]+(?=,|$)");
         }
         // remove '{' and '}' toJsonObject string
-        String json = jsonString.trim().substring(2, jsonString.length() - 2);
+        String json = jsonString.trim().substring(1, jsonString.length() - 1);
 
         JsonObject jsonObject = new JsonObject();
 
