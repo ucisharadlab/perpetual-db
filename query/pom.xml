@@ -37,6 +37,11 @@
             <version>2.16.0</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>edu.uci.ics.perpetualdb</groupId>
+            <artifactId>common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
