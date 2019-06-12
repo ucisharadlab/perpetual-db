@@ -3,8 +3,8 @@ package edu.uci.ics.perpetual.statement.insert;
 
 import java.util.List;
 
-import edu.uci.ics.perpetual.expression.Expression;
-import edu.uci.ics.perpetual.expression.operators.relational.ItemsList;
+import edu.uci.ics.perpetual.expressions.Expression;
+import edu.uci.ics.perpetual.expressions.operators.relational.ItemsList;
 import edu.uci.ics.perpetual.schema.Column;
 import edu.uci.ics.perpetual.schema.Type;
 import edu.uci.ics.perpetual.statement.Statement;

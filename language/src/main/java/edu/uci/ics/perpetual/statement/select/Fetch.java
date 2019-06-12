@@ -1,7 +1,7 @@
 
 package edu.uci.ics.perpetual.statement.select;
 
-import edu.uci.ics.perpetual.expression.JdbcParameter;
+import edu.uci.ics.perpetual.expressions.JdbcParameter;
 
 /**
  * A fetch clause in the form FETCH (FIRST | NEXT) row_count (ROW | ROWS) ONLY

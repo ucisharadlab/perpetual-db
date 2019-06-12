@@ -1,4 +1,7 @@
 package edu.uci.ics.perpetual.workload.extractor;
 
-public class IExtractor {
+public interface IExtractor {
+
+    public IExtractInfo extractAll();
+
 }

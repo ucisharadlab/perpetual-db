@@ -1,8 +1,8 @@
 
 package edu.uci.ics.perpetual.statement.add;
 
-import edu.uci.ics.perpetual.expression.Expression;
-import edu.uci.ics.perpetual.expression.operators.relational.ItemsList;
+import edu.uci.ics.perpetual.expressions.Expression;
+import edu.uci.ics.perpetual.expressions.operators.relational.ItemsList;
 import edu.uci.ics.perpetual.schema.Column;
 import edu.uci.ics.perpetual.schema.DataSourceType;
 import edu.uci.ics.perpetual.schema.Type;

@@ -1,5 +1,7 @@
 package edu.uci.ics.perpetual.workload.extractor;
 
+import edu.uci.ics.perpetual.util.PrettyPrintingMap;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,4 +25,10 @@ public class QueryBotExtractInfo implements IExtractInfo{
     public void setTagInfo(Map<String, Map<String, Integer>> tagInfo) {
         this.tagInfo = tagInfo;
     }
+
+    public String toString() {
+        return String.format("Type : Count ==> \n%s\n\nType :: Tag : Count ==>\n%s\n\n\n",
+                new PrettyPrintingMap(typeInfo), new PrettyPrintingMap(tagInfo));
+    }
+
 }

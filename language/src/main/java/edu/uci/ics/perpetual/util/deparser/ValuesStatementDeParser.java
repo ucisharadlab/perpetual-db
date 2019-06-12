@@ -21,8 +21,8 @@
  */
 package edu.uci.ics.perpetual.util.deparser;
 
-import edu.uci.ics.perpetual.expression.Expression;
-import edu.uci.ics.perpetual.expression.ExpressionVisitor;
+import edu.uci.ics.perpetual.expressions.Expression;
+import edu.uci.ics.perpetual.expressions.ExpressionVisitor;
 import edu.uci.ics.perpetual.statement.values.ValuesStatement;
 
 public class ValuesStatementDeParser {

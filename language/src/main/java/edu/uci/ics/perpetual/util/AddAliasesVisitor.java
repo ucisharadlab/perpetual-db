@@ -2,7 +2,7 @@
 package edu.uci.ics.perpetual.util;
 
 import java.util.*;
-import edu.uci.ics.perpetual.expression.*;
+import edu.uci.ics.perpetual.expressions.*;
 import edu.uci.ics.perpetual.statement.select.*;
 import edu.uci.ics.perpetual.statement.values.ValuesStatement;
 

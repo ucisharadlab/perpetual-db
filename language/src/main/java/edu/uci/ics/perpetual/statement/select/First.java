@@ -21,7 +21,7 @@
  */
 package edu.uci.ics.perpetual.statement.select;
 
-import edu.uci.ics.perpetual.expression.JdbcParameter;
+import edu.uci.ics.perpetual.expressions.JdbcParameter;
 
 /**
  * A FIRST clause in the form [FIRST row_count] the alternative form [LIMIT row_count] is also

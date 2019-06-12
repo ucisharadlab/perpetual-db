@@ -24,7 +24,7 @@ public class TestAdd {
     @Test
     public void testAddAcquisitionFunction() throws ParseException, JSQLParserException {
 
-        String create = "ADD FOR CameraFeed ACQUISITION FUNCTION('CameraSource', '.../func.jar')";
+            String create = "ADD FOR CameraFeed ACQUISITION FUNCTION('CameraSource', '.../func.jar')";
         Statement stmt = parser.parse(create);
 
 

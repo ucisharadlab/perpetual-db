@@ -1,10 +1,10 @@
 package edu.uci.ics.perpetual.workload.extractor;
 
-import edu.uci.ics.perpetual.expression.*;
-import edu.uci.ics.perpetual.expression.operators.arithmetic.*;
-import edu.uci.ics.perpetual.expression.operators.conditional.AndExpression;
-import edu.uci.ics.perpetual.expression.operators.conditional.OrExpression;
-import edu.uci.ics.perpetual.expression.operators.relational.*;
+import edu.uci.ics.perpetual.expressions.*;
+import edu.uci.ics.perpetual.expressions.operators.arithmetic.*;
+import edu.uci.ics.perpetual.expressions.operators.conditional.AndExpression;
+import edu.uci.ics.perpetual.expressions.operators.conditional.OrExpression;
+import edu.uci.ics.perpetual.expressions.operators.relational.*;
 import edu.uci.ics.perpetual.schema.Column;
 import edu.uci.ics.perpetual.schema.Type;
 import edu.uci.ics.perpetual.statement.*;

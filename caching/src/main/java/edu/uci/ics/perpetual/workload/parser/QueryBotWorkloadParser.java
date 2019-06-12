@@ -63,7 +63,7 @@ public class QueryBotWorkloadParser implements IWorkloadParser, Iterable<Stateme
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSQLParserException | ParseException e) {
-            System.out.println(String.format("Error Parsing Query %s", e.getMessage()));
+//            System.out.println(String.format("Error Parsing Query %s", e.getMessage()));
         }
 
         return null;

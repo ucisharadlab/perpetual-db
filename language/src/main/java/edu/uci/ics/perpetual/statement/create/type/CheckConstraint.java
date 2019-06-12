@@ -1,7 +1,7 @@
 
 package edu.uci.ics.perpetual.statement.create.type;
 
-import edu.uci.ics.perpetual.expression.Expression;
+import edu.uci.ics.perpetual.expressions.Expression;
 import edu.uci.ics.perpetual.schema.Type;
 
 /**

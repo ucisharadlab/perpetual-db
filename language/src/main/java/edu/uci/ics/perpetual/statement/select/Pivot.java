@@ -4,7 +4,7 @@ package edu.uci.ics.perpetual.statement.select;
 import edu.uci.ics.perpetual.schema.Column;
 
 import java.util.List;
-import edu.uci.ics.perpetual.expression.Alias;
+import edu.uci.ics.perpetual.expressions.Alias;
 
 public class Pivot {
 

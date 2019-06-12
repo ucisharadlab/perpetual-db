@@ -1,8 +1,8 @@
 
 package edu.uci.ics.perpetual.statement.select;
 
-import edu.uci.ics.perpetual.expression.Alias;
-import edu.uci.ics.perpetual.expression.UDFFunction;
+import edu.uci.ics.perpetual.expressions.Alias;
+import edu.uci.ics.perpetual.expressions.UDFFunction;
 
 public class FunctionItem {
 

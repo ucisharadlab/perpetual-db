@@ -23,7 +23,7 @@ package edu.uci.ics.perpetual.util.cnfexpression;
 
 import java.util.List;
 
-import edu.uci.ics.perpetual.expression.Expression;
+import edu.uci.ics.perpetual.expressions.Expression;
 
 /**
  * This helper class is mainly used for handling the CNF conversion.
