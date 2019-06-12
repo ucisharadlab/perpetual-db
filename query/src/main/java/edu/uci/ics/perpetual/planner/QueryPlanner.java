@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
 
+import edu.uci.ics.perpetual.epochhandler.EpochHandler;
 import edu.uci.ics.perpetual.model.EnrichmentFunction;
 import edu.uci.ics.perpetual.model.PlanPath;
 import edu.uci.ics.perpetual.model.Predicate;
@@ -12,14 +13,23 @@ public class QueryPlanner {
 	private PriorityQueue<PlanPath> planQueue;
 	private List<Predicate> predicateList;
 	private List<EnrichmentFunction> enrichmentFunctionList;
+	private static QueryPlanner instance;
+	private EpochHandler epochHandler;
 	
-	public QueryPlanner()
+	private QueryPlanner()
 	{
 		//initiliazing lists and queues
 		planQueue = new PriorityQueue<PlanPath>();
 		predicateList = new ArrayList<Predicate>();
 		enrichmentFunctionList = new ArrayList<EnrichmentFunction>();
 	}
+	public static QueryPlanner getInstance(){
+        if (instance == null){
+        	instance = new QueryPlanner();
+        }
+
+        return instance;
+    }
 	//add, seek and poll for planQueue
 	public void addPlanPath(PlanPath pp)
 	{
@@ -84,7 +94,27 @@ public class QueryPlanner {
 	}
 	public double benifitEstimator()
 	{
-		//estimate the benifit of the plan
+		//estimate the benefit of the pair of object function
 		return 0;
+	}
+	public void getEnrichmentFunctionsFromMemory()
+	{
+		//query the in-memory db to get all enrichment functions and add them to the list
+		
+	}
+	public void initializeObjectStates()
+	{
+		//retrieve objects from DB then send it to StateManager
+		
+	}
+	public void objectRetreival(List<Predicate> predicates)
+	{
+		//retrieve objects with passed predicates and add it to the object state list
+		
+	}
+	public void initializePlanner(List<Predicate> predicates, int epochBudget)
+	{
+		// initialize the planner and call appropiate methods to retrieve objects and initialize the object state.
+		
 	}
 }

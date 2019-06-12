@@ -7,19 +7,26 @@ import edu.uci.ics.perpetual.epochhandler.EpochHandler;
 import edu.uci.ics.perpetual.model.EnrichmentFunction;
 import edu.uci.ics.perpetual.model.ObjectState;
 
-public class QueryExecuter {
+public class QueryExecuter{
+	private static QueryExecuter instance;
 	private EpochHandler epochHandler;
 	
 	private List<EnrichmentFunction> enrichmentFunctionList;
 	private List<ObjectState> objectStateList;
 	
-	public QueryExecuter()
+	private QueryExecuter()
 	{
 		//initialize lists
 		enrichmentFunctionList = new ArrayList<EnrichmentFunction>();
 		objectStateList = new ArrayList<ObjectState>();
 	}
-	
+	public static QueryExecuter getInstance(){
+        if (instance == null){
+        	instance = new QueryExecuter();
+        }
+
+        return instance;
+    }
 	public EpochHandler getEpochHandler() {
 		return epochHandler;
 	}
