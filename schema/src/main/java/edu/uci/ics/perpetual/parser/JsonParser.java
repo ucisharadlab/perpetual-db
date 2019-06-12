@@ -1,8 +1,7 @@
 package edu.uci.ics.perpetual.parser;
 
 import com.google.gson.JsonObject;
-import edu.uci.ics.perpetual.table.Attribute;
-import edu.uci.ics.perpetual.table.AttributeKind;
+import edu.uci.ics.perpetual.util.StringUtils;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -17,7 +16,7 @@ public class JsonParser {
             pattern = Pattern.compile("\\w[\\w\\d]*:[^:]+(?=,|$)");
         }
         // remove '{' and '}' toJsonObject string
-        String json = jsonString.substring(1, jsonString.length() - 1);
+        String json = jsonString.trim().substring(1, jsonString.length() - 1);
 
         JsonObject jsonObject = new JsonObject();
 
@@ -31,15 +30,14 @@ public class JsonParser {
         return jsonObject;
     }
 
-    public static List<Attribute> toAttribute(String jsonString, AttributeKind kind) {
-        Set<String> seen = new HashSet<>();
-        List<Attribute> attributeList = new ArrayList<>();
+    public static HashMap<String, String> toMap(String jsonString) {
+        HashMap<String, String> map = new HashMap<>();
 
         if (pattern == null) {
             pattern = Pattern.compile("\\w[\\w\\d]*:[^:]+(?=,|$)");
         }
         // remove '{' and '}' toJsonObject string
-        String json = jsonString.substring(1, jsonString.length() - 1);
+        String json = jsonString.trim().substring(2, jsonString.length() - 2);
 
         Matcher m = pattern.matcher(json);
 
@@ -48,14 +46,13 @@ public class JsonParser {
             if (pair.length != 2) {
                 throw new IllegalArgumentException("Incorrect Json format");
             }
-            if (seen.contains(pair[0])) {
+            if (map.containsKey(pair[0])) {
                 throw new IllegalArgumentException(String.format("key '%s' has seen before", pair[0]));
             }
-            seen.add(pair[0]);
-            attributeList.add(Attribute.of(kind,pair[0], pair[1]));
+            map.put(pair[0], StringUtils.removeQuote(pair[1]));
         }
 
-        return attributeList;
+        return map;
     }
 
     public static List<String> toKeyList(String jsonString) {
@@ -65,7 +62,7 @@ public class JsonParser {
             pattern = Pattern.compile("\\w[\\w\\d]*:[^:]+(?=,|$)");
         }
         // remove '{' and '}' toJsonObject string
-        String json = jsonString.substring(1, jsonString.length() - 1);
+        String json = jsonString.trim().substring(2, jsonString.length() - 2);
 
         Matcher m = pattern.matcher(json);
 

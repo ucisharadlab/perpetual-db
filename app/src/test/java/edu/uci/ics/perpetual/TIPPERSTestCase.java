@@ -17,7 +17,8 @@ public class TIPPERSTestCase {
 
     @BeforeClass
     public static void setUp(){
-        pClient = new PerpetualCMDClient();
+
+        pClient = new PerpetualCMDClient(SchemaManager.getInstance(), CachingManagerFactory.getCachingManager());
     }
 
     @Test

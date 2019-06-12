@@ -8,7 +8,7 @@ import edu.uci.ics.perpetual.workload.parser.IWorkloadParser;
 import edu.uci.ics.perpetual.workload.parser.QueryBotWorkloadParser;
 import org.apache.commons.lang3.NotImplementedException;
 
-public class WorkloadManager implements Runnable {
+public class WorkloadManager {
 
     private String dataDir;
     private IWorkloadParser workloadParser;
@@ -35,19 +35,8 @@ public class WorkloadManager implements Runnable {
 
     }
 
-    @Override
     public void run() {
-
-        while (true) {
-            extractInfo = extractor.extractAll();
-            System.out.print(extractInfo);
-            try {
-                Thread.sleep(sleepInterval);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
+        extractInfo = extractor.extractAll();
     }
 
     public IExtractInfo getExtractInfo() {

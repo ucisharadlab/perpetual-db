@@ -11,8 +11,9 @@ public class ExpressionPredicate implements IPredicate {
 
     private List<Expression> expressions;
 
-    public ExpressionPredicate() {
-
+    public ExpressionPredicate(LogicalOperator lop, List<Expression> expressions) {
+        this.lop = lop;
+        this.expressions = expressions;
     }
 
     public LogicalOperator getLop() {

@@ -13,7 +13,7 @@ public class TestJsonParser {
      */
     @Test
     public void test() {
-        String json = "{ip:'1.1.1.1', port:2000}";
+        String json = "{ip:\"1.1.1.1\", port:2000}";
 
         JsonObject object = JsonParser.toJsonObject(json);
 
@@ -30,11 +30,6 @@ public class TestJsonParser {
 
         JsonObject object = JsonParser.toJsonObject(json);
 
-        for (String key : object.keySet()) {
-            System.out.println(key);
-        }
-
-//        (\w[\w\d]*:^\w\b$)|(\w[\w\d]*:\d*.\d*)
         assertTrue(object.has("ip"));
         assertTrue(object.has("port"));
         assertTrue(object.has("name"));
@@ -48,10 +43,6 @@ public class TestJsonParser {
         String json = "{score:95.25}";
 
         JsonObject object = JsonParser.toJsonObject(json);
-
-        for (String key : object.keySet()) {
-            System.out.println(key);
-        }
 
         assertTrue(object.has("score"));
     }

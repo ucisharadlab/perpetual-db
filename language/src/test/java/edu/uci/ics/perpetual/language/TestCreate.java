@@ -45,12 +45,12 @@ public class TestCreate {
     @Test
     public void testCreateFunctionType() throws ParseException, JSQLParserException {
 
-        String create = "CREATE FUNCTION images_to_objects(Images) RETURNS Objects COST 50";
+        String create = "CREATE FUNCTION images_to_objects(Image) RETURNS Objects COST 50";
         Statement stmt = parser.parse(create);
 
         Assert.assertTrue(stmt instanceof CreateFunction);
 
-        create = "CREATE FUNCTION images_to_objects(Images, person) RETURNS Objects COST 50";
+        create = "CREATE FUNCTION images_to_person(Image, objects) RETURNS Person COST 50";
         stmt = parser.parse(create);
 
         Assert.assertTrue(stmt instanceof CreateFunction);

@@ -9,7 +9,7 @@ public class StaticAction implements IAction {
 
     private List<EnrichmentFunction> functions;
 
-    private StaticAction(List<EnrichmentFunction> functions) {
+    public StaticAction(List<EnrichmentFunction> functions) {
         this.functions = functions;
     }
 

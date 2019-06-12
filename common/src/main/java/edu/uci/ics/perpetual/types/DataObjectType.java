@@ -7,6 +7,8 @@ import java.util.List;
 
 public class DataObjectType {
 
+    private String name;
+
     public List<String> getAvailableTags() {
         return null;
     }
@@ -15,5 +17,11 @@ public class DataObjectType {
         return null;
     }
 
+    public String getName() {
+        return name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 }
