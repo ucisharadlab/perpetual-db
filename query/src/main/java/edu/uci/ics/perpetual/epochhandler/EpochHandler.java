@@ -1,14 +1,28 @@
 package edu.uci.ics.perpetual.epochhandler;
 
-public class EpochHandler {
-	private double passedTime;
+import edu.uci.ics.perpetual.planner.ObjectRetreival;
+
+public class EpochHandler{
+	private static EpochHandler instance;
+	private double budget;
 	private double remainingTime;
 	private int epochNumber;
-	public double getPassedTime() {
-		return passedTime;
+	private EpochHandler()
+	{
+		
 	}
-	public void setPassedTime(double passedTime) {
-		this.passedTime = passedTime;
+	public static EpochHandler getInstance(){
+        if (instance == null){
+        	instance = new EpochHandler();
+        }
+
+        return instance;
+    }
+	public double getBudget() {
+		return budget;
+	}
+	public void setBudget(double budget) {
+		this.budget = budget;
 	}
 	public double getRemainingTime() {
 		return remainingTime;
@@ -22,6 +36,4 @@ public class EpochHandler {
 	public void setEpochNumber(int epochNumber) {
 		this.epochNumber = epochNumber;
 	}
-
-	
 }

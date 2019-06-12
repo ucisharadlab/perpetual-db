@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class ObjectState{
-	private int objectId;
+	private DataObject object;
 	private List<Integer> functionBitmap;
 	private List<String> functionResultList;  // For deterministic functions
 	private List<Double> functionProbResultList; // For probabilistic functions
@@ -17,11 +17,11 @@ public final class ObjectState{
 		functionProbResultList = new ArrayList<Double>();
 	}
 	
-	public int getObjectId() {
-		return objectId;
+	public int getObject() {
+		return object;
 	}
-	public void setObjectId(int objectId) {
-		this.objectId = objectId;
+	public void setObject(int object) {
+		this.object = object;
 	}
 	
 	// add, get and remove for functionBitmap

@@ -5,7 +5,6 @@ import java.util.List;
 
 public class PlanPath {
 	private int objectId;
-	
 	private double cost;
 	private List<EnrichmentFunction> enrichmentFunctionList;
 	
