@@ -1,5 +1,7 @@
 package edu.uci.ics.perpetual.model;
 
+import edu.uci.ics.perpetual.data.DataObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +12,30 @@ public final class ObjectState{
 	private List<Double> functionProbResultList; // For probabilistic functions
 	
 	
+	public List<Integer> getFunctionBitmap() {
+		return functionBitmap;
+	}
+
+	public void setFunctionBitmap(List<Integer> functionBitmap) {
+		this.functionBitmap = functionBitmap;
+	}
+
+	public List<String> getFunctionResultList() {
+		return functionResultList;
+	}
+
+	public void setFunctionResultList(List<String> functionResultList) {
+		this.functionResultList = functionResultList;
+	}
+
+	public List<Double> getFunctionProbResultList() {
+		return functionProbResultList;
+	}
+
+	public void setFunctionProbResultList(List<Double> functionProbResultList) {
+		this.functionProbResultList = functionProbResultList;
+	}
+
 	public ObjectState(){
 		//initializing lists
 		functionBitmap = new ArrayList<Integer>();
@@ -17,10 +43,10 @@ public final class ObjectState{
 		functionProbResultList = new ArrayList<Double>();
 	}
 	
-	public int getObject() {
+	public DataObject getObject() {
 		return object;
 	}
-	public void setObject(int object) {
+	public void setObject(DataObject object) {
 		this.object = object;
 	}
 	
