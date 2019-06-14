@@ -2,6 +2,10 @@ package edu.uci.ics.perpetual.request;
 
 import java.util.HashMap;
 
+/**
+ * THe AcquisitionRequest is a intermediary that uses for communicating
+ * between SchemaManager and AcquisitionManager
+ */
 public class AcquisitionRequest extends Request {
     // provided by AcquisitionManager
     private int requestId;
@@ -22,7 +26,6 @@ public class AcquisitionRequest extends Request {
         this.dataSourceId = dataSourceId;
     }
 
-    // region Setter
     public void setAcquisitionFunctionPath(String acquisitionFunctionPath) {
         this.acquisitionFunctionPath = acquisitionFunctionPath;
     }
@@ -34,9 +37,7 @@ public class AcquisitionRequest extends Request {
     public void setRawTypeScheme(HashMap<String, String> rawTypeScheme) {
         this.rawTypeScheme = rawTypeScheme;
     }
-    // endregion
 
-    // region Getter
     public int getRequestId() {
         return requestId;
     }
@@ -56,5 +57,4 @@ public class AcquisitionRequest extends Request {
     public HashMap<String, String> getRawTypeScheme() {
         return rawTypeScheme;
     }
-    // endregion
 }

@@ -1,26 +1,19 @@
 package edu.uci.ics.perpetual.request;
 
+import edu.uci.ics.perpetual.Schema;
+
+/**
+ * THe LoadRequest is used internally for loading data from Database to memory
+ */
 public class LoadRequest extends Request {
 
-    public enum LoadOption {SCHEMA, RELATION}
+    private Schema schema;
 
-    private LoadOption option;
-
-    private Object result;
-
-    public LoadRequest(LoadOption option) {
-        this.option = option;
+    public void setSchema(Schema schema) {
+        this.schema = schema;
     }
 
-    public LoadOption getOption() {
-        return option;
-    }
-
-    public void setResult(Object result) {
-        this.result = result;
-    }
-
-    public Object getResult() {
-        return result;
+    public Schema getResult() {
+        return schema;
     }
 }

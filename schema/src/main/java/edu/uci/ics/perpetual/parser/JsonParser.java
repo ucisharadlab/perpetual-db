@@ -7,6 +7,9 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * JsonParser is a simple parser that uses regex to convert json string into expected datatypes
+ */
 public class JsonParser {
 
     private static Pattern pattern;

@@ -7,7 +7,6 @@ import java.util.List;
 public class DataSourceType {
     private String name;
 
-    // should I expend this to a hashmap ?
     private List<String> paramList;
 
     private RawType returnType;
@@ -31,7 +30,6 @@ public class DataSourceType {
         this.sourceFunctions = sourceFunctions;
     }
 
-    // region check param scheme for new source
     public boolean checkParams(Collection<String> sourceParams) {
         // the following is a stream operation that checks
         // there should be an one-to-one mapping between 'keys of Attribute' and 'this.params'.
@@ -41,15 +39,13 @@ public class DataSourceType {
                 .count();
         return nonExistCount == 0;
     }
-    // endregion
 
-    // region Acquisition Function
     public boolean hasAcquisitionFunction(String funcName) {
         return sourceFunctions.containsKey(funcName.toUpperCase());
     }
 
     public void addAcquisitionFunction(String funcName, String funcPath) {
-        // duplication is not a use case, but
+        // duplication function is not a use case, but
         // if there is duplicate, just replace the old value
         sourceFunctions.put(funcName.toUpperCase(), funcPath);
     }
@@ -57,9 +53,7 @@ public class DataSourceType {
     public String getAcquisitionFunctionPath(String funcName) {
         return sourceFunctions.get(funcName.toUpperCase());
     }
-    // endregion
 
-    // region Getter
     public List<String> getParamList() {
         return paramList;
     }
@@ -75,6 +69,4 @@ public class DataSourceType {
     public RawType getReturnType() {
         return returnType;
     }
-
-    // endregion
 }

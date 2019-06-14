@@ -38,9 +38,6 @@ public class TestAll {
         execute("CREATE FUNCTION getRoomLocation(wifi_observation) RETURNS roomLocations Cost 50");
         execute("CREATE FUNCTION getOffice(wifi_observation) RETURNS office Cost 50");
         execute("CREATE FUNCTION getAffinity(wifi_observation, device_mac) RETURNS affinities Cost 50");
-
-        // Add DataSource
-        System.out.println(1);
     }
 
     @Test
@@ -49,15 +46,11 @@ public class TestAll {
 
         execute("ADD FOR wifi_sensor ACQUISITION FUNCTION('CameraSource', '.../func.jar');");
         execute("ADD FOR wifi_sensor DATASOURCE(1, 'Hall Camera', 'CameraSource', '{ip:\"127.1.1.1\", port:1111}');");
-
-        System.out.println(1);
     }
 
     @Test
     public void testRetrieveSaved() {
         schemaManager = SchemaManager.getInstance();
-
-        System.out.println(1);
     }
 
 

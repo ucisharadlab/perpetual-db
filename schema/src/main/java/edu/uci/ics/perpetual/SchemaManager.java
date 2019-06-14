@@ -15,17 +15,12 @@ import edu.uci.ics.perpetual.types.*;
 import edu.uci.ics.perpetual.util.StringUtils;
 import javafx.util.Pair;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class SchemaManager {
 
     private Schema schema;
-
-    private Relation relation;
 
     private SchemaManager() {}
 
@@ -38,19 +33,13 @@ public class SchemaManager {
             instance = new SchemaManager();
             storage = MysqlStorage.getInstance();
 
-            LoadRequest schemaRequest = new LoadRequest(LoadRequest.LoadOption.SCHEMA);
+            LoadRequest schemaRequest = new LoadRequest();
             storage.load(schemaRequest);
-            instance.setSchema((Schema) schemaRequest.getResult());
-
-
-            LoadRequest relationRequest = new LoadRequest(LoadRequest.LoadOption.RELATION);
-            storage.load(relationRequest);
-            instance.setRelation((Relation) relationRequest.getResult());
+            instance.setSchema(schemaRequest.getResult());
         }
         return instance;
     }
 
-    // region Cache Handler
     public void accept(CacheRequest request) {
         if (request.isFindAll()) {
 
@@ -72,7 +61,7 @@ public class SchemaManager {
             HashMap<String, ArrayList<Pair<String, Integer>>> tagFunctionMapping = new HashMap<>();
 
             // retrieve all tags that parent is typeName
-            Set<String> tags = relation.childOf(typeName);
+            Set<String> tags = schema.childOf(typeName);
 
             // loop over all TaggingFunctions
             for (TaggingFunction function : schema.getEnrichmentFunctions().values()) {
@@ -90,9 +79,7 @@ public class SchemaManager {
             request.setStatus(RequestStatus.success());
         }
     }
-    // endregion
 
-    // region Acquisition Handler
     public void accept(AcquisitionRequest request) {
         RequestStatus status = new RequestStatus();
 
@@ -111,9 +98,7 @@ public class SchemaManager {
         request.setAcquisitionFunctionParameters(dataSource.getFunctionParams());
         request.setStatus(RequestStatus.success());
     }
-    // endregion
 
-    // region SQL handler
     public void accept(final SqlRequest request) {
         RequestStatus status = new RequestStatus();
 
@@ -289,8 +274,8 @@ public class SchemaManager {
 
                 storage.persist(new StorageRequest(function));
                 // add new relation between Raw Type and return Tag
-                if (!relation.existRelation(rawTypeName, returnTagName)) {
-                    relation.connect(rawTypeName, returnTagName);
+                if (!schema.existRelation(rawTypeName, returnTagName)) {
+                    schema.connect(rawTypeName, returnTagName);
 
                     storage.persist(new StorageRequest(rawTypeName, returnTagName));
                 }
@@ -319,8 +304,8 @@ public class SchemaManager {
                 schema.addTag(tag);
 
                 storage.persist(new StorageRequest(tag));
-                if (!relation.existRelation(parentName, tagName)) {
-                    relation.connect(parentName, tagName);
+                if (!schema.existRelation(parentName, tagName)) {
+                    schema.connect(parentName, tagName);
                     storage.persist(new StorageRequest(parentName, tagName));
                 }
 
@@ -333,16 +318,9 @@ public class SchemaManager {
             request.setStatus(status);
         }
     }
-    // endregion
 
-    // region setter, only used during initialization of SchemaManager
     private void setSchema(Schema schema) {
         this.schema = schema;
     }
-
-    private void setRelation(Relation relation) {
-        this.relation = relation;
-    }
-    // endregion
 }
 

@@ -1,6 +1,10 @@
 package edu.uci.ics.perpetual.request;
 
-public class Request {
+/**
+ * All communicate (internally or externally)
+ * with SchemaManager will be done through Requests
+ */
+public abstract class Request {
 
     private RequestStatus status;
 

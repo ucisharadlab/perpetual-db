@@ -1,13 +1,16 @@
 package edu.uci.ics.perpetual.request;
 
+/**
+ * RequestStatus represents if a request is success or not.
+ * It embeds the error message when the request fails
+ */
 public class RequestStatus {
-    enum Status {SUCCESS, FAILED}
-
     // single instance status, representing success
     private static final RequestStatus successRequest = new RequestStatus();
 
     private boolean success;
 
+    // If success, errMsg is null
     private String errMsg;
 
     public RequestStatus() {

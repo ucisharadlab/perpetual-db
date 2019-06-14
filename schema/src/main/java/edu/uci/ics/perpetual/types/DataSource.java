@@ -3,7 +3,7 @@ package edu.uci.ics.perpetual.types;
 import java.util.HashMap;
 
 public class DataSource {
-    // unique identifier
+    // unique identifier of DataSource, always in increasing order
     private int id;
 
     private String sourceDescription;
@@ -22,7 +22,6 @@ public class DataSource {
         this.functionParams = functionParams;
     }
 
-    // region Getter
     public int getId() {
         return id;
     }
@@ -42,12 +41,11 @@ public class DataSource {
     public HashMap<String, String> getFunctionParams() {
         return functionParams;
     }
-    // endregion
 
-    // region Setter
-    // TODO I don't believe I need this.
+    /**
+     * This seems unnecessary, but fine.
+     */
     public void setSourceType(DataSourceType sourceType) {
         this.sourceType = sourceType;
     }
-    // endregion
 }

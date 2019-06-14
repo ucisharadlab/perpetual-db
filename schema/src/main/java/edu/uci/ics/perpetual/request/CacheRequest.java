@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * THe CacheManager is a intermediary that uses for communicating
+ * between SchemaManager and CacheManager
+ */
 public class CacheRequest extends Request {
 
     private boolean findAll;
@@ -25,7 +29,6 @@ public class CacheRequest extends Request {
         this.rawTypeName = rawTypeName;
     }
 
-    // region Getter
     public boolean isFindAll() {
         return findAll;
     }
@@ -42,9 +45,6 @@ public class CacheRequest extends Request {
         return tagFunctionMapping;
     }
 
-    // endregion
-
-    // region Setter
     public void setAllRawTypes(List<String> allRawTypes) {
         this.allRawTypes = allRawTypes;
     }
@@ -52,5 +52,4 @@ public class CacheRequest extends Request {
     public void setTagFunctionMapping(HashMap<String, ArrayList<Pair<String, Integer>>> tagFunctionMapping) {
         this.tagFunctionMapping = tagFunctionMapping;
     }
-// endregion
 }

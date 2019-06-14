@@ -2,6 +2,9 @@ package edu.uci.ics.perpetual.request;
 
 import javafx.util.Pair;
 
+/**
+ * THe LoadRequest is used internally for saving data to Database.
+ */
 public class StorageRequest extends Request {
 
     private boolean isType;

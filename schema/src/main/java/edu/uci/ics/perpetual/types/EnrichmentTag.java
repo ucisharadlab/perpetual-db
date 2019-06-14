@@ -16,7 +16,6 @@ public class EnrichmentTag implements IType {
         this.type = type;
     }
 
-    // region getter
     public String getName() {
         return name;
     }
@@ -24,5 +23,4 @@ public class EnrichmentTag implements IType {
     public String getType() {
         return type;
     }
-    // endregion
 }

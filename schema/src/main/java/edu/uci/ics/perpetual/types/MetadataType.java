@@ -12,7 +12,6 @@ public class MetadataType {
         this.attributes = attributes;
     }
 
-    // region getter and setter
     public String getName() {
         return name;
     }
@@ -20,6 +19,4 @@ public class MetadataType {
     public HashMap<String, String> getAttributes() {
         return attributes;
     }
-
-    // endregion
 }

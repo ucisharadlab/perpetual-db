@@ -4,7 +4,13 @@ import edu.uci.ics.perpetual.types.TaggingFunction;
 import edu.uci.ics.perpetual.types.*;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
+/**
+ * Schema class is an abstraction the holds all necessary information
+ * that will be used by other components of perpetual-db
+ */
 public class Schema {
 
     private HashMap<String, MetadataType> metadataMap;
@@ -14,6 +20,9 @@ public class Schema {
     private HashMap<String, EnrichmentTag> tagMap;
     private HashMap<String, TaggingFunction> enrichmentFunctions;
 
+    // One-to-Many mapping, parent-to-children
+    private HashMap<String, Set<String>> relationships;
+
     public Schema() {
         this.metadataMap = new HashMap<>();
         this.rawMap = new HashMap<>();
@@ -21,9 +30,10 @@ public class Schema {
         this.dataSourceMap = new HashMap<>();
         this.tagMap = new HashMap<>();
         this.enrichmentFunctions = new HashMap<>();
+
+        this.relationships = new HashMap<>();
     }
 
-    // region Raw Type
     boolean existRawType(String typeName) {
         return rawMap.containsKey(typeName.toUpperCase());
     }
@@ -35,9 +45,7 @@ public class Schema {
     public RawType getRawType(String typeName) {
         return rawMap.get(typeName.toUpperCase());
     }
-    // endregion
 
-    // region Metadata Type
     boolean existMetadataType(String typeName) {
         return metadataMap.containsKey(typeName.toUpperCase());
     }
@@ -45,9 +53,7 @@ public class Schema {
     public void addMetadataType(MetadataType metadataType) {
         metadataMap.put(metadataType.getName().toUpperCase(), metadataType);
     }
-    // endregion
 
-    // region DataSource Type
     boolean existDataSourceType(String typeName) {
         return dataSourceTypeMap.containsKey(typeName.toUpperCase());
     }
@@ -59,9 +65,7 @@ public class Schema {
     public DataSourceType getDataSourceType(String typeName) {
         return dataSourceTypeMap.get(typeName.toUpperCase());
     }
-    // endregion
 
-    // region DataSource
     boolean existDataSource(int sourceId) {
         return dataSourceMap.containsKey(sourceId);
     }
@@ -73,9 +77,7 @@ public class Schema {
     DataSource getDataSource(int sourceId) {
         return dataSourceMap.get(sourceId);
     }
-    // endregion
 
-    // region Enrichment Tag
     boolean existTag(String tagName) {
         return tagMap.containsKey(tagName.toUpperCase());
     }
@@ -87,9 +89,7 @@ public class Schema {
     EnrichmentTag getTag(String tagName) {
         return tagMap.get(tagName.toUpperCase());
     }
-    // endregion
 
-    // region TaggingFunction
     boolean existFunction(String funcName) {
         return enrichmentFunctions.containsKey(funcName.toUpperCase());
     }
@@ -101,9 +101,25 @@ public class Schema {
     TaggingFunction getFunction(String funcName) {
         return enrichmentFunctions.get(funcName.toUpperCase());
     }
-    // endregion
 
-    // region Getter
+    public void connect(String parentName, String childName) {
+        String key = parentName.toUpperCase();
+        if (!relationships.containsKey(key)) {
+            relationships.put(key, new HashSet<>());
+        }
+        relationships.get(key).add(childName);
+    }
+
+    public boolean existRelation(String parentName, String childName) {
+        String parent = parentName.toUpperCase();
+        String child = childName.toLowerCase();
+        return relationships.containsKey(parent) && relationships.get(parent).contains(child);
+    }
+
+    public Set<String> childOf(String parent) {
+        return relationships.get(parent.toUpperCase());
+    }
+
     public HashMap<String, MetadataType> getMetadataMap() {
         return metadataMap;
     }
@@ -127,5 +143,4 @@ public class Schema {
     public HashMap<String, TaggingFunction> getEnrichmentFunctions() {
         return enrichmentFunctions;
     }
-    // endregion
 }

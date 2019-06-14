@@ -1,7 +1,6 @@
 package edu.uci.ics.perpetual.storage;
 
 import com.zaxxer.hikari.HikariDataSource;
-import edu.uci.ics.perpetual.Relation;
 import edu.uci.ics.perpetual.Schema;
 import edu.uci.ics.perpetual.request.LoadRequest;
 import edu.uci.ics.perpetual.request.RequestStatus;
@@ -18,6 +17,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
+/**
+ * Implementation of Storage using Mysql;
+ */
 public class MysqlStorage implements Storage {
 
     private final String resourceName = "database.properties";
@@ -36,7 +38,6 @@ public class MysqlStorage implements Storage {
         return storage;
     }
 
-    // region load
     @Override
     public void load(LoadRequest request) {
         RequestStatus status = new RequestStatus();
@@ -49,91 +50,80 @@ public class MysqlStorage implements Storage {
         try {
 
             ResultSet rs;
-            if (request.getOption() == LoadRequest.LoadOption.SCHEMA) {
-                Schema schema = new Schema();
+            Schema schema = new Schema();
 
-                rs = conn.prepareStatement("SELECT name, attributes FROM MetadataType;").executeQuery();
-                while (rs.next()) {
-                    MetadataType metadataType = new MetadataType(rs.getString("name"),
-                            StringUtils.toMap(rs.getString("attributes")));
-                    schema.addMetadataType(metadataType);
-                }
-
-                rs = conn.prepareStatement("SELECT name, attributes FROM RawType;").executeQuery();
-
-                while (rs.next()) {
-                    RawType rawType = new RawType(rs.getString("name"),
-                            StringUtils.toMap(rs.getString("attributes")));
-                    schema.addRawType(rawType);
-                }
-
-                rs = conn.prepareStatement("SELECT name, paramList, returnType, sourceFunctions FROM DataSourceType;").executeQuery();
-
-                while (rs.next()) {
-                    DataSourceType dataSourceType = new DataSourceType(
-                            rs.getString("name"),
-                            StringUtils.toList(rs.getString("paramList")),
-                            schema.getRawType(rs.getString("returnType")),
-                            StringUtils.toMap(rs.getString("sourceFunctions")));
-                    schema.addDataSourceType(dataSourceType);
-                }
-
-                rs = conn.prepareStatement("SELECT name, type FROM EnrichmentTag;").executeQuery();
-
-                while (rs.next()) {
-                    EnrichmentTag tag = new EnrichmentTag(
-                            rs.getString("name"), rs.getString("type"));
-                    schema.addTag(tag);
-                }
-
-                rs = conn.prepareStatement("SELECT id, sourceDescription, typeName, functionPath, functionParams FROM DataSource;").executeQuery();
-
-                while (rs.next()) {
-                    DataSource dataSource = new DataSource(
-                            rs.getInt("id"),
-                            rs.getString("sourceDescription"),
-                            schema.getDataSourceType(rs.getString("typeName")),
-                            rs.getString("functionPath"),
-                            StringUtils.toMap(rs.getString("functionParams")));
-                    schema.addDataSource(dataSource);
-                }
-
-                rs = conn.prepareStatement("SELECT functionName, sourceType, paramList, returnTag, cost FROM TaggingFunction;").executeQuery();
-
-                while (rs.next()) {
-                    TaggingFunction function = new TaggingFunction(rs.getString("functionName"),
-                            rs.getString("sourceType"),
-                            StringUtils.toList(rs.getString("paramList")),
-                            rs.getString("returnTag"),
-                            rs.getInt("cost"));
-                    schema.addFunction(function);
-                }
-
-                rs.close();
-                request.setResult(schema);
-                request.setStatus(RequestStatus.success());
+            rs = conn.prepareStatement("SELECT name, attributes FROM MetadataType;").executeQuery();
+            while (rs.next()) {
+                MetadataType metadataType = new MetadataType(rs.getString("name"),
+                        StringUtils.toMap(rs.getString("attributes")));
+                schema.addMetadataType(metadataType);
             }
 
-            else if (request.getOption() == LoadRequest.LoadOption.RELATION) {
-                Relation relation = new Relation();
+            rs = conn.prepareStatement("SELECT name, attributes FROM RawType;").executeQuery();
 
-                rs = conn.prepareStatement("SELECT parent, child FROM Relation;").executeQuery();
-                while (rs.next()) {
-                    relation.connect(rs.getString("parent"), rs.getString("child"));
-                }
-                rs.close();
-                request.setResult(relation);
-                request.setStatus(RequestStatus.success());
+            while (rs.next()) {
+                RawType rawType = new RawType(rs.getString("name"),
+                        StringUtils.toMap(rs.getString("attributes")));
+                schema.addRawType(rawType);
             }
+
+            rs = conn.prepareStatement("SELECT name, paramList, returnType, sourceFunctions FROM DataSourceType;").executeQuery();
+
+            while (rs.next()) {
+                DataSourceType dataSourceType = new DataSourceType(
+                        rs.getString("name"),
+                        StringUtils.toList(rs.getString("paramList")),
+                        schema.getRawType(rs.getString("returnType")),
+                        StringUtils.toMap(rs.getString("sourceFunctions")));
+                schema.addDataSourceType(dataSourceType);
+            }
+
+            rs = conn.prepareStatement("SELECT name, type FROM EnrichmentTag;").executeQuery();
+
+            while (rs.next()) {
+                EnrichmentTag tag = new EnrichmentTag(
+                        rs.getString("name"), rs.getString("type"));
+                schema.addTag(tag);
+            }
+
+            rs = conn.prepareStatement("SELECT id, sourceDescription, typeName, functionPath, functionParams FROM DataSource;").executeQuery();
+
+            while (rs.next()) {
+                DataSource dataSource = new DataSource(
+                        rs.getInt("id"),
+                        rs.getString("sourceDescription"),
+                        schema.getDataSourceType(rs.getString("typeName")),
+                        rs.getString("functionPath"),
+                        StringUtils.toMap(rs.getString("functionParams")));
+                schema.addDataSource(dataSource);
+            }
+
+            rs = conn.prepareStatement("SELECT functionName, sourceType, paramList, returnTag, cost FROM TaggingFunction;").executeQuery();
+
+            while (rs.next()) {
+                TaggingFunction function = new TaggingFunction(rs.getString("functionName"),
+                        rs.getString("sourceType"),
+                        StringUtils.toList(rs.getString("paramList")),
+                        rs.getString("returnTag"),
+                        rs.getInt("cost"));
+                schema.addFunction(function);
+            }
+
+            rs = conn.prepareStatement("SELECT parent, child FROM Relation;").executeQuery();
+            while (rs.next()) {
+                schema.connect(rs.getString("parent"), rs.getString("child"));
+            }
+
+            rs.close();
+            request.setSchema(schema);
+            request.setStatus(RequestStatus.success());
+
         } catch (SQLException e) {
             status.setErrMsg("Unable to retrieve information from Mysql.");
             request.setStatus(status);
         }
     }
 
-    // endregion
-
-    // region save
     @Override
     public void persist(StorageRequest request) {
         RequestStatus status = new RequestStatus();
@@ -184,7 +174,7 @@ public class MysqlStorage implements Storage {
                     ps.setString(1, function.getFunctionName());
                     ps.setString(2, function.getSourceType());
                     ps.setString(3, StringUtils.fromList(function.getParamList()));
-                    ps.setString(4,function.getReturnTag());
+                    ps.setString(4, function.getReturnTag());
                     ps.setInt(5, function.getCost());
                 }
             } else {
@@ -199,7 +189,6 @@ public class MysqlStorage implements Storage {
             }
             request.setStatus(RequestStatus.success());
         } catch (SQLException e) {
-//            e.printStackTrace();
             status.setErrMsg("Unable to save information to Mysql.");
             request.setStatus(status);
         }
@@ -228,9 +217,7 @@ public class MysqlStorage implements Storage {
             request.setStatus(status);
         }
     }
-    // endregion
 
-    // region inti
     private void init() {
         Properties prop = new Properties();
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream(resourceName);
@@ -257,6 +244,4 @@ public class MysqlStorage implements Storage {
             throw new UnsupportedOperationException("Unable to connect to mysql database");
         }
     }
-
-    // endregion
 }

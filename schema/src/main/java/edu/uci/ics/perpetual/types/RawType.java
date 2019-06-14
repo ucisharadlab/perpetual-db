@@ -14,7 +14,6 @@ public class RawType implements IType {
         this.attributes = attributes;
     }
 
-    // region getter and setter
     public String getName() {
         return name;
     }
@@ -22,5 +21,4 @@ public class RawType implements IType {
     public HashMap<String, String> getAttributes() {
         return attributes;
     }
-    // endregion
 }
