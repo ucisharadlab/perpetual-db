@@ -61,6 +61,5 @@ public class QueryExecuter{
 	{
 		EnrichmentFunctionInfo tmpFunc = pp.removeFunction(0);
 		String result = tmpFunc.getFunction().executeAndReturnResult(pp.getObject().getObject());
-		stateManager.updateObjectState(pp.getObject());
 	}
 }
