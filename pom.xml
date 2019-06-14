@@ -13,8 +13,8 @@
         <module>workload</module>
         <module>statistics</module>
         <module>schema</module>
-        <module>query</module>
         <module>caching</module>
+        <module>query</module>
         <module>acquisition</module>
         <module>enrichment</module>
         <module>storage</module>

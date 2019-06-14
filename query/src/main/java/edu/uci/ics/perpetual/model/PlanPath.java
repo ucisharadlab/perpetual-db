@@ -3,22 +3,22 @@ package edu.uci.ics.perpetual.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlanPath {
-	private int objectId;
+public class PlanPath implements Comparable<PlanPath>{
+	private ObjectState object;
 	private double cost;
-	private List<EnrichmentFunction> enrichmentFunctionList;
+	private List<EnrichmentFunctionInfo> enrichmentFunctionList;
 	
 	public PlanPath()
 	{
 		//initializing list
-		enrichmentFunctionList = new ArrayList<EnrichmentFunction>();
+		enrichmentFunctionList = new ArrayList<EnrichmentFunctionInfo>();
 	}
 	
-	public int getObjectId() {
-		return objectId;
+	public ObjectState getObject() {
+		return object;
 	}
-	public void setObjectId(int objectId) {
-		this.objectId = objectId;
+	public void setObject(ObjectState object) {
+		this.object = object;
 	}
 	public double getCost() {
 		return cost;
@@ -26,25 +26,38 @@ public class PlanPath {
 	public void calculateCost() {
 		cost = 0;
 		// sum up all the cost of the enrichment funcitons.
-		for(EnrichmentFunction f: enrichmentFunctionList)
+		for(EnrichmentFunctionInfo f: enrichmentFunctionList)
 			cost += f.getCost();
 	}
 	
 	// add, get and remove for enrichmentFunctionList
-	public void addEnrichmentFunction(EnrichmentFunction f)
+	public void addEnrichmentFunction(EnrichmentFunctionInfo f)
 	{
 		enrichmentFunctionList.add(f);
 	}
-	public void addEnrichmentFunction(EnrichmentFunction f, int index)
+	public void addEnrichmentFunction(EnrichmentFunctionInfo f, int index)
 	{
 		enrichmentFunctionList.add(index, f);
 	}
-	public EnrichmentFunction getFunction(int index)
+	public EnrichmentFunctionInfo getFunction(int index)
 	{
 		return enrichmentFunctionList.get(index);
 	}
-	public EnrichmentFunction removeFunction(int index)
+	public int getEnrichmentFunctionInfoSize()
+	{
+		return enrichmentFunctionList.size();
+	}
+	public EnrichmentFunctionInfo removeFunction(int index)
 	{
 		return enrichmentFunctionList.remove(index);
+	}
+	@Override
+	public int compareTo(PlanPath o) {
+		// TODO Auto-generated method stub
+		if(this.getCost() < o.getCost())
+			return -1;
+		if(this.getCost() > o.getCost())
+			return 1;
+		return 0;
 	}
 }

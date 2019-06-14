@@ -1,0 +1,28 @@
+package edu.uci.ics.perpetual.model;
+
+import edu.uci.ics.perpetual.enrichment.EnrichmentFunction;
+
+public class EnrichmentFunctionInfo {
+	private EnrichmentFunction function;
+	private double cost;
+	private double quality;
+	
+	public double getQuality() {
+		return quality;
+	}
+	public void setQuality(double quality) {
+		this.quality = quality;
+	}
+	public double getCost() {
+		return cost;
+	}
+	public void setCost(double cost) {
+		this.cost = cost;
+	}
+	public EnrichmentFunction getFunction() {
+		return function;
+	}
+	public void setFunction(EnrichmentFunction function) {
+		this.function = function;
+	}
+}

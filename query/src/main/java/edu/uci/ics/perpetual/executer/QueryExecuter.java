@@ -4,21 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.uci.ics.perpetual.epochhandler.EpochHandler;
-import edu.uci.ics.perpetual.model.EnrichmentFunction;
+import edu.uci.ics.perpetual.model.EnrichmentFunctionInfo;
 import edu.uci.ics.perpetual.model.ObjectState;
+import edu.uci.ics.perpetual.model.PlanPath;
+import edu.uci.ics.perpetual.planner.QueryPlanner;
+import edu.uci.ics.perpetual.state.StateManager;
 
 public class QueryExecuter{
 	private static QueryExecuter instance;
 	private EpochHandler epochHandler;
-	
-	private List<EnrichmentFunction> enrichmentFunctionList;
-	private List<ObjectState> objectStateList;
+	private QueryPlanner queryPlanner;
+	private StateManager stateManager;
 	
 	private QueryExecuter()
 	{
 		//initialize lists
-		enrichmentFunctionList = new ArrayList<EnrichmentFunction>();
-		objectStateList = new ArrayList<ObjectState>();
+		epochHandler = EpochHandler.getInstance();
+		queryPlanner = QueryPlanner.getInstance();
 	}
 	public static QueryExecuter getInstance(){
         if (instance == null){
@@ -27,56 +29,30 @@ public class QueryExecuter{
 
         return instance;
     }
-	public EpochHandler getEpochHandler() {
-		return epochHandler;
-	}
-	public void setEpochHandler(EpochHandler epochHandler) {
-		this.epochHandler = epochHandler;
-	}
 
 	// add, get and remove for enrichmentFunctionList
-	public void addEnrichmentFunction(EnrichmentFunction f)
-	{
-		enrichmentFunctionList.add(f);
-	}
-	public void addEnrichmentFunction(EnrichmentFunction f, int index)
-	{
-		enrichmentFunctionList.add(index, f);
-	}
-	public EnrichmentFunction getFunction(int index)
-	{
-		return enrichmentFunctionList.get(index);
-	}
-	public EnrichmentFunction removeFunction(int index)
-	{
-		return enrichmentFunctionList.remove(index);
-	}
 	
-	// add, get and remove for parameters
-	public void addObjectState(ObjectState o)
+	public void execute()
 	{
-		objectStateList.add(o);
+		while(!queryPlanner.getPlanQueue().isEmpty())
+		{
+			executeOneEpoch();
+		}
 	}
-	public void addObjectState(ObjectState o, int index)
-	{
-		objectStateList.add(index, o);
+	private void executeOneEpoch() {
+		PlanPath pp;
+		while(epochHandler.availableBudgetToRunFunction(queryPlanner.peekPlanPath().getCost()))
+		{
+			pp = queryPlanner.pollPlanPath();
+			executeOneObjectFunctionPair(pp);
+			pp.calculateCost();
+			queryPlanner.getPlanQueue().add(pp);
+		}
 	}
-	public Object getObjectState(int index)
+	public void executeOneObjectFunctionPair(PlanPath pp)
 	{
-		return objectStateList.get(index);
-	}
-	public Object removeObjectState(int index)
-	{
-		return objectStateList.remove(index);
-	}
-	
-	public boolean execute()
-	{
-		return false;
-	}
-	
-	public boolean updateState()
-	{
-		return false;
+		EnrichmentFunctionInfo tmpFunc = pp.removeFunction(0);
+		String result = tmpFunc.getFunction().executeAndReturnResult(pp.getObject().getObject());
+		
 	}
 }

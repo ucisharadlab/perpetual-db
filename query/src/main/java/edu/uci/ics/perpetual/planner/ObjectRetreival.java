@@ -2,8 +2,10 @@ package edu.uci.ics.perpetual.planner;
 
 import java.util.List;
 
+import edu.uci.ics.perpetual.data.DataObject;
 import edu.uci.ics.perpetual.executer.QueryExecuter;
 import edu.uci.ics.perpetual.model.Predicate;
+import edu.uci.ics.perpetual.predicate.ExpressionPredicate;
 
 public class ObjectRetreival{
 	//public StorageManager sm;
@@ -33,4 +35,8 @@ public class ObjectRetreival{
 //		}
 //		return objectList;
 //	}
+	public List<DataObject> getObjectsFromFile(List<ExpressionPredicate> predicates) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

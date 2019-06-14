@@ -37,4 +37,13 @@ public class EnrichmentFunction {
             e.printStackTrace();
         }
     }
+    public String executeAndReturnResult(DataObject dataObject) {
+        try {
+            String result = (String) method.invoke(enrichmentInstance, dataObject.getObject());
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+		return null;
+    }
 }
