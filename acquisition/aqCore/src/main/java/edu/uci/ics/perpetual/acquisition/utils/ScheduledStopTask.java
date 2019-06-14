@@ -1,7 +1,7 @@
 package edu.uci.ics.perpetual.acquisition.utils;
 
-import edu.uci.ics.perpetual.acquisition.datatypes.AcquisitionRequest;
-import edu.uci.ics.perpetual.acquisition.datatypes.RequestStatus;
+import edu.uci.ics.perpetual.request.AcquisitionRequest;
+import edu.uci.ics.perpetual.request.AcquisitionRequestStatus;
 
 import java.util.TimerTask;
 
@@ -19,7 +19,7 @@ public class ScheduledStopTask extends TimerTask {
 
     @Override
     public void run() {
-        this.request.setStatus( RequestStatus.DONE );
+        this.request.setStatus( AcquisitionRequestStatus.DONE );
         System.out.println("Stopping the task!!!" );
         producerTask.cancel();
     }

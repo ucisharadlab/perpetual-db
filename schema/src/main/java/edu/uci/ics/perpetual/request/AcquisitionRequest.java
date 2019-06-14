@@ -1,17 +1,30 @@
 package edu.uci.ics.perpetual.request;
 
+import java.util.Date;
 import java.util.HashMap;
 
-public class AcquisitionRequest extends Request {
-    // provided by AcquisitionManager
+public class AcquisitionRequest {
+
     private int requestId;
+
+    private String acquisitionName;
+
     private int dataSourceId;
 
     private String acquisitionFunctionPath;
 
     private HashMap<String, String> acquisitionFunctionParameters;
 
+    private AcquisitionRequestStatus status;
+
     private HashMap<String, String> rawTypeScheme;
+
+    private Date startTime;
+
+    private Date endTime;
+
+    public AcquisitionRequest() {
+    }
 
     public AcquisitionRequest(int dataSourceId) {
         this.dataSourceId = dataSourceId;
@@ -22,39 +35,84 @@ public class AcquisitionRequest extends Request {
         this.dataSourceId = dataSourceId;
     }
 
-    // region Setter
-    public void setAcquisitionFunctionPath(String acquisitionFunctionPath) {
-        this.acquisitionFunctionPath = acquisitionFunctionPath;
-    }
 
-    public void setAcquisitionFunctionParameters(HashMap<String, String> acquisitionFunctionParameters) {
-        this.acquisitionFunctionParameters = acquisitionFunctionParameters;
-    }
-
-    public void setRawTypeScheme(HashMap<String, String> rawTypeScheme) {
-        this.rawTypeScheme = rawTypeScheme;
-    }
-    // endregion
-
-    // region Getter
     public int getRequestId() {
         return requestId;
+    }
+
+    public void setRequestId(int requestId) {
+        this.requestId = requestId;
+    }
+
+    public String getAcquisitionName() {
+        return acquisitionName;
+    }
+
+    public void setAcquisitionName(String acquisitionName) {
+        this.acquisitionName = acquisitionName;
     }
 
     public int getDataSourceId() {
         return dataSourceId;
     }
 
+    public void setDataSourceId(int dataSourceId) {
+        this.dataSourceId = dataSourceId;
+    }
+
     public String getAcquisitionFunctionPath() {
         return acquisitionFunctionPath;
     }
 
-    public HashMap<String, String> getAcquisitionFunctionParameters() {
+    public void setAcquisitionFunctionPath(String acquisitionFunctionPath) {
+        this.acquisitionFunctionPath = acquisitionFunctionPath;
+    }
+
+    public HashMap <String, String> getAcquisitionFunctionParameters() {
         return acquisitionFunctionParameters;
     }
 
-    public HashMap<String, String> getRawTypeScheme() {
+    public void setAcquisitionFunctionParameters(HashMap <String, String> acquisitionFunctionParameters) {
+        this.acquisitionFunctionParameters = acquisitionFunctionParameters;
+    }
+
+    public HashMap <String, String> getRawTypeScheme() {
         return rawTypeScheme;
     }
-    // endregion
+
+    public void setRawTypeScheme(HashMap <String, String> rawTypeScheme) {
+        this.rawTypeScheme = rawTypeScheme;
+    }
+
+    public AcquisitionRequestStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(AcquisitionRequestStatus status) {
+        this.status = status;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    @Override
+    public String toString() {
+
+        return String.format("RequestId = %s, DataSourceId = %s, Status = %s, FunctionPath = %s",
+                requestId, dataSourceId, status, acquisitionFunctionPath);
+
+    }
 }

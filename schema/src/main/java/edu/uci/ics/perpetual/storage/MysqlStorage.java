@@ -78,11 +78,12 @@ public class MysqlStorage implements Storage {
                     schema.addDataSourceType(dataSourceType);
                 }
 
-                rs = conn.prepareStatement("SELECT name, type FROM EnrichmentTag;").executeQuery();
+                rs = conn.prepareStatement("SELECT name, type, rawType FROM EnrichmentTag;").executeQuery();
 
                 while (rs.next()) {
                     EnrichmentTag tag = new EnrichmentTag(
-                            rs.getString("name"), rs.getString("type"));
+                            rs.getString("name"), rs.getString("type"),
+                            rs.getString("rawType"));
                     schema.addTag(tag);
                 }
 
@@ -175,9 +176,10 @@ public class MysqlStorage implements Storage {
                     ps.setString(5, StringUtils.fromMap(dataSource.getFunctionParams()));
                 } else if (object instanceof EnrichmentTag) {
                     EnrichmentTag tag = (EnrichmentTag) object;
-                    ps = conn.prepareStatement("INSERT INTO EnrichmentTag(name, type) VALUE (?,?);");
+                    ps = conn.prepareStatement("INSERT INTO EnrichmentTag(name, type, rawType) VALUE (?,?, ?);");
                     ps.setString(1, tag.getName());
                     ps.setString(2, tag.getType());
+                    ps.setString(3, tag.getRawType());
                 } else if (object instanceof TaggingFunction) {
                     TaggingFunction function = (TaggingFunction) object;
                     ps = conn.prepareStatement("INSERT INTO TaggingFunction(functionName, sourceType, paramList, returnTag, cost) VALUE (?, ?, ?, ?, ?);");

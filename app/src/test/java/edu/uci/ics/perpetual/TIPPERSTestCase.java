@@ -1,5 +1,6 @@
 package edu.uci.ics.perpetual;
 
+import edu.uci.ics.perpetual.acquisition.AcquisitionManager;
 import edu.uci.ics.perpetual.app.PerpetualCMDClient;
 import edu.uci.ics.perpetual.parser.CCJSqlParserManager;
 import edu.uci.ics.perpetual.parser.ParseException;
@@ -18,7 +19,8 @@ public class TIPPERSTestCase {
     @BeforeClass
     public static void setUp(){
 
-        pClient = new PerpetualCMDClient(SchemaManager.getInstance(), CachingManagerFactory.getCachingManager());
+        pClient = new PerpetualCMDClient(SchemaManager.getInstance(), CachingManagerFactory.getCachingManager(),
+                AcquisitionManager.getInstance());
     }
 
     @Test

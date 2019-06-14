@@ -5,9 +5,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.uci.ics.perpetual.acquisition.datatypes.RequestStatus;
+import edu.uci.ics.perpetual.request.AcquisitionRequestStatus;
 import edu.uci.ics.perpetual.acquisition.requestmanagement.AcquisitionRequestManager;
-import edu.uci.ics.perpetual.acquisition.utils.AcquisitionConfig;
 import edu.uci.ics.perpetual.data.DataObject;
 import edu.uci.ics.perpetual.types.DataObjectType;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -50,7 +49,7 @@ public class AcquisitionManager {
         ConsumerRecords<Object, Object> records  = consumer.poll(1000);
 
         ArrayList<DataObject> data = new ArrayList<DataObject>();
-        if(records.isEmpty() && requestManager.getRequestStatus( requestId ) == RequestStatus.DONE){
+        if(records.isEmpty() && requestManager.getRequestStatus( requestId ) == AcquisitionRequestStatus.DONE){
             return null;
         }
         for (ConsumerRecord<Object, Object> record : records)
