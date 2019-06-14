@@ -7,6 +7,7 @@ import edu.uci.ics.perpetual.acquisition.AcquisitionManager;
 import edu.uci.ics.perpetual.data.DataObject;
 import edu.uci.ics.perpetual.enrichment.EnrichmentFunction;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -46,6 +47,7 @@ public class IngestionThread implements Runnable {
         for (DataObject object : objects) {
             if (!seenTimeStamps.contains(object.getTimeStamp())) {
                 tagObject(object);
+                System.out.println(object.getObject().toString());
             }
         }
     }

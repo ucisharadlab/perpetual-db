@@ -3,6 +3,7 @@ package edu.uci.ics.perpetual.model;
 import edu.uci.ics.perpetual.enrichment.EnrichmentFunction;
 
 public class EnrichmentFunctionInfo {
+	private int id;
 	private EnrichmentFunction function;
 	private double cost;
 	private double quality;
@@ -24,5 +25,11 @@ public class EnrichmentFunctionInfo {
 	}
 	public void setFunction(EnrichmentFunction function) {
 		this.function = function;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
 	}
 }

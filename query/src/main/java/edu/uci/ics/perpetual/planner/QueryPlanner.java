@@ -27,7 +27,7 @@ public class QueryPlanner {
 	private QueryPlanner()
 	{
 		//initiliazing lists and queues
-		stateManager = new StateManager();
+		stateManager = StateManager.getInstance();
 		planQueue = new PriorityQueue<PlanPath>();
 		predicateList = new ArrayList<ExpressionPredicate>();
 		enrichmentFunctionList = new ArrayList<EnrichmentFunctionInfo>();
@@ -116,8 +116,8 @@ public class QueryPlanner {
 	public void getEnrichmentFunctionsFromMemory()
 	{
 		//query the in-memory db to get all enrichment functions and add them to the list
-		String functionOne = "Enrichment.jar1";
-		String functionTwo = "Enrichment.jar2";
+		String functionOne = "Enrichment1.jar";
+		String functionTwo = "Enrichment2.jar";
 		this.enrichmentFunctionList.add(new EnrichmentFunctionInfo());
 		this.enrichmentFunctionList.add(new EnrichmentFunctionInfo());
 		this.enrichmentFunctionList.get(0).setFunction(EnrichmentFunction.getEnrichmentFunction(functionOne));
@@ -126,6 +126,8 @@ public class QueryPlanner {
 		this.enrichmentFunctionList.get(1).setCost(80);
 		this.enrichmentFunctionList.get(0).setQuality(0.5);
 		this.enrichmentFunctionList.get(1).setQuality(1);
+		this.enrichmentFunctionList.get(0).setId(1);
+		this.enrichmentFunctionList.get(0).setId(2);
 	}
 	public List<ObjectState> initializeObjectStates(List<DataObject> objectList)
 	{

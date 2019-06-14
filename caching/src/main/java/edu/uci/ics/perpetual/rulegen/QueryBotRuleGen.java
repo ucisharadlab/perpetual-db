@@ -30,7 +30,7 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
     private final int TOP_TAGS = 2;
     private ListRule ruleStore;
     private final String TYPE_STR = "type";
-    private final String DUMMY_ENRICH_FUNC = "/home/peeyush/Downloads/perpetual-db/common/src/test/edu/uci/ics/perpetual/common/enrichment/Enrichment.jar";
+    private final String DUMMY_ENRICH_FUNC = "file:///home/peeyush/Downloads/perpetual-db/common/src/test/edu/uci/ics/perpetual/common/enrichment/Enrichment.jar";
 
     public QueryBotRuleGen(WorkloadManager workloadManager, Schema schema) {
         workloadManager.run();
@@ -51,10 +51,12 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
         ruleStore = new ListRule();
         try {
             List<String> topRawTypes = getTopRawTypes(TOP_TYPES);
+            if (topRawTypes.size() > TOP_TYPES) topRawTypes = topRawTypes.subList(0, TOP_TYPES);
 
             for (String type : topRawTypes) {
 
-                List<String> topTags = getTopTagsForRawType(type, TOP_TAGS);
+                List<String> topTags = getTopTagsForRawType(type);
+                if (topTags.size() > TOP_TAGS) topTags = topTags.subList(0, TOP_TAGS);
 
                 DataObjectType dataObjectType = new DataObjectType();
                 dataObjectType.setName(type);
@@ -83,7 +85,7 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
             return ruleStore;
         } catch (Exception e) {
             System.out.println("No Rules Generated\n\n");
-//            e.printStackTrace();
+            e.printStackTrace();
         }
         return ruleStore;
     }
@@ -94,14 +96,13 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
         types.sort((a,b) -> b.getValue() - a.getValue());
 
         return types.stream()
-                .filter(a-> schema.getRawMap().keySet().contains(a.getKey()))
+                .filter(a-> schema.getRawMap().keySet().contains(a.getKey().toUpperCase()))
                 .map(Map.Entry::getKey)
-                .collect(Collectors.toList())
-                .subList(0, N);
+                .collect(Collectors.toList());
 
     }
 
-    private List<String> getTopTagsForRawType(String rawType, int N) {
+    private List<String> getTopTagsForRawType(String rawType) {
 
         List<String> tags = schema.getTagMap().entrySet().stream()
                 .filter(a->a.getValue().getRawType().equalsIgnoreCase(rawType))
@@ -111,7 +112,7 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
         Set<Map.Entry<String, Integer>> extractedTags = new HashSet<>();
         exInfo.getTagInfo().forEach(
                 (key, value) -> value.entrySet().forEach( a-> {
-                    if (tags.contains(a.getKey())) extractedTags.add(a);
+                    if (tags.contains(a.getKey().toUpperCase())) extractedTags.add(a);
                 })
 
         );
@@ -121,10 +122,7 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
 
         return extractedTagsList.stream()
                 .map(Map.Entry::getKey)
-                .collect(Collectors.toList())
-                .subList(0, N);
-
-
+                .collect(Collectors.toList());
     }
 
     @Override

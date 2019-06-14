@@ -102,7 +102,7 @@ public class SchemaManager {
 
         if (!schema.existDataSource(sourceId)) {
             status.setErrMsg(String.format("DataSource with id '%s' does not exist", sourceId));
-            request.setStatus(status);
+//            request.setStatus(status);
             return;
         }
 
@@ -111,7 +111,7 @@ public class SchemaManager {
         request.setRawTypeScheme(dataSource.getSourceType().getReturnType().getAttributes());
         request.setAcquisitionFunctionPath(dataSource.getFunctionPath());
         request.setAcquisitionFunctionParameters(dataSource.getFunctionParams());
-        request.setStatus(RequestStatus.success());
+//        request.setStatus(RequestStatus.success());
     }
     // endregion
 

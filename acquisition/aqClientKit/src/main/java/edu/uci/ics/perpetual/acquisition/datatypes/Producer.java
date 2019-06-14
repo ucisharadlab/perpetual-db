@@ -3,6 +3,7 @@ package edu.uci.ics.perpetual.acquisition.datatypes;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.uci.ics.perpetual.request.AcquisitionRequest;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import static edu.uci.ics.perpetual.acquisition.utils.AcquisitionConfig.config;

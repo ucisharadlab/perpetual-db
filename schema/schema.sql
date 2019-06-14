@@ -38,7 +38,7 @@ CREATE TABLE DataSource (
 CREATE TABLE EnrichmentTag (
 	name VARCHAR(40) NOT NULL,
 	type VARCHAR(40) NOT NULL,
-
+    rawType VARCHAR(40) NOT NULL,
 	PRIMARY KEY (name)
 );
 

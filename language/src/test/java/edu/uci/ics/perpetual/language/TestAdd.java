@@ -46,7 +46,7 @@ public class TestAdd {
     @Test
     public void testAddRequest() throws ParseException, JSQLParserException {
 
-        String create = "ADD Request(1, 1, '04/08/2019 12:00:00', '04/08/2019 14:00', 20, 'pull')";
+        String create = "ADD Request(1, 1, '06/13/2019 11:19:00', '06/13/2019 11:21:00', 20, 'pull')";
         Statement stmt = parser.parse(create);
 
 

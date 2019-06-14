@@ -2,7 +2,6 @@ package edu.uci.ics.perpetual;
 
 import edu.uci.ics.perpetual.parser.CCJSqlParserManager;
 import edu.uci.ics.perpetual.parser.ParseException;
-import edu.uci.ics.perpetual.request.AcquisitionRequest;
 import edu.uci.ics.perpetual.request.CacheRequest;
 import edu.uci.ics.perpetual.request.SqlRequest;
 import javafx.util.Pair;

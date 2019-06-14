@@ -3,12 +3,14 @@ package edu.uci.ics.perpetual.app;
 import edu.uci.ics.perpetual.CachingManager;
 import edu.uci.ics.perpetual.CachingManagerFactory;
 import edu.uci.ics.perpetual.SchemaManager;
+import edu.uci.ics.perpetual.acquisition.AcquisitionManager;
 
 public class Server {
 
     private PerpetualCMDClient cmdClient;
     private SchemaManager schemaManager;
     private CachingManager cachingManager;
+    private AcquisitionManager acquisitionManager;
 
 
     public void start() {
@@ -22,11 +24,11 @@ public class Server {
         cachingManager = CachingManagerFactory.getCachingManager();
 
         System.out.println("Starting Acquisition and Enrichment Engine ...........................\n");
-//        cachingManager = CachingManagerFactory.getCachingManager();
+        acquisitionManager = AcquisitionManager.getInstance();
 
         System.out.println("Server Initialization Complete ...........................\n\n");
 
-        cmdClient = new PerpetualCMDClient(schemaManager, cachingManager);
+        cmdClient = new PerpetualCMDClient(schemaManager, cachingManager, acquisitionManager);
         cmdClient.start();
     }
 

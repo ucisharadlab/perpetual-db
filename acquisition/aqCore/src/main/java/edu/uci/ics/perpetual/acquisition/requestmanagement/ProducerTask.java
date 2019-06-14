@@ -1,8 +1,8 @@
 package edu.uci.ics.perpetual.acquisition.requestmanagement;
 
-import edu.uci.ics.perpetual.acquisition.datatypes.AcquisitionRequest;
+import edu.uci.ics.perpetual.request.AcquisitionRequest;
 import edu.uci.ics.perpetual.acquisition.datatypes.Producer;
-import edu.uci.ics.perpetual.acquisition.datatypes.RequestStatus;
+import edu.uci.ics.perpetual.request.AcquisitionRequestStatus;
 import edu.uci.ics.perpetual.acquisition.utils.JavaUtils;
 import edu.uci.ics.perpetual.ingestion.IngestionThread;
 
@@ -20,7 +20,7 @@ public class ProducerTask extends TimerTask {
 
     @Override
     public void run() {
-        request.setStatus( RequestStatus.INPROGRESS );
+        request.setStatus( AcquisitionRequestStatus.INPROGRESS );
         System.out.println("ACQUISITION ENGINE: Running request - "+ request.getRequestId() + " for datasource: "+ request.getDataSourceId()  );
         try{
             startConsumerThread();
