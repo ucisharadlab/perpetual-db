@@ -1,17 +1,26 @@
 package edu.uci.ics.perpetual.model;
 
-import edu.uci.ics.perpetual.data.DataObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.uci.ics.perpetual.data.*;
+
 public final class ObjectState{
-	private DataObject object;
+	private  DataObject object;
 	private List<Integer> functionBitmap;
 	private List<String> functionResultList;  // For deterministic functions
 	private List<Double> functionProbResultList; // For probabilistic functions
+	private boolean isResolved;
 	
 	
+	public boolean isResolved() {
+		return isResolved;
+	}
+
+	public void setResolved(boolean isResolved) {
+		this.isResolved = isResolved;
+	}
+
 	public List<Integer> getFunctionBitmap() {
 		return functionBitmap;
 	}
