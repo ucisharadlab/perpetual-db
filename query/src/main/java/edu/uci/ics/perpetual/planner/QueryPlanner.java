@@ -114,7 +114,7 @@ public class QueryPlanner {
 	}
 	public void initializePlanner(List<Predicate> predicates, int epochBudget)
 	{
-		// initialize the planner and call appropiate methods to retrieve objects and initialize the object state.
+		// initialize the planner and call appropriate methods to retrieve objects and initialize the object state.
 		
 	}
 }

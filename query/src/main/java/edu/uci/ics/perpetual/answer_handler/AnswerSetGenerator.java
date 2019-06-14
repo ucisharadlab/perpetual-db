@@ -2,12 +2,30 @@ package edu.uci.ics.perpetual.answer_handler;
 
 import edu.uci.ics.perpetual.model.AnswerSet;
 import edu.uci.ics.perpetual.model.ObjectState;
+import edu.uci.ics.perpetual.planner.ObjectRetreival;
 import edu.uci.ics.perpetual.state.StateManager;
 
 public class AnswerSetGenerator {
 	
-	private static StateManager instance;
-	AnswerSet answerSet = new AnswerSet();
+	
+	private static AnswerSetGenerator instance;
+	private AnswerSet answerSet ;
+	
+
+	private AnswerSetGenerator() {
+		// TODO Auto-generated constructor stub
+		// Retrieve Storage Manager Instance
+		answerSet = new AnswerSet();
+		
+	}
+	public static AnswerSetGenerator getInstance(){
+        if (instance == null){
+        		instance = new AnswerSetGenerator();
+        }
+
+        return instance;
+    }
+	
 	
 	public void generateAnswer() {
 		AnswerSet answer = new AnswerSet();
@@ -25,8 +43,8 @@ public class AnswerSetGenerator {
 		/*
 		 * Given an object id, it will retrieve the state of the object.
 		 */
-		ObjectState objectState = instance.getStateManagerHashMap().get(objectId);
-		return objectState;
+		
+		return null;
 	}
 	
 	public void getAnswerSet(int epochId) {
