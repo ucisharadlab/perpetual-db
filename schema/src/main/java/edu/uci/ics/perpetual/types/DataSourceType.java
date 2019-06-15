@@ -84,6 +84,7 @@ public class DataSourceType {
         for (String param: paramList) {
             sb.append(String.format("%s, ", param));
         }
+        sb.append("Acquisition Functions, ").append(sourceFunctions);
         return sb.toString();
 
     }

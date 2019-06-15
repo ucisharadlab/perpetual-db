@@ -40,6 +40,7 @@ public class PerpetualCMDClient extends Thread {
             System.out.print("PerperualDB >>> ");
             String query = scanner.nextLine();
 
+            System.out.println();
             // Handle Special Commands
             if (Commands.SHOW_SCHEMA.equalsIgnoreCase(query)) {
                 System.out.println(schemaManager.getSchema());

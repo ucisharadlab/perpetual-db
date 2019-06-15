@@ -1,5 +1,6 @@
 package edu.uci.ics.perpetual.rulegen;
 
+import edu.uci.ics.perpetual.CachingConfig;
 import edu.uci.ics.perpetual.Schema;
 import edu.uci.ics.perpetual.action.StaticAction;
 import edu.uci.ics.perpetual.enrichment.EnrichmentFunction;
@@ -26,11 +27,8 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
 
     private Schema schema;
     private QueryBotExtractInfo exInfo;
-    private final int TOP_TYPES = 2;
-    private final int TOP_TAGS = 2;
+
     private ListRule ruleStore;
-    private final String TYPE_STR = "type";
-    private final String DUMMY_ENRICH_FUNC = "file:///home/peeyush/Downloads/perpetual-db/common/src/test/edu/uci/ics/perpetual/common/enrichment/Enrichment.jar";
 
     public QueryBotRuleGen(WorkloadManager workloadManager, Schema schema) {
         workloadManager.run();
@@ -50,19 +48,19 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
 
         ruleStore = new ListRule();
         try {
-            List<String> topRawTypes = getTopRawTypes(TOP_TYPES);
-            if (topRawTypes.size() > TOP_TYPES) topRawTypes = topRawTypes.subList(0, TOP_TYPES);
+            List<String> topRawTypes = getTopRawTypes(CachingConfig.TOP_TYPES);
+            if (topRawTypes.size() > CachingConfig.TOP_TYPES)
+                topRawTypes = topRawTypes.subList(0, CachingConfig.TOP_TYPES);
 
             for (String type : topRawTypes) {
-
                 List<String> topTags = getTopTagsForRawType(type);
-                if (topTags.size() > TOP_TAGS) topTags = topTags.subList(0, TOP_TAGS);
+                if (topTags.size() > CachingConfig.TOP_TAGS) topTags = topTags.subList(0, CachingConfig.TOP_TAGS);
 
                 DataObjectType dataObjectType = new DataObjectType();
                 dataObjectType.setName(type);
 
                 List<Expression> expressions = new ArrayList<>();
-                expressions.add(new Expression<>(TYPE_STR, ComparisionOperator.EQ, type));
+                expressions.add(new Expression<>(CachingConfig.TYPE_STR, ComparisionOperator.EQ, type));
                 ExpressionPredicate predicate = new ExpressionPredicate(
                         LogicalOperator.AND,
                         expressions);
@@ -70,7 +68,7 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
                 for (String tag : topTags) {
 
                     List<EnrichmentFunction> functions = new ArrayList<>();
-                    functions.add(EnrichmentFunction.getEnrichmentFunction(DUMMY_ENRICH_FUNC));
+                    functions.add(EnrichmentFunction.getEnrichmentFunction(CachingConfig.DUMMY_ENRICH_FUNC));
 
                     StaticAction action = new StaticAction(functions);
 
@@ -130,7 +128,7 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
         while (true) {
             generateRules();
             try {
-                Thread.sleep(10000000);
+                Thread.sleep(CachingConfig.SLEEP_INTERVAl);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

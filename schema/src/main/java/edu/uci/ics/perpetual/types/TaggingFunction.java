@@ -41,4 +41,10 @@ public class TaggingFunction {
     public int getCost() {
         return cost;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Raw Type=%s, Tag=%s, Dependencies=%s, Cost=%s",
+                sourceType, returnTag, paramList, cost);
+    }
 }

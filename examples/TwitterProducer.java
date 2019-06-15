@@ -10,6 +10,7 @@ public class TwitterProducer extends Producer {
 
     public void fetch() throws Exception {
 
+        sendMessage
         System.out.println("Sending data");
 
     }

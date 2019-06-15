@@ -20,15 +20,11 @@ public class CachingManager {
     private QueryBotRuleGen ruleGen;
 
     private IRuleStore ruleStore;
-    private final int SLEEP_INTERVAl = 1000000;
-    private final String DATADIR = "/home/peeyush/Downloads/perpetual-db/caching/src/main/resources/query-bot-5000.sample";
 
-    private final WorkloadType WTYPE = WorkloadType.QueryBot;
-    private final RuleType ruleType = RuleType.List;
 
     public CachingManager(){
         schemaManager = SchemaManager.getInstance();
-        workloadManager = new WorkloadManager(DATADIR, WTYPE, SLEEP_INTERVAl);
+        workloadManager = new WorkloadManager(CachingConfig.DATADIR, CachingConfig.WTYPE, CachingConfig.SLEEP_INTERVAl);
         ruleGen = new QueryBotRuleGen(workloadManager, schemaManager.getSchema());
         init();
 
@@ -42,7 +38,7 @@ public class CachingManager {
 
     public IAction match(DataObject dataObject) {
 
-        switch (ruleType) {
+        switch (CachingConfig.ruleType) {
             case List:
                 for (Rule rule: ((ListRule)ruleStore).getRules()) {
                     if (rule.match(dataObject))
@@ -56,9 +52,11 @@ public class CachingManager {
     }
 
     public ListRule getRules() {
-//        ruleGen.run();
+
         System.out.println(((QueryBotRuleGen)ruleGen).getExInfo());
-        return ruleGen.generateRules();
+        ruleStore = ruleGen.generateRules();
+        return (ListRule) ruleStore;
+
     }
 
     public static void main(String args[]) {

@@ -40,6 +40,7 @@ public class ProducerTask extends TimerTask {
     }
 
     private void startConsumerThread() {
+        request.getAcquisitionFunctionParameters().put("resolution", "1");
         IngestionThread ingestionTask = new IngestionThread(request.getRequestId(),Long.parseLong(request.getAcquisitionFunctionParameters().get("resolution")));
         Thread th = new Thread(ingestionTask);
         th.start();

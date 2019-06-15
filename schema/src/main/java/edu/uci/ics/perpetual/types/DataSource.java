@@ -50,4 +50,11 @@ public class DataSource {
         this.sourceType = sourceType;
     }
     // endregion
+
+    public String toString() {
+
+        return String.format("Data Source Type = %s, Function Path = %s, Function Params = %s", sourceType.getName(),
+                functionPath, functionParams);
+
+    }
 }

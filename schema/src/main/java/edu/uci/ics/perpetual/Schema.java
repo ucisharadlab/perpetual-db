@@ -162,6 +162,10 @@ public class Schema {
         sb.append("\n-------------------------------------------------\n\n");
 
         sb.append("Data Source Types\n-------------------------------------------\n");
+        sb.append(new PrettyPrintingMap(dataSourceTypeMap));
+        sb.append("\n-------------------------------------------------\n\n");
+
+        sb.append("Data Sources\n-------------------------------------------\n");
         sb.append(new PrettyPrintingMap(dataSourceMap));
         sb.append("\n-------------------------------------------------\n\n");
 
