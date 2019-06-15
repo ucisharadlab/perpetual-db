@@ -52,6 +52,10 @@ public class SchemaManager {
         return instance;
     }
 
+    public DataObjectType getDataObjectTypeByDataSourceId(int dataSourceId) {
+        return schema.getDataSource(dataSourceId).getSourceType().getReturnType();
+    }
+
     // region Cache Handler
     public void accept(CacheRequest request) {
         if (request.isFindAll()) {

@@ -33,14 +33,15 @@ public class ProducerTask extends TimerTask {
     }
 
     private void produce() throws Exception {
-        producer = (Producer) JavaUtils.getObjectOfClass(request.getAcquisitionFunctionPath(), request.getAcquisitionName(), new Object[]{request});
+        producer = (Producer) JavaUtils.getObjectOfClass(request.getAcquisitionFunctionPath(),
+                request.getAcquisitionName(), new Object[]{request});
         // TODO LOG
         System.out.println("ACQUISITION ENGINE: Calling fetch");
         producer.fetch();
     }
 
     private void startConsumerThread() {
-        request.getAcquisitionFunctionParameters().put("resolution", "1");
+        request.getAcquisitionFunctionParameters().put("resolution", "4000");
         IngestionThread ingestionTask = new IngestionThread(request.getRequestId(),Long.parseLong(request.getAcquisitionFunctionParameters().get("resolution")));
         Thread th = new Thread(ingestionTask);
         th.start();

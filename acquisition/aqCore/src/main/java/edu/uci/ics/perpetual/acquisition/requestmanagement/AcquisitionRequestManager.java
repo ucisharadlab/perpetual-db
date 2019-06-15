@@ -16,6 +16,8 @@ import edu.uci.ics.perpetual.statement.drop.Drop;
 import edu.uci.ics.perpetual.statement.insert.Insert;
 import edu.uci.ics.perpetual.statement.select.Select;
 import edu.uci.ics.perpetual.statement.values.ValuesStatement;
+import edu.uci.ics.perpetual.types.DataObjectType;
+import edu.uci.ics.perpetual.types.DataSourceType;
 import edu.uci.ics.perpetual.util.PrettyPrintingMap;
 import org.apache.commons.lang3.StringUtils;
 
@@ -90,6 +92,14 @@ public class AcquisitionRequestManager {
 
         return addRequest(acquisitionRequest);
 
+    }
+
+    public AcquisitionRequest getRequest(int requestId){
+        return requests.get( requestId );
+    }
+
+    public DataObjectType getRequestDataSourceType(int requestId){
+        return schema.getDataObjectTypeByDataSourceId(requests.get(requestId).getDataSourceId());
     }
 
     public AcquisitionRequestStatus getRequestStatus(int requestId){

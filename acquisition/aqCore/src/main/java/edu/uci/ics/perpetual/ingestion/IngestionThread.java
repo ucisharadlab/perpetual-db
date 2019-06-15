@@ -1,8 +1,7 @@
 package edu.uci.ics.perpetual.ingestion;
 
 import com.google.gson.JsonElement;
-import edu.uci.ics.perpetual.CachingManager;
-import edu.uci.ics.perpetual.CachingManagerFactory;
+import edu.uci.ics.perpetual.*;
 import edu.uci.ics.perpetual.acquisition.AcquisitionManager;
 import edu.uci.ics.perpetual.data.DataObject;
 import edu.uci.ics.perpetual.enrichment.EnrichmentFunction;
@@ -18,6 +17,8 @@ public class IngestionThread implements Runnable {
     private AcquisitionManager aquisitionMgr = AcquisitionManager.getInstance();
     private HashSet<JsonElement> seenTimeStamps = new HashSet<>();
     private CachingManager cachingManager = CachingManagerFactory.getCachingManager();
+    private SchemaManager schemaManager = SchemaManager.getInstance();
+    private StorageManager storageManager = FileStorage.getInstance(schemaManager);
 
     public IngestionThread(int requestId, long checkTimeInterval) {
         this.requestId = requestId;
@@ -48,6 +49,7 @@ public class IngestionThread implements Runnable {
             if (!seenTimeStamps.contains(object.getTimeStamp())) {
                 tagObject(object);
                 System.out.println(object.getObject().toString());
+                storageManager.addRawObject(object);
             }
         }
     }

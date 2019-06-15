@@ -5,7 +5,7 @@ import edu.uci.ics.perpetual.schema.IType;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RawType implements IType {
+public class RawType extends DataObjectType implements IType {
     private String name;
 
     private HashMap<String, String> attributes;

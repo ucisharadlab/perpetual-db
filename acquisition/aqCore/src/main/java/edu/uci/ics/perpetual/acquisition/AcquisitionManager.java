@@ -59,7 +59,9 @@ public class AcquisitionManager {
             JsonFactory factory = om.getFactory();
             JsonParser parser = factory.createParser(record.value().toString());
             JsonNode rec = om.readTree( parser );
-            data.add( new DataObject(rec.toString() , new DataObjectType ()));
+            data.add( new DataObject(rec.toString() ,
+                    requestManager.getRequestDataSourceType(requestId))
+            );
         }
         consumer.close();
         System.out.println( "ACQUISITION ENGINE: returning data of size: " + data.size()  + " to the ingestion engine for processing");
