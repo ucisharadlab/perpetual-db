@@ -111,6 +111,10 @@ public class SchemaManager {
         request.setRawTypeScheme(dataSource.getSourceType().getReturnType().getAttributes());
         request.setAcquisitionFunctionPath(dataSource.getFunctionPath());
         request.setAcquisitionFunctionParameters(dataSource.getFunctionParams());
+
+        String pathToJar = dataSource.getFunctionPath();
+        String functionName = pathToJar.substring(pathToJar.lastIndexOf('/') + 1, pathToJar.lastIndexOf(".jar"));
+        request.setAcquisitionName(functionName);
 //        request.setStatus(RequestStatus.success());
     }
     // endregion

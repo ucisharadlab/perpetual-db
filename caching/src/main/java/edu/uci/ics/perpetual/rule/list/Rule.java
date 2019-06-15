@@ -71,7 +71,7 @@ public class Rule {
 
     public boolean match(DataObject dataObject) {
 
-        return false;
+        return true;
 
     }
 

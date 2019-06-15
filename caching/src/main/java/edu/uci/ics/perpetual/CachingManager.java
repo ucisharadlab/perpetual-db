@@ -37,7 +37,7 @@ public class CachingManager {
 
 
     public IAction match(DataObject dataObject) {
-
+        ruleStore = ruleGen.getRuleStore();
         switch (CachingConfig.ruleType) {
             case List:
                 for (Rule rule: ((ListRule)ruleStore).getRules()) {
