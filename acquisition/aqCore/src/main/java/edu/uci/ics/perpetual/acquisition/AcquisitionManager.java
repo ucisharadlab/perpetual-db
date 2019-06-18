@@ -12,12 +12,17 @@ import edu.uci.ics.perpetual.types.DataObjectType;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
 import static edu.uci.ics.perpetual.acquisition.utils.AcquisitionConfig.config;
+
 public class AcquisitionManager {
+
+    Logger LOGGER = Logger.getLogger(AcquisitionManager.class);
 
     private static AcquisitionManager instance;
     KafkaConsumer<Object, Object> consumer;
@@ -54,7 +59,7 @@ public class AcquisitionManager {
         }
         for (ConsumerRecord<Object, Object> record : records)
         {
-            System.out.println( "ACQUISITION ENGINE: Found: " + record.toString() );
+            LOGGER.info( "ACQUISITION ENGINE: Found: " + record.toString() );
             ObjectMapper om = new ObjectMapper();
             JsonFactory factory = om.getFactory();
             JsonParser parser = factory.createParser(record.value().toString());
@@ -64,7 +69,7 @@ public class AcquisitionManager {
             );
         }
         consumer.close();
-        System.out.println( "ACQUISITION ENGINE: returning data of size: " + data.size()  + " to the ingestion engine for processing");
+        LOGGER.info( "ACQUISITION ENGINE: returning data of size: " + data.size()  + " to the ingestion engine for processing");
         return data;
     }
 

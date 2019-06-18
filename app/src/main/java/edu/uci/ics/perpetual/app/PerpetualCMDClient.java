@@ -67,6 +67,7 @@ public class PerpetualCMDClient extends Thread {
                 // Handle Add Request
                 if (stmt instanceof AddRequest) {
                     acquisitionRequestManager.addRequest(stmt);
+                    System.out.println("Request Added\n");
                     continue;
                 }
 

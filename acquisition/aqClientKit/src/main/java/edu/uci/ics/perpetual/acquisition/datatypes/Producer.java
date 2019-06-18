@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.uci.ics.perpetual.request.AcquisitionRequest;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.log4j.Logger;
+
 import static edu.uci.ics.perpetual.acquisition.utils.AcquisitionConfig.config;
 
 import java.io.IOException;
@@ -15,6 +17,8 @@ public abstract class Producer {
 
     protected AcquisitionRequest request;
     private KafkaProducer<Object, Object> producer;
+
+    Logger LOGGER = Logger.getLogger(Producer.class);
 
     public Producer(AcquisitionRequest request){
         // shared kafka initialization
@@ -33,7 +37,7 @@ public abstract class Producer {
     }
 
     public void sendMessage(long idx , Object object){
-        System.out.println("Sending: "+ object);
+        LOGGER.info("Sending: "+ object);
         producer.send( new ProducerRecord <Object,Object>( request.getRequestId() + "",idx, object ));
     }
 

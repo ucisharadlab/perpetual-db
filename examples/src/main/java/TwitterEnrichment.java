@@ -1,9 +1,13 @@
 import com.google.gson.JsonObject;
+import org.apache.log4j.Logger;
+
 
 public class TwitterEnrichment {
 
+    Logger LOGGER = Logger.getLogger(TwitterEnrichment.class);
+
     public String enrich(JsonObject data) {
-        System.out.println("Running Enrichment");
+        LOGGER.info("Running Enrichment");
         return "Success";
     }
 
