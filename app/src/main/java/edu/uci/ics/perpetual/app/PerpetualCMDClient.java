@@ -37,7 +37,7 @@ public class PerpetualCMDClient extends Thread {
         Scanner scanner = new Scanner(System.in);
         while (true) {
 
-            System.out.print("PerperualDB >>> ");
+            System.out.println("PerperualDB >>> ");
             String query = scanner.nextLine();
 
             System.out.println();

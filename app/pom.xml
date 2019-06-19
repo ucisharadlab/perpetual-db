@@ -71,11 +71,13 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>edu.uci.ics.perpetual.app.Server</mainClass>
+                    <includeProjectDependencies>true</includeProjectDependencies>
+                    <executable>java</executable>
                     <arguments>
-                        <argument>foo</argument>
-                        <argument>bar</argument>
-                    </arguments>show
+                        <argument>-classpath</argument>
+                        <classpath/>
+                        <argument>edu.uci.ics.perpetual.app.Server</argument>
+                    </arguments>
                 </configuration>
             </plugin>
         </plugins>
