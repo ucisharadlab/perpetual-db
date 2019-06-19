@@ -202,6 +202,7 @@ TOKEN: /* SQL Keywords. prefixed with K_ to avoid name clashes */
 |   <K_OUTER:"OUTER">
 |   <K_OVER:"OVER">
 |   <K_PARTITION:"PARTITION">
+|   <K_PATH:"PATH">
 |   <K_PERCENT:"PERCENT">
 |   <K_PIVOT:"PIVOT">
 |   <K_PLACING:"PLACING">
@@ -2683,6 +2684,7 @@ CreateFunction CreateFunction():
     Token tk = null;
     Token tk2 = null;
     Token tk3 = null;
+    Token pathTk = null;
     String sk3 = null;
 }
 {
@@ -2718,6 +2720,7 @@ CreateFunction CreateFunction():
         returnTag.setName(tagName);
     }
     <K_COST> tk=<S_LONG>
+    [<K_PATH>  pathTk=<S_CHAR_LITERAL> {createFunction.setPath(pathTk.image);} ]
     {
         createFunction.setFunction(UDFFunction);
         createFunction.setType(type);

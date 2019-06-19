@@ -18,6 +18,7 @@ public class CreateFunction implements Statement {
 
     private Function function;
     private Type type;
+    private String path;
     private boolean unlogged = false;
     private List<String> createOptionsStrings;
     private List<String> typeOptionsStrings;
@@ -43,6 +44,14 @@ public class CreateFunction implements Statement {
 
     public void setType(Type type) {
         this.type = type;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     /**

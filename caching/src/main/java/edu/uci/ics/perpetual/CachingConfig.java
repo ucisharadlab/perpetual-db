@@ -7,15 +7,19 @@ public class CachingConfig {
 
     public static final int SLEEP_INTERVAl = 1000000;
 
-    public static final String DATADIR = "/home/peeyush/Downloads/perpetual-db/caching/src/main/resources/query-bot-5000.sample";
+    // Query Bot Data
+    // public static final String DATADIR = "/home/peeyush/Downloads/perpetual-db/caching/src/main/resources/query-bot-5000.sample";
+    // public static final WorkloadType WTYPE = WorkloadType.QueryBot;
 
-    public static final WorkloadType WTYPE = WorkloadType.QueryBot;
+    // Twitter Data
+    public static final String DATADIR = "/home/peeyush/Downloads/perpetual-db/scripts/twitter_queries.txt";
+    public static final WorkloadType WTYPE = WorkloadType.Twitter;
 
     public static final RuleType ruleType = RuleType.List;
 
     public static final String TYPE_STR = "type";
 
-    public static final String DUMMY_ENRICH_FUNC = "file:////home/peeyush/Downloads/perpetual-db/examples/TwitterEnrichment.jar";
+    public static final String DUMMY_ENRICH_FUNC = "/home/peeyush/Downloads/perpetual-db/examples/TwitterEnrichment.jar";
 
     public static final int TOP_TYPES = 2;
 

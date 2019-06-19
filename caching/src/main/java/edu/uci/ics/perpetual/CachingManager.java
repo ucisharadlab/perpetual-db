@@ -9,6 +9,7 @@ import edu.uci.ics.perpetual.rule.IRuleStore;
 import edu.uci.ics.perpetual.rule.list.ListRule;
 import edu.uci.ics.perpetual.rule.list.Rule;
 import edu.uci.ics.perpetual.rulegen.QueryBotRuleGen;
+import edu.uci.ics.perpetual.rulegen.TwitterRuleGen;
 import edu.uci.ics.perpetual.workload.WorkloadManager;
 import edu.uci.ics.perpetual.caching.WorkloadType;
 import org.apache.commons.lang3.NotImplementedException;
@@ -25,7 +26,17 @@ public class CachingManager {
     public CachingManager(){
         schemaManager = SchemaManager.getInstance();
         workloadManager = new WorkloadManager(CachingConfig.DATADIR, CachingConfig.WTYPE, CachingConfig.SLEEP_INTERVAl);
-        ruleGen = new QueryBotRuleGen(workloadManager, schemaManager.getSchema());
+        switch (CachingConfig.WTYPE) {
+            case QueryBot:
+                ruleGen = new QueryBotRuleGen(workloadManager, schemaManager.getSchema());
+                break;
+            case Twitter:
+                ruleGen = new TwitterRuleGen(workloadManager, schemaManager.getSchema());
+                break;
+            default:
+                ruleGen = new TwitterRuleGen(workloadManager, schemaManager.getSchema());
+                break;
+        }
         init();
 
     }

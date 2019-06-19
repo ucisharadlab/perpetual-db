@@ -13,6 +13,7 @@ import edu.uci.ics.perpetual.rule.list.ListRule;
 import edu.uci.ics.perpetual.rule.list.Rule;
 import edu.uci.ics.perpetual.statistics.IStats;
 import edu.uci.ics.perpetual.types.DataObjectType;
+import edu.uci.ics.perpetual.types.TaggingFunction;
 import edu.uci.ics.perpetual.workload.WorkloadManager;
 import edu.uci.ics.perpetual.workload.clusterer.IClusteredInfo;
 import edu.uci.ics.perpetual.workload.extractor.IExtractInfo;
@@ -68,8 +69,12 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
                 for (String tag : topTags) {
 
                     List<EnrichmentFunction> functions = new ArrayList<>();
-                    functions.add(EnrichmentFunction.getEnrichmentFunction(CachingConfig.DUMMY_ENRICH_FUNC));
-
+                    EnrichmentFunction enrichmentFunction = getEnrichementFunctioByTag(tag, type);
+                    if (enrichmentFunction!= null) {
+                        functions.add(enrichmentFunction);
+                    } else {
+                        functions.add(EnrichmentFunction.getEnrichmentFunction(CachingConfig.DUMMY_ENRICH_FUNC));
+                    }
                     StaticAction action = new StaticAction(functions);
 
                     Rule rule = new Rule();
@@ -88,7 +93,20 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
         return ruleStore;
     }
 
-    private List<String> getTopRawTypes(int N) {
+    EnrichmentFunction getEnrichementFunctioByTag(String tag, String rawType) {
+
+        for (Map.Entry<String, TaggingFunction> entry : schema.getEnrichmentFunctions().entrySet()) {
+            if(entry.getValue().getReturnTag().equalsIgnoreCase(tag) &&
+                    entry.getValue().getSourceType().equalsIgnoreCase(rawType))
+                return EnrichmentFunction.getEnrichmentFunction(entry.getValue().getPath(), tag);
+
+        }
+
+        return null;
+
+    }
+
+    List<String> getTopRawTypes(int N) {
 
         List<Map.Entry<String, Integer>> types = new ArrayList<>(exInfo.getTypeInfo().entrySet());
         types.sort((a,b) -> b.getValue() - a.getValue());
@@ -100,7 +118,7 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
 
     }
 
-    private List<String> getTopTagsForRawType(String rawType) {
+    List<String> getTopTagsForRawType(String rawType) {
 
         List<String> tags = schema.getTagMap().entrySet().stream()
                 .filter(a->a.getValue().getRawType().equalsIgnoreCase(rawType))

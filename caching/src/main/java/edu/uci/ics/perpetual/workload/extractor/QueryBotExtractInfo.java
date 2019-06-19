@@ -27,7 +27,9 @@ public class QueryBotExtractInfo implements IExtractInfo{
     }
 
     public String toString() {
-        return String.format("Type : Count ==> \n%s\n\nType :: Tag : Count ==>\n%s\n\n\n",
+        return String.format("Extracted Info From Workload\n---------------------------------------\n" +
+                        "Type : Count ==> \n%s\n\nType :: Tag : Count ==>\n%s" +
+                        "------------------------------------\n\n",
                 new PrettyPrintingMap(typeInfo), new PrettyPrintingMap(tagInfo));
     }
 
