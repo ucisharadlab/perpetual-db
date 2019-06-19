@@ -262,5 +262,8 @@ public class MysqlStorage implements Storage {
         }
     }
 
-    // endregion
+    public Connection getConn() {
+        return conn;
+    }
+// endregion
 }

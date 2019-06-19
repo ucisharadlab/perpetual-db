@@ -23,7 +23,6 @@ public class TwitterRuleGen extends QueryBotRuleGen {
 
     private ListRule ruleStore;
 
-
     public TwitterRuleGen(WorkloadManager workloadManager, Schema schema) {
         super(workloadManager, schema);
     }
@@ -86,6 +85,10 @@ public class TwitterRuleGen extends QueryBotRuleGen {
                 }
 
             }
+            if (CachingConfig.PERSIST) {
+                persistence.persist(ruleStore);
+            }
+
             return ruleStore;
         } catch (Exception e) {
             System.out.println("No Rules Generated\n\n");

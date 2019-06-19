@@ -25,4 +25,6 @@ public class CachingConfig {
 
     public static final int TOP_TAGS = 2;
 
+    public static final boolean PERSIST = true;
+
 }

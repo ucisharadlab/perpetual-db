@@ -4,6 +4,8 @@ import edu.uci.ics.perpetual.CachingConfig;
 import edu.uci.ics.perpetual.Schema;
 import edu.uci.ics.perpetual.action.StaticAction;
 import edu.uci.ics.perpetual.enrichment.EnrichmentFunction;
+import edu.uci.ics.perpetual.persistence.RulePersistence;
+import edu.uci.ics.perpetual.persistence.mysql.MySQLPersistence;
 import edu.uci.ics.perpetual.predicate.ComparisionOperator;
 import edu.uci.ics.perpetual.predicate.Expression;
 import edu.uci.ics.perpetual.predicate.ExpressionPredicate;
@@ -28,6 +30,7 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
 
     private Schema schema;
     private QueryBotExtractInfo exInfo;
+    protected RulePersistence persistence;
 
     private ListRule ruleStore;
 
@@ -36,6 +39,7 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
         this.exInfo = (QueryBotExtractInfo) workloadManager.getExtractInfo();
         System.out.print(exInfo);
         this.schema = schema;
+        this.persistence = new MySQLPersistence();
     }
 
     public QueryBotRuleGen(IExtractInfo workloadInfo, IStats stats) {
@@ -85,6 +89,11 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
                 }
 
             }
+
+            if (CachingConfig.PERSIST) {
+                persistence.persist(ruleStore);
+            }
+
             return ruleStore;
         } catch (Exception e) {
             System.out.println("No Rules Generated\n\n");
