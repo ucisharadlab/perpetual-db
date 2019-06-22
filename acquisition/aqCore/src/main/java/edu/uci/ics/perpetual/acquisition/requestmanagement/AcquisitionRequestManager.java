@@ -77,6 +77,7 @@ public class AcquisitionRequestManager {
 
                 acquisitionRequest.setDataSourceId(addRequest.getDataSourceId());
                 acquisitionRequest.setRequestId(addRequest.getId());
+                acquisitionRequest.setFrequency(addRequest.getFrequency());
                 try {
                     String start = StringUtils.strip(addRequest.getStartTime(),"'");
                     String end = StringUtils.strip(addRequest.getEndTime(), "'");

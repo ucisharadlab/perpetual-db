@@ -37,6 +37,7 @@ public class TwitterProducer extends Producer {
             sendTweet.addProperty("id", tweet.getAsJsonObject("_id").get("$numberLong").getAsLong());
             sendTweet.addProperty("text", tweet.getAsJsonObject("status").get("text").getAsString());
             sendTweet.addProperty("timestamp", tweet.getAsJsonObject("timestamp").get("$numberLong").getAsLong());
+            sendTweet.addProperty("user", tweet.getAsJsonObject("status").getAsJsonObject("user").get("name").getAsString());
 
             LOGGER.info("PRODUCER UDF : Sending..." + sendTweet.toString());
             sendMessage(0, sendTweet.toString());

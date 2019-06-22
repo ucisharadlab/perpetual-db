@@ -39,7 +39,7 @@ public class IngestionThread implements Runnable {
                 processObjects(objects);
                 clean();
                 long endTime = System.currentTimeMillis();
-                Thread.sleep(checkTimeInterval - (endTime - startTime));
+                Thread.sleep(Math.max(0, checkTimeInterval - (endTime - startTime)));
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -44,9 +44,7 @@ public class ProducerTask extends TimerTask {
     }
 
     private void startConsumerThread() {
-        // TODO: Change this to user provided value
-        request.getAcquisitionFunctionParameters().put("resolution", "10000");
-        IngestionThread ingestionTask = new IngestionThread(request.getRequestId(),Long.parseLong(request.getAcquisitionFunctionParameters().get("resolution")));
+        IngestionThread ingestionTask = new IngestionThread(request.getRequestId(),request.getFrequency());
         Thread th = new Thread(ingestionTask);
         th.start();
         LOGGER.info("ACQUISITION ENGINE: Ingestion thread spawned!");

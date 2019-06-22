@@ -49,9 +49,10 @@ public class AcquisitionManager {
      * Invoked by Ingestion Engine
      */
     public ArrayList<DataObject> getData(int requestId) throws JsonParseException, IOException {
+        KafkaConsumer<Object, Object> consumer;
         consumer = new KafkaConsumer<Object, Object>( kafkaConfigs);    // consumer
         consumer.subscribe(Arrays.asList(requestId+""));      // topic
-        ConsumerRecords<Object, Object> records  = consumer.poll(1000);
+        ConsumerRecords<Object, Object> records  = consumer.poll(100);
 
         ArrayList<DataObject> data = new ArrayList<DataObject>();
         if(records.isEmpty() && requestManager.getRequestStatus( requestId ) == AcquisitionRequestStatus.DONE){
