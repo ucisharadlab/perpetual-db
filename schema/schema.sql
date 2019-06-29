@@ -48,6 +48,7 @@ CREATE TABLE TaggingFunction (
 	paramList TEXT NOT NULL,
 	returnTag TEXT NOT NULL,
 	cost INT NOT NULL,
+    path VARCHAR(300),
 
 	PRIMARY KEY (functionName)
 );
@@ -57,4 +58,28 @@ CREATE TABLE Relation (
  	child VARCHAR(40) NOT NULL,
 
  	PRIMARY KEY (parent, child)
+);
+
+CREATE TABLE CachingRules (
+    rule TEXT,
+    version INT
+);
+
+CREATE TABLE CachingVersions (
+    version INT,
+    creationTime TIMESTAMP
+);
+
+CREATE TABLE AcquisitionRequests (
+    requestId INT,
+    acquisitionName VARCHAR(60),
+    dataSourceId INT,
+    acquisitionFunctionPath VARCHAR(300),
+    acquisitionFunctionParameters TEXT,
+    rawTypeScheme TEXT,
+    startTime DATE,
+    endTime DATE,
+    frequency INT,
+
+    PRIMARY KEY(requestId)
 );

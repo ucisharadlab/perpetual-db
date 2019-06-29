@@ -42,7 +42,24 @@ public class ExpressionPredicate implements IPredicate {
 
     @Override
     public boolean evaluate(DataObject dataObject) {
-        return false;
+
+        boolean flag = false;
+        if (lop == LogicalOperator.AND)
+            flag = true;
+
+        for (Expression expression : expressions) {
+
+            switch (lop) {
+                case AND:
+                    flag = flag && expression.check(dataObject);
+                    break;
+                case OR:
+                    flag = flag || expression.check(dataObject);
+                    break;
+            }
+        }
+
+        return flag;
     }
 
 }

@@ -27,4 +27,9 @@ public class DataObject {
     public JsonElement getTimeStamp(){
         return object.get("timestamp");
     }
+
+    @Override
+    public String toString() {
+        return object.toString();
+    }
 }

@@ -12,12 +12,17 @@ import edu.uci.ics.perpetual.types.DataObjectType;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
 import static edu.uci.ics.perpetual.acquisition.utils.AcquisitionConfig.config;
+
 public class AcquisitionManager {
+
+    Logger LOGGER = Logger.getLogger(AcquisitionManager.class);
 
     private static AcquisitionManager instance;
     KafkaConsumer<Object, Object> consumer;
@@ -44,9 +49,10 @@ public class AcquisitionManager {
      * Invoked by Ingestion Engine
      */
     public ArrayList<DataObject> getData(int requestId) throws JsonParseException, IOException {
+        KafkaConsumer<Object, Object> consumer;
         consumer = new KafkaConsumer<Object, Object>( kafkaConfigs);    // consumer
         consumer.subscribe(Arrays.asList(requestId+""));      // topic
-        ConsumerRecords<Object, Object> records  = consumer.poll(1000);
+        ConsumerRecords<Object, Object> records  = consumer.poll(100);
 
         ArrayList<DataObject> data = new ArrayList<DataObject>();
         if(records.isEmpty() && requestManager.getRequestStatus( requestId ) == AcquisitionRequestStatus.DONE){
@@ -54,15 +60,17 @@ public class AcquisitionManager {
         }
         for (ConsumerRecord<Object, Object> record : records)
         {
-            System.out.println( "ACQUISITION ENGINE: Found: " + record.toString() );
+            LOGGER.info( "ACQUISITION ENGINE: Found: " + record.toString() );
             ObjectMapper om = new ObjectMapper();
             JsonFactory factory = om.getFactory();
             JsonParser parser = factory.createParser(record.value().toString());
             JsonNode rec = om.readTree( parser );
-            data.add( new DataObject(rec.toString() , new DataObjectType ()));
+            data.add( new DataObject(rec.toString() ,
+                    requestManager.getRequestDataSourceType(requestId))
+            );
         }
         consumer.close();
-        System.out.println( "ACQUISITION ENGINE: returning data of size: " + data.size()  + " to the ingestion engine for processing");
+        LOGGER.info( "ACQUISITION ENGINE: returning data of size: " + data.size()  + " to the ingestion engine for processing");
         return data;
     }
 

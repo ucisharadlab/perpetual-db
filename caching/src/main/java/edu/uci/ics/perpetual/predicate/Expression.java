@@ -1,5 +1,7 @@
 package edu.uci.ics.perpetual.predicate;
 
+import edu.uci.ics.perpetual.data.DataObject;
+
 public class Expression<T> {
 
     private String tag;
@@ -36,6 +38,53 @@ public class Expression<T> {
 
     public void setValue(T value) {
         this.value = value;
+    }
+
+    public boolean check(DataObject dataObject) {
+
+        switch (cop) {
+
+            case EQ:
+                if (value instanceof String) {
+                    return dataObject.getObject().get(tag).getAsString().equalsIgnoreCase((String)value);
+                } else if (value instanceof Integer) {
+                    return dataObject.getObject().get(tag).getAsInt() == (Integer) value;
+                } else if (value instanceof Float) {
+                    return dataObject.getObject().get(tag).getAsFloat() == (Float) value;
+                }
+                break;
+            case GT:
+                if (value instanceof String) {
+                    return dataObject.getObject().get(tag).getAsString().compareToIgnoreCase((String)value) > 0;
+                } else if (value instanceof Integer) {
+                    return dataObject.getObject().get(tag).getAsInt() > (Integer) value;
+                } else if (value instanceof Float) {
+                    return dataObject.getObject().get(tag).getAsFloat() > (Float) value;
+                }
+                break;
+            case LT:
+                if (value instanceof String) {
+                    return dataObject.getObject().get(tag).getAsString().compareToIgnoreCase((String)value) < 0;
+                } else if (value instanceof Integer) {
+                    return dataObject.getObject().get(tag).getAsInt() < (Integer) value;
+                } else if (value instanceof Float) {
+                    return dataObject.getObject().get(tag).getAsFloat() < (Float) value;
+                }
+                break;
+            case NEQ:
+                if (value instanceof String) {
+                    return !dataObject.getObject().get(tag).getAsString().equalsIgnoreCase((String)value);
+                } else if (value instanceof Integer) {
+                    return dataObject.getObject().get(tag).getAsInt() != (Integer) value;
+                } else if (value instanceof Float) {
+                    return dataObject.getObject().get(tag).getAsFloat() != (Float) value;
+                }
+                break;
+
+        }
+
+        return false;
+
     }
 
     public String toString() {

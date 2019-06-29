@@ -1,8 +1,11 @@
 package edu.uci.ics.perpetual.rulegen;
 
+import edu.uci.ics.perpetual.CachingConfig;
 import edu.uci.ics.perpetual.Schema;
 import edu.uci.ics.perpetual.action.StaticAction;
 import edu.uci.ics.perpetual.enrichment.EnrichmentFunction;
+import edu.uci.ics.perpetual.persistence.RulePersistence;
+import edu.uci.ics.perpetual.persistence.mysql.MySQLPersistence;
 import edu.uci.ics.perpetual.predicate.ComparisionOperator;
 import edu.uci.ics.perpetual.predicate.Expression;
 import edu.uci.ics.perpetual.predicate.ExpressionPredicate;
@@ -12,6 +15,7 @@ import edu.uci.ics.perpetual.rule.list.ListRule;
 import edu.uci.ics.perpetual.rule.list.Rule;
 import edu.uci.ics.perpetual.statistics.IStats;
 import edu.uci.ics.perpetual.types.DataObjectType;
+import edu.uci.ics.perpetual.types.TaggingFunction;
 import edu.uci.ics.perpetual.workload.WorkloadManager;
 import edu.uci.ics.perpetual.workload.clusterer.IClusteredInfo;
 import edu.uci.ics.perpetual.workload.extractor.IExtractInfo;
@@ -26,17 +30,16 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
 
     private Schema schema;
     private QueryBotExtractInfo exInfo;
-    private final int TOP_TYPES = 2;
-    private final int TOP_TAGS = 2;
+    protected RulePersistence persistence;
+
     private ListRule ruleStore;
-    private final String TYPE_STR = "type";
-    private final String DUMMY_ENRICH_FUNC = "file:///home/peeyush/Downloads/perpetual-db/common/src/test/edu/uci/ics/perpetual/common/enrichment/Enrichment.jar";
 
     public QueryBotRuleGen(WorkloadManager workloadManager, Schema schema) {
         workloadManager.run();
         this.exInfo = (QueryBotExtractInfo) workloadManager.getExtractInfo();
         System.out.print(exInfo);
         this.schema = schema;
+        this.persistence = new MySQLPersistence();
     }
 
     public QueryBotRuleGen(IExtractInfo workloadInfo, IStats stats) {
@@ -50,19 +53,19 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
 
         ruleStore = new ListRule();
         try {
-            List<String> topRawTypes = getTopRawTypes(TOP_TYPES);
-            if (topRawTypes.size() > TOP_TYPES) topRawTypes = topRawTypes.subList(0, TOP_TYPES);
+            List<String> topRawTypes = getTopRawTypes(CachingConfig.TOP_TYPES);
+            if (topRawTypes.size() > CachingConfig.TOP_TYPES)
+                topRawTypes = topRawTypes.subList(0, CachingConfig.TOP_TYPES);
 
             for (String type : topRawTypes) {
-
                 List<String> topTags = getTopTagsForRawType(type);
-                if (topTags.size() > TOP_TAGS) topTags = topTags.subList(0, TOP_TAGS);
+                if (topTags.size() > CachingConfig.TOP_TAGS) topTags = topTags.subList(0, CachingConfig.TOP_TAGS);
 
                 DataObjectType dataObjectType = new DataObjectType();
                 dataObjectType.setName(type);
 
                 List<Expression> expressions = new ArrayList<>();
-                expressions.add(new Expression<>(TYPE_STR, ComparisionOperator.EQ, type));
+                expressions.add(new Expression<>(CachingConfig.TYPE_STR, ComparisionOperator.EQ, type));
                 ExpressionPredicate predicate = new ExpressionPredicate(
                         LogicalOperator.AND,
                         expressions);
@@ -70,8 +73,12 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
                 for (String tag : topTags) {
 
                     List<EnrichmentFunction> functions = new ArrayList<>();
-                    functions.add(EnrichmentFunction.getEnrichmentFunction(DUMMY_ENRICH_FUNC));
-
+                    EnrichmentFunction enrichmentFunction = getEnrichementFunctioByTag(tag, type);
+                    if (enrichmentFunction!= null) {
+                        functions.add(enrichmentFunction);
+                    } else {
+                        functions.add(EnrichmentFunction.getEnrichmentFunction(CachingConfig.DUMMY_ENRICH_FUNC));
+                    }
                     StaticAction action = new StaticAction(functions);
 
                     Rule rule = new Rule();
@@ -82,6 +89,11 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
                 }
 
             }
+
+            if (CachingConfig.PERSIST) {
+                persistence.persist(ruleStore);
+            }
+
             return ruleStore;
         } catch (Exception e) {
             System.out.println("No Rules Generated\n\n");
@@ -90,7 +102,20 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
         return ruleStore;
     }
 
-    private List<String> getTopRawTypes(int N) {
+    EnrichmentFunction getEnrichementFunctioByTag(String tag, String rawType) {
+
+        for (Map.Entry<String, TaggingFunction> entry : schema.getEnrichmentFunctions().entrySet()) {
+            if(entry.getValue().getReturnTag().equalsIgnoreCase(tag) &&
+                    entry.getValue().getSourceType().equalsIgnoreCase(rawType))
+                return EnrichmentFunction.getEnrichmentFunction(entry.getValue().getPath(), tag);
+
+        }
+
+        return null;
+
+    }
+
+    List<String> getTopRawTypes(int N) {
 
         List<Map.Entry<String, Integer>> types = new ArrayList<>(exInfo.getTypeInfo().entrySet());
         types.sort((a,b) -> b.getValue() - a.getValue());
@@ -102,7 +127,7 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
 
     }
 
-    private List<String> getTopTagsForRawType(String rawType) {
+    List<String> getTopTagsForRawType(String rawType) {
 
         List<String> tags = schema.getTagMap().entrySet().stream()
                 .filter(a->a.getValue().getRawType().equalsIgnoreCase(rawType))
@@ -130,7 +155,7 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
         while (true) {
             generateRules();
             try {
-                Thread.sleep(10000000);
+                Thread.sleep(CachingConfig.SLEEP_INTERVAl);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

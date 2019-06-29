@@ -37,9 +37,10 @@ public class PerpetualCMDClient extends Thread {
         Scanner scanner = new Scanner(System.in);
         while (true) {
 
-            System.out.print("PerperualDB >>> ");
+            System.out.println("PerperualDB >>> ");
             String query = scanner.nextLine();
 
+            System.out.println();
             // Handle Special Commands
             if (Commands.SHOW_SCHEMA.equalsIgnoreCase(query)) {
                 System.out.println(schemaManager.getSchema());
@@ -66,6 +67,7 @@ public class PerpetualCMDClient extends Thread {
                 // Handle Add Request
                 if (stmt instanceof AddRequest) {
                     acquisitionRequestManager.addRequest(stmt);
+                    System.out.println("Request Added\n");
                     continue;
                 }
 

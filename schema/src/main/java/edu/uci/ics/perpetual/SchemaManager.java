@@ -52,6 +52,10 @@ public class SchemaManager {
         return instance;
     }
 
+    public DataObjectType getDataObjectTypeByDataSourceId(int dataSourceId) {
+        return schema.getDataSource(dataSourceId).getSourceType().getReturnType();
+    }
+
     // region Cache Handler
     public void accept(CacheRequest request) {
         if (request.isFindAll()) {
@@ -111,6 +115,10 @@ public class SchemaManager {
         request.setRawTypeScheme(dataSource.getSourceType().getReturnType().getAttributes());
         request.setAcquisitionFunctionPath(dataSource.getFunctionPath());
         request.setAcquisitionFunctionParameters(dataSource.getFunctionParams());
+
+        String pathToJar = dataSource.getFunctionPath();
+        String functionName = pathToJar.substring(pathToJar.lastIndexOf('/') + 1, pathToJar.lastIndexOf(".jar"));
+        request.setAcquisitionName(functionName);
 //        request.setStatus(RequestStatus.success());
     }
     // endregion
@@ -288,6 +296,7 @@ public class SchemaManager {
                 }
 
                 TaggingFunction function = new TaggingFunction(funcName, rawTypeName, params, returnTagName, createFunction.getCost());
+                function.setPath(createFunction.getPath());
                 schema.addFunction(function);
 
                 storage.persist(new StorageRequest(function));

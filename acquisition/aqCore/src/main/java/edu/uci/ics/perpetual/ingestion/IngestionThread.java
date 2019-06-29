@@ -1,11 +1,11 @@
 package edu.uci.ics.perpetual.ingestion;
 
 import com.google.gson.JsonElement;
-import edu.uci.ics.perpetual.CachingManager;
-import edu.uci.ics.perpetual.CachingManagerFactory;
+import edu.uci.ics.perpetual.*;
 import edu.uci.ics.perpetual.acquisition.AcquisitionManager;
 import edu.uci.ics.perpetual.data.DataObject;
 import edu.uci.ics.perpetual.enrichment.EnrichmentFunction;
+import org.apache.log4j.Logger;
 
 import java.sql.SQLOutput;
 import java.util.ArrayList;
@@ -18,6 +18,10 @@ public class IngestionThread implements Runnable {
     private AcquisitionManager aquisitionMgr = AcquisitionManager.getInstance();
     private HashSet<JsonElement> seenTimeStamps = new HashSet<>();
     private CachingManager cachingManager = CachingManagerFactory.getCachingManager();
+    private SchemaManager schemaManager = SchemaManager.getInstance();
+    private StorageManager storageManager = FileStorage.getInstance(schemaManager);
+
+    Logger LOGGER = Logger.getLogger(IngestionThread.class);
 
     public IngestionThread(int requestId, long checkTimeInterval) {
         this.requestId = requestId;
@@ -35,7 +39,7 @@ public class IngestionThread implements Runnable {
                 processObjects(objects);
                 clean();
                 long endTime = System.currentTimeMillis();
-                Thread.sleep(checkTimeInterval - (endTime - startTime));
+                Thread.sleep(Math.max(0, checkTimeInterval - (endTime - startTime)));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,7 +51,8 @@ public class IngestionThread implements Runnable {
         for (DataObject object : objects) {
             if (!seenTimeStamps.contains(object.getTimeStamp())) {
                 tagObject(object);
-                System.out.println(object.getObject().toString());
+                LOGGER.info(object.getObject().toString());
+                storageManager.addRawObject(object);
             }
         }
     }

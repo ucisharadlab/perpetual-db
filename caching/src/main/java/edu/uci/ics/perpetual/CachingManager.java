@@ -9,6 +9,7 @@ import edu.uci.ics.perpetual.rule.IRuleStore;
 import edu.uci.ics.perpetual.rule.list.ListRule;
 import edu.uci.ics.perpetual.rule.list.Rule;
 import edu.uci.ics.perpetual.rulegen.QueryBotRuleGen;
+import edu.uci.ics.perpetual.rulegen.TwitterRuleGen;
 import edu.uci.ics.perpetual.workload.WorkloadManager;
 import edu.uci.ics.perpetual.caching.WorkloadType;
 import org.apache.commons.lang3.NotImplementedException;
@@ -20,16 +21,22 @@ public class CachingManager {
     private QueryBotRuleGen ruleGen;
 
     private IRuleStore ruleStore;
-    private final int SLEEP_INTERVAl = 1000000;
-    private final String DATADIR = "/home/peeyush/Downloads/perpetual-db/caching/src/main/resources/query-bot-5000.sample";
 
-    private final WorkloadType WTYPE = WorkloadType.QueryBot;
-    private final RuleType ruleType = RuleType.List;
 
     public CachingManager(){
         schemaManager = SchemaManager.getInstance();
-        workloadManager = new WorkloadManager(DATADIR, WTYPE, SLEEP_INTERVAl);
-        ruleGen = new QueryBotRuleGen(workloadManager, schemaManager.getSchema());
+        workloadManager = new WorkloadManager(CachingConfig.DATADIR, CachingConfig.WTYPE, CachingConfig.SLEEP_INTERVAl);
+        switch (CachingConfig.WTYPE) {
+            case QueryBot:
+                ruleGen = new QueryBotRuleGen(workloadManager, schemaManager.getSchema());
+                break;
+            case Twitter:
+                ruleGen = new TwitterRuleGen(workloadManager, schemaManager.getSchema());
+                break;
+            default:
+                ruleGen = new TwitterRuleGen(workloadManager, schemaManager.getSchema());
+                break;
+        }
         init();
 
     }
@@ -41,8 +48,8 @@ public class CachingManager {
 
 
     public IAction match(DataObject dataObject) {
-
-        switch (ruleType) {
+        ruleStore = ruleGen.getRuleStore();
+        switch (CachingConfig.ruleType) {
             case List:
                 for (Rule rule: ((ListRule)ruleStore).getRules()) {
                     if (rule.match(dataObject))
@@ -56,9 +63,11 @@ public class CachingManager {
     }
 
     public ListRule getRules() {
-//        ruleGen.run();
+
         System.out.println(((QueryBotRuleGen)ruleGen).getExInfo());
-        return ruleGen.generateRules();
+        ruleStore = ruleGen.generateRules();
+        return (ListRule) ruleStore;
+
     }
 
     public static void main(String args[]) {

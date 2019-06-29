@@ -1,38 +1,23 @@
 package edu.uci.ics.perpetual.persistence;
 
 import com.lambdaworks.redis.RedisConnection;
+import edu.uci.ics.perpetual.rule.IRuleStore;
+import edu.uci.ics.perpetual.rule.list.ListRule;
 import edu.uci.ics.perpetual.rule.list.Rule;
 
 import java.util.List;
 
-public class RulePersistence implements Runnable {
+public abstract class RulePersistence {
 
-    private RedisConnection<String, String> connection;
+    public abstract String marshall(Rule rule);
 
-    public RulePersistence() {
-        connection = RedisConnectionManager.getConnection();
-    }
+    public abstract Rule unmarshall(String rule);
 
-    public String marshall(Rule rule) {
-        return null;
-    }
+    public abstract void persist(IRuleStore ruleStore);
 
-    public Rule unmarshall(String rule) {
-        return null;
-    }
+    public abstract IRuleStore load(int version);
 
-    public void persist(List<Rule> rules) {
-
-    }
-
-    public List<Rule> load() {
-        return null;
-    }
-
-    @Override
-    public void run() {
-
-    }
+    public abstract int maxVersion();
 
 
 }

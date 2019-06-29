@@ -28,7 +28,9 @@ public class WorkloadManager {
                 extractor = new QueryBotExtractor(workloadParser);
                 break;
             case Twitter:
-                throw new NotImplementedException("");
+                workloadParser = new QueryBotWorkloadParser(dataDir);
+                extractor = new QueryBotExtractor(workloadParser);
+                break;
             default:
                 break;
         }

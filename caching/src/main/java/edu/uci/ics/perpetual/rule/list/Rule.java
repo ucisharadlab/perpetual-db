@@ -71,7 +71,10 @@ public class Rule {
 
     public boolean match(DataObject dataObject) {
 
-        return false;
+        if (!dataObject.getType().getName().equalsIgnoreCase(type.getName())) {
+            return false;
+        }
+        return predicate.evaluate(dataObject);
 
     }
 

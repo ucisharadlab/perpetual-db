@@ -32,10 +32,11 @@ public class ListRule implements IRuleStore {
     public String toString() {
 
         StringBuilder sb = new StringBuilder();
+        sb.append("Caching Rules\n-------------------------------------------\n");
         for (Rule rule: rules) {
             sb.append(rule).append("\n");
         }
-
+        sb.append("-------------------------------------------\n");
         return sb.toString();
 
     }

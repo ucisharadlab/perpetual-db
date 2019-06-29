@@ -23,6 +23,8 @@ public class AcquisitionRequest {
 
     private Date endTime;
 
+    private int frequency;
+
     public AcquisitionRequest() {
     }
 
@@ -106,6 +108,14 @@ public class AcquisitionRequest {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    public int getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(int frequency) {
+        this.frequency = frequency;
     }
 
     @Override
