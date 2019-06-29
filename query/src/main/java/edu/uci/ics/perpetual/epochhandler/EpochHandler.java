@@ -1,15 +1,22 @@
 package edu.uci.ics.perpetual.epochhandler;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import edu.uci.ics.perpetual.model.ObjectState;
+
 public class EpochHandler{
 	private static EpochHandler instance;
 	private double budget;
 	private double remainingBudget;
 	private int epochNumber;
+	private List<ObjectState> answerObjectStatesList;
 	private EpochHandler()
 	{
 		epochNumber = 0;
 		budget = 200;
 		remainingBudget = budget;
+		answerObjectStatesList = new ArrayList<ObjectState>();
 	}
 	public static EpochHandler getInstance(){
         if (instance == null){
@@ -18,6 +25,13 @@ public class EpochHandler{
 
         return instance;
     }
+	
+	public List<ObjectState> getAnswerObjectStatesList() {
+		return answerObjectStatesList;
+	}
+	public void setAnswerObjectStatesList(List<ObjectState> answerObjectStates) {
+		this.answerObjectStatesList = answerObjectStates;
+	}
 	public double getBudget() {
 		return budget;
 	}
@@ -40,7 +54,10 @@ public class EpochHandler{
 	{
 		incrementEpochNumber();
 		resetRemainingBudget();
-		
+		resetAnswerObjectStatesList();
+	}
+	private void resetAnswerObjectStatesList() {
+		answerObjectStatesList = new ArrayList<ObjectState>();
 	}
 	public void resetRemainingBudget() {
 		remainingBudget = budget;

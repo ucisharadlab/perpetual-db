@@ -29,6 +29,7 @@ public class PlanGeneration {
 		if(index+1 == enrichmentFunctionList.size())
 			return pp;
 		OGP(index+1, enrichmentFunctionList, pp);
+		pp.calculateCost();
 		return pp;
 	}
 	private int getLatestEvaluatedFunction(ObjectState objectState) {

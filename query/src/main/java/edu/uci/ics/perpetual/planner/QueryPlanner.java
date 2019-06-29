@@ -1,5 +1,6 @@
 package edu.uci.ics.perpetual.planner;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -139,7 +140,13 @@ public class QueryPlanner {
 	{
 		//retrieve objects with passed predicates and add it to the object state list
 		ObjectRetreival  objret = ObjectRetreival.getInstance();
-		return objret.getObjectsFromFile(predicates);
+		try {
+			return objret.getObjectsFromFile(predicates);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	public void initializePlanner(List<ExpressionPredicate> predicates, int epochBudget)
 	{
@@ -148,5 +155,12 @@ public class QueryPlanner {
 		pathGenerator(initializeObjectStates(objectRetreival(predicates)));
 		epochHandler = EpochHandler.getInstance();
 		queryExecuter = QueryExecuter.getInstance();
+	}
+	public EnrichmentFunctionInfo getEnrichmentFunctionInfoByID(int id)
+	{
+		for(EnrichmentFunctionInfo tmp: enrichmentFunctionList)
+			if(tmp.getId() == id)
+				return tmp;
+		return null;
 	}
 }

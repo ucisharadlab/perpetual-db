@@ -3,6 +3,7 @@ package edu.uci.ics.perpetual.state;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import edu.uci.ics.perpetual.answer_handler.AnswerSetGenerator;
 import edu.uci.ics.perpetual.data.DataObject;
@@ -10,6 +11,7 @@ import edu.uci.ics.perpetual.model.AnswerSet;
 import edu.uci.ics.perpetual.model.EnrichmentFunctionInfo;
 import edu.uci.ics.perpetual.model.ObjectState;
 //import edu.uci.ics.perpetualdb.common.DataObject;
+import edu.uci.ics.perpetual.planner.QueryPlanner;
 
 
 public class StateManager {
@@ -85,17 +87,26 @@ public class StateManager {
 			
 	}
 
-	public void updateObjectState(DataObject dataObject, int functionId) {
+	public void updateObjectState(DataObject dataObject, int functionId, String result) {
+		// return 0 for yes, 1 for no, 2 for maybe
 		try {
 			int dataObjectIndex = dataObjectList.indexOf(dataObject);
 			ObjectState objectState = stateManagerHashMap.get(dataObjectIndex);			
 			List<Integer> functionBitmap = objectState.getFunctionBitmap();
 			functionBitmap.set(functionId, 1);	
 			objectState.setFunctionBitmap(functionBitmap);
-			stateManagerHashMap.put(dataObjectIndex, objectState);			
+			stateManagerHashMap.put(dataObjectIndex, objectState);
+			EnrichmentFunctionInfo tmpFunction = QueryPlanner.getInstance().getFunction(functionId);
+			checkResolved(objectState, tmpFunction);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+	private void checkResolved(ObjectState objectState, EnrichmentFunctionInfo tmpFunction) {
+		// TODO Auto-generated method stub
+		Random r = new Random();
+		if(r.nextDouble() <= tmpFunction.getQuality())
+			objectState.setResolved(true);
 	}
 	public void deleteObjectState(ObjectState objectState) {
 		

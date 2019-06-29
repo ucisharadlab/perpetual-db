@@ -42,7 +42,17 @@ public class QueryExecuter{
 		while(!queryPlanner.getPlanQueue().isEmpty())
 		{
 			executeOneEpoch();
+			// create answer set to feed it the objects
+			System.out.println("Epoch Number: "+epochHandler.getEpochNumber());
+			System.out.println("Results:");
+			for(int i=0;i<epochHandler.getAnswerObjectStatesList().size();i++)
+				printObjectToSTDout(epochHandler.getAnswerObjectStatesList().get(i));
+			epochHandler.AddNewEpoch();
 		}
+	}
+	private void printObjectToSTDout(ObjectState objectState) {
+		// TODO Auto-generated method stub
+		System.out.println(objectState.getObject().getObject().toString());
 	}
 	private void executeOneEpoch() {
 		PlanPath pp;
@@ -50,10 +60,14 @@ public class QueryExecuter{
 		{
 			pp = queryPlanner.pollPlanPath();
 			executeOneObjectFunctionPair(pp);
-			pp.calculateCost();
 			if(!pp.getObject().isResolved())
 			{
+				pp.calculateCost();
 				queryPlanner.getPlanQueue().add(pp);
+			}
+			else
+			{
+				epochHandler.getAnswerObjectStatesList().add(pp.getObject());
 			}
 		}
 	}
@@ -61,5 +75,7 @@ public class QueryExecuter{
 	{
 		EnrichmentFunctionInfo tmpFunc = pp.removeFunction(0);
 		String result = tmpFunc.getFunction().executeAndReturnResult(pp.getObject().getObject());
+		epochHandler.deductFromRemainingBudget(tmpFunc.getCost());
+		stateManager.updateObjectState(pp.getObject().getObject(), tmpFunc.getId(), result);
 	}
 }
