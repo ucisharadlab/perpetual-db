@@ -1,36 +1,36 @@
 package edu.uci.ics.perpetual.planner;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
 
+import edu.uci.ics.perpetual.enrichment.EnrichmentFunction;
+import edu.uci.ics.perpetual.FileStorage;
+import edu.uci.ics.perpetual.SchemaManager;
 import edu.uci.ics.perpetual.data.DataObject;
 import edu.uci.ics.perpetual.enrichment.EnrichmentFunction;
 import edu.uci.ics.perpetual.epochhandler.EpochHandler;
-import edu.uci.ics.perpetual.executer.QueryExecuter;
 import edu.uci.ics.perpetual.model.EnrichmentFunctionInfo;
 import edu.uci.ics.perpetual.model.ObjectState;
 import edu.uci.ics.perpetual.model.PlanPath;
+import edu.uci.ics.perpetual.model.Query;
 import edu.uci.ics.perpetual.predicate.ExpressionPredicate;
 import edu.uci.ics.perpetual.state.StateManager;
+import edu.uci.ics.perpetual.types.DataObjectType;
+import edu.uci.ics.perpetual.types.TaggingFunction;
 
 public class QueryPlanner {
-	private StateManager stateManager;
 	private PriorityQueue<PlanPath> planQueue;
-	private List<ExpressionPredicate> predicateList;
 	private List<EnrichmentFunctionInfo> enrichmentFunctionList;
 	private static QueryPlanner instance;
-	private EpochHandler epochHandler;
 	private PlanGeneration plangen;
-	private QueryExecuter queryExecuter;
+	private Query query;
 	
 	private QueryPlanner()
 	{
-		//initiliazing lists and queues
-		stateManager = StateManager.getInstance();
+		StateManager.getInstance();
 		planQueue = new PriorityQueue<PlanPath>();
-		predicateList = new ArrayList<ExpressionPredicate>();
 		enrichmentFunctionList = new ArrayList<EnrichmentFunctionInfo>();
 		plangen = new PlanGeneration();
 	}
@@ -41,6 +41,14 @@ public class QueryPlanner {
 
         return instance;
     }
+	
+	
+	public Query getQuery() {
+		return query;
+	}
+	public void setQuery(Query query) {
+		this.query = query;
+	}
 	//add, seek and poll for planQueue
 	public void addPlanPath(PlanPath pp)
 	{
@@ -60,23 +68,6 @@ public class QueryPlanner {
 	}
 	public void setPlanQueue(PriorityQueue<PlanPath> planQueue) {
 		this.planQueue = planQueue;
-	}
-	// add, get and remove for predicateList
-	public void addPredicate(ExpressionPredicate p)
-	{
-		predicateList.add(p);
-	}
-	public void addPredicate(ExpressionPredicate p, int index)
-	{
-		predicateList.add(index, p);
-	}
-	public ExpressionPredicate getPredicate(int index)
-	{
-		return predicateList.get(index);
-	}
-	public ExpressionPredicate removePredicate(int index)
-	{
-		return predicateList.remove(index);
 	}
 	
 	// add, get and remove for enrichmentFunctionList
@@ -117,44 +108,53 @@ public class QueryPlanner {
 	public void getEnrichmentFunctionsFromMemory()
 	{
 		//query the in-memory db to get all enrichment functions and add them to the list
-		String functionOne = "Enrichment1.jar";
-		String functionTwo = "Enrichment2.jar";
-		this.enrichmentFunctionList.add(new EnrichmentFunctionInfo());
-		this.enrichmentFunctionList.add(new EnrichmentFunctionInfo());
-		this.enrichmentFunctionList.get(0).setFunction(EnrichmentFunction.getEnrichmentFunction(functionOne));
-		this.enrichmentFunctionList.get(1).setFunction(EnrichmentFunction.getEnrichmentFunction(functionTwo));
-		this.enrichmentFunctionList.get(0).setCost(20);
-		this.enrichmentFunctionList.get(1).setCost(80);
-		this.enrichmentFunctionList.get(0).setQuality(0.5);
-		this.enrichmentFunctionList.get(1).setQuality(1);
-		this.enrichmentFunctionList.get(0).setId(1);
-		this.enrichmentFunctionList.get(0).setId(2);
+		int count = 0;
+
+		for (Map.Entry<String, TaggingFunction> entry : SchemaManager.getInstance().getSchema().getEnrichmentFunctions().entrySet()) {
+            if(entry.getValue().getReturnTag().equalsIgnoreCase(query.getiPredicate().getTag()) &&
+                    entry.getValue().getSourceType().equalsIgnoreCase(query.getType().getName()))
+            {
+            	enrichmentFunctionList.add(new EnrichmentFunctionInfo(count,
+            			EnrichmentFunction.getEnrichmentFunction(entry.getValue().getPath(), query.getiPredicate().getTag()),
+            			entry.getValue().getCost(),
+            			0));
+            }
+        }
 	}
 	public List<ObjectState> initializeObjectStates(List<DataObject> objectList)
 	{
 		//retrieve objects from DB then send it to StateManager
 		//List<ObjectState> objectStateList = stateManager.initializeObjectStates(objectList);
+		
+		
 		return null;
 	}
-	public List<DataObject> objectRetreival(List<ExpressionPredicate> predicates)
+	public List<DataObject> objectRetreival(DataObjectType type, ExpressionPredicate predicate)
 	{
 		//retrieve objects with passed predicates and add it to the object state list
-		ObjectRetreival  objret = ObjectRetreival.getInstance();
-		try {
-			return objret.getObjectsFromFile(predicates);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		
+		return FileStorage.getInstance(SchemaManager.getInstance()).getDataObjects(type, predicate);
+		
+		
+		
+//		ObjectRetreival  objret = ObjectRetreival.getInstance();
+//		try {
+//			return objret.getObjectsFromFile(predicates);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return null;
 	}
-	public void initializePlanner(List<ExpressionPredicate> predicates, int epochBudget)
+	public void initializePlanner(Query query, int epochBudget)
 	{
 		// initialize the planner and call appropiate methods to retrieve objects and initialize the object state.
+		
 		getEnrichmentFunctionsFromMemory();
-		pathGenerator(initializeObjectStates(objectRetreival(predicates)));
-		epochHandler = EpochHandler.getInstance();
-		queryExecuter = QueryExecuter.getInstance();
+		pathGenerator(initializeObjectStates(objectRetreival(query.getType(), query.getpPredicate())));
+		
+		// set the epochBudget in EpochHandler
+		EpochHandler.getInstance().setBudget(epochBudget);
 	}
 	public EnrichmentFunctionInfo getEnrichmentFunctionInfoByID(int id)
 	{

@@ -32,4 +32,11 @@ public class EnrichmentFunctionInfo {
 	public void setId(int id) {
 		this.id = id;
 	}
+	public EnrichmentFunctionInfo(int id, EnrichmentFunction function, double cost, double quality) {
+		super();
+		this.id = id;
+		this.function = function;
+		this.cost = cost;
+		this.quality = quality;
+	}
 }

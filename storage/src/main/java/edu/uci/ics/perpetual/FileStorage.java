@@ -1,13 +1,20 @@
 package edu.uci.ics.perpetual;
 
 import edu.uci.ics.perpetual.data.DataObject;
+import edu.uci.ics.perpetual.predicate.ExpressionPredicate;
+import edu.uci.ics.perpetual.types.DataObjectType;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +70,58 @@ public class FileStorage implements StorageManager{
 
     }
 
-    public DataObject getDataObject(int id, String type) {
-        return null;
+    public DataObject getDataObject(DataObjectType type, int id) {
+    	// if type is not found, then return null (for future throw an exception)
+    	if(!writers.containsKey(type.getName()))
+			return null;
+    	DataObject tmpObject;
+    	try {
+			BufferedReader br = new BufferedReader(
+					new FileReader(
+			                Paths.get(StorageConfig.STORAGE_DIR, type+StorageConfig.FILE_EX ).toString()));
+			
+			while(br.ready())
+			{
+				tmpObject = new DataObject(br.readLine(), type);
+				if(ObjectChecker.getInstance().checkDataObjectID(tmpObject, id))
+					return tmpObject;
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return null;
     }
+
+    public List<DataObject> getDataObjects(DataObjectType type, ExpressionPredicate predicate) {
+		// if type is not found, then return null (for future throw an exception)
+    	if(!writers.containsKey(type.getName()))
+			return null;
+    	
+    	//if type is found then navigate through objects and return the object that satisfy the predict
+		List<DataObject> dataObjectList = new ArrayList<DataObject>();
+		DataObject tmpObject;
+		try {
+			BufferedReader br = new BufferedReader(
+					new FileReader(
+			                Paths.get(StorageConfig.STORAGE_DIR, type+StorageConfig.FILE_EX ).toString()));
+			
+			while(br.ready())
+			{
+				tmpObject = new DataObject(br.readLine(), type);
+				if(ObjectChecker.getInstance().doesDataObjectSatisfyPredicate(tmpObject, predicate))
+					dataObjectList.add(tmpObject);
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return dataObjectList;
+	}
 }

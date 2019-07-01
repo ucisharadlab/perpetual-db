@@ -14,10 +14,10 @@
         <module>statistics</module>
         <module>schema</module>
         <module>caching</module>
-        <module>query</module>
         <module>acquisition</module>
         <module>enrichment</module>
         <module>storage</module>
+        <module>query</module>
         <module>language</module>
         <module>app</module>
     </modules>
