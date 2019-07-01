@@ -11,6 +11,7 @@ import edu.uci.ics.perpetual.SchemaManager;
 import edu.uci.ics.perpetual.data.DataObject;
 import edu.uci.ics.perpetual.enrichment.EnrichmentFunction;
 import edu.uci.ics.perpetual.epochhandler.EpochHandler;
+import edu.uci.ics.perpetual.executer.QueryExecuter;
 import edu.uci.ics.perpetual.model.EnrichmentFunctionInfo;
 import edu.uci.ics.perpetual.model.ObjectState;
 import edu.uci.ics.perpetual.model.PlanPath;
@@ -118,6 +119,7 @@ public class QueryPlanner {
             			EnrichmentFunction.getEnrichmentFunction(entry.getValue().getPath(), query.getiPredicate().getTag()),
             			entry.getValue().getCost(),
             			0));
+            	count++;
             }
         }
 	}
@@ -155,6 +157,7 @@ public class QueryPlanner {
 		
 		// set the epochBudget in EpochHandler
 		EpochHandler.getInstance().setBudget(epochBudget);
+		QueryExecuter.getInstance().execute();
 	}
 	public EnrichmentFunctionInfo getEnrichmentFunctionInfoByID(int id)
 	{

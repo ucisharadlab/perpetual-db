@@ -47,6 +47,10 @@ public class QueryExecuter{
 			System.out.println("Results:");
 			for(int i=0;i<epochHandler.getAnswerObjectStatesList().size();i++)
 				printObjectToSTDout(epochHandler.getAnswerObjectStatesList().get(i));
+			
+			/* call answer set genrator and take the answerObjectStatesList
+			 *  and deal with the answer set generator
+			 */
 			epochHandler.AddNewEpoch();
 		}
 	}
