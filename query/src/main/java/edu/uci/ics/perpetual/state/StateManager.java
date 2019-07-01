@@ -17,6 +17,7 @@ import edu.uci.ics.perpetual.planner.QueryPlanner;
 public class StateManager {
 
 	private static StateManager instance;
+	private QueryPlanner queryPlanner;
 	private List<Integer> queryIdList = new ArrayList<Integer>();
 	private List<DataObject> dataObjectList = new ArrayList<DataObject>();
 	private HashMap<Integer,ObjectState> stateManagerHashMap = new HashMap<Integer,ObjectState>();
@@ -26,6 +27,7 @@ public class StateManager {
 	private StateManager() {
 		// TODO Auto-generated constructor stub
 		// Retrieve State Manager Instance
+		queryPlanner = QueryPlanner.getInstance();
 		
 	}
 	public static StateManager getInstance(){
@@ -98,6 +100,13 @@ public class StateManager {
 			stateManagerHashMap.put(dataObjectIndex, objectState);
 			EnrichmentFunctionInfo tmpFunction = QueryPlanner.getInstance().getFunction(functionId);
 			checkResolved(objectState, tmpFunction);
+			if(objectState.isResolved()) {
+				/*
+				 * Update the tag.
+				 */
+				String tag = queryPlanner.getQuery().getiPredicate().getTag();
+				dataObject.getObject().addProperty(tag, result);
+			}
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
