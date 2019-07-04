@@ -48,7 +48,7 @@ CREATE TABLE TaggingFunction (
 	paramList TEXT NOT NULL,
 	returnTag TEXT NOT NULL,
 	cost INT NOT NULL,
-	quality DOUBLE(20,20) NOT NULL,
+	quality FLOAT NOT NULL,
     path VARCHAR(300),
 
 	PRIMARY KEY (functionName)
