@@ -210,6 +210,7 @@ TOKEN: /* SQL Keywords. prefixed with K_ to avoid name clashes */
 |   <K_PRECISION : "PRECISION">
 |   <K_PRIMARY:"PRIMARY">
 |   <K_PRIOR:"PRIOR">
+|	<K_QUALITY:"QUALITY">
 |   <K_RANGE: "RANGE">
 |   <K_RECURSIVE:"RECURSIVE">
 |   <K_REFERENCES:"REFERENCES">
@@ -757,7 +758,7 @@ String RelObjectNameWithoutValue() :
       | tk=<K_INSERT> | tk=<K_INDEX> | tk=<K_PRIMARY> | tk=<K_ENABLE>
 	  | tk=<K_UNSIGNED>
       | tk=<K_TEMP> | tk=<K_TEMPORARY> | tk=<K_ISNULL> 
-	  | tk=<K_ZONE> | tk=<K_FUNCTION> | tk=<K_RETURNS> | tk=<K_COST>
+	  | tk=<K_ZONE> | tk=<K_FUNCTION> | tk=<K_RETURNS> | tk=<K_COST> | tk=<K_QUALITY>
 /*      | tk=<K_PLACING> | tk=<K_BOTH> | tk=<K_LEADING> | tk=<K_TRAILING> */
       )
 
@@ -2681,7 +2682,9 @@ CreateFunction CreateFunction():
     Tag tag;
     Tag returnTag;
     String cost;
+    String quality;
     Token tk = null;
+    Token qualityTK = null;
     Token tk2 = null;
     Token tk3 = null;
     Token pathTk = null;
@@ -2720,6 +2723,7 @@ CreateFunction CreateFunction():
         returnTag.setName(tagName);
     }
     <K_COST> tk=<S_LONG>
+    [<K_QUALITY> qualityTK=<S_DOUBLE> {createFunction.setQuality(Double.parseDouble(qualityTK.image));} ]
     [<K_PATH>  pathTk=<S_CHAR_LITERAL> {createFunction.setPath(pathTk.image);} ]
     {
         createFunction.setFunction(UDFFunction);

@@ -99,7 +99,7 @@ public class MysqlStorage implements Storage {
                     schema.addDataSource(dataSource);
                 }
 
-                rs = conn.prepareStatement("SELECT functionName, sourceType, paramList, returnTag, cost, path FROM TaggingFunction;").executeQuery();
+                rs = conn.prepareStatement("SELECT functionName, sourceType, paramList, returnTag, cost, quality, path FROM TaggingFunction;").executeQuery();
 
                 while (rs.next()) {
                     TaggingFunction function = new TaggingFunction(rs.getString("functionName"),
@@ -107,6 +107,7 @@ public class MysqlStorage implements Storage {
                             StringUtils.toList(rs.getString("paramList")),
                             rs.getString("returnTag"),
                             rs.getInt("cost"));
+                    function.setQuality(rs.getDouble("quality"));
                     function.setPath(rs.getString("path"));
                     schema.addFunction(function);
                 }
@@ -183,13 +184,14 @@ public class MysqlStorage implements Storage {
                     ps.setString(3, tag.getRawType());
                 } else if (object instanceof TaggingFunction) {
                     TaggingFunction function = (TaggingFunction) object;
-                    ps = conn.prepareStatement("INSERT INTO TaggingFunction(functionName, sourceType, paramList, returnTag, cost, path) VALUE (?, ?, ?, ?, ?, ?);");
+                    ps = conn.prepareStatement("INSERT INTO TaggingFunction(functionName, sourceType, paramList, returnTag, cost, quality, path) VALUE (?, ?, ?, ?, ?, ?, ?);");
                     ps.setString(1, function.getFunctionName());
                     ps.setString(2, function.getSourceType());
                     ps.setString(3, StringUtils.fromList(function.getParamList()));
                     ps.setString(4,function.getReturnTag());
                     ps.setInt(5, function.getCost());
-                    ps.setString(6, function.getPath());
+                    ps.setDouble(6, function.getQuality());
+                    ps.setString(7, function.getPath());
                 }
             } else {
                 Pair<String, String> relation = request.getRelation();

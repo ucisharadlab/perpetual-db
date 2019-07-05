@@ -15,6 +15,8 @@ public class TaggingFunction {
     private String path;
 
     private int cost;
+    
+    private double quality;
 
     public TaggingFunction(String functionName, String sourceType, List<String> paramList, String returnTag, int cost) {
         this.functionName = functionName;
@@ -52,9 +54,17 @@ public class TaggingFunction {
         return cost;
     }
 
-    @Override
+    public double getQuality() {
+		return quality;
+	}
+
+	public void setQuality(double quality) {
+		this.quality = quality;
+	}
+
+	@Override
     public String toString() {
-        return String.format("Raw Type=%s, Tag=%s, Dependencies=%s, Cost=%s, Path=%s",
-                sourceType, returnTag, paramList, cost, path);
+        return String.format("Raw Type=%s, Tag=%s, Dependencies=%s, Cost=%s, Quality=%s, Path=%s",
+                sourceType, returnTag, paramList, cost, quality,path);
     }
 }

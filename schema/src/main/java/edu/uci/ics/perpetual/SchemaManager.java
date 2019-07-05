@@ -297,6 +297,7 @@ public class SchemaManager {
 
                 TaggingFunction function = new TaggingFunction(funcName, rawTypeName, params, returnTagName, createFunction.getCost());
                 function.setPath(createFunction.getPath());
+                function.setQuality(createFunction.getQuality());
                 schema.addFunction(function);
 
                 storage.persist(new StorageRequest(function));

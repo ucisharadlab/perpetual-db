@@ -28,6 +28,7 @@ public class CreateFunction implements Statement {
     private boolean selectParenthesis;
     private boolean ifNotExists = false;
     private int cost;
+    private double quality;
     private Tag returnTag;
 
     @Override
@@ -46,7 +47,15 @@ public class CreateFunction implements Statement {
         this.type = type;
     }
 
-    public String getPath() {
+    public double getQuality() {
+		return quality;
+	}
+
+	public void setQuality(double quality) {
+		this.quality = quality;
+	}
+
+	public String getPath() {
         return path;
     }
 
