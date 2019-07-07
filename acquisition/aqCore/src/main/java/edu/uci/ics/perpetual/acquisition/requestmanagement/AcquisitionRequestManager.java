@@ -38,7 +38,6 @@ public class AcquisitionRequestManager {
     private AcquisitionRequestManager(){
         super();
         db =  RequestPersistanceManager.getInstance();
-        instance = new AcquisitionRequestManager();
         schema = SchemaManager.getInstance();
         loadRequests();
     }
@@ -47,7 +46,9 @@ public class AcquisitionRequestManager {
         if(null != instance){
             return instance;
         }
-        return new AcquisitionRequestManager();
+        instance = new AcquisitionRequestManager();
+
+        return instance;
     }
 
     private void loadRequests(){
