@@ -5,5 +5,6 @@ public enum AcquisitionRequestStatus {
     INPROGRESS,
     NEW,
     SCHEDULED,
+    RESCHEDULED,
     DONE
 }

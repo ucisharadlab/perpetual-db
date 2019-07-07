@@ -1,7 +1,6 @@
 package edu.uci.ics.perpetual.acquisition.requestmanagement;
 
 import edu.uci.ics.perpetual.request.AcquisitionRequest;
-import edu.uci.ics.perpetual.acquisition.utils.ScheduledStopTask;
 import edu.uci.ics.perpetual.request.AcquisitionRequestStatus;
 import org.apache.log4j.Logger;
 
@@ -10,6 +9,7 @@ import java.util.Timer;
 
 public class RequestScheduler {
 
+    private static RequestPersistanceManager db = RequestPersistanceManager.getInstance();
     static Logger LOGGER = Logger.getLogger(RequestScheduler.class);
 
     public static void scheduleRequest(AcquisitionRequest request) throws Exception{
@@ -20,19 +20,24 @@ public class RequestScheduler {
             ProducerTask task = new ProducerTask(request);
             Timer timer = new Timer();
             Long startTime = request.getStartTime().getTime()  - System.currentTimeMillis();
-            // startTime = 10L; // For debugging
-
             Long endTime = request.getEndTime().getTime()  - System.currentTimeMillis();
             timer.schedule( task, startTime);
-            ScheduledStopTask stoppingTask = new ScheduledStopTask(task,request, request.getRequestId()+"-stop-task");
+            ScheduledStopProducerTask stoppingTask = new ScheduledStopProducerTask(task,request, request.getRequestId()+"-stop-task");
             timer.schedule(stoppingTask,endTime);
             LOGGER.info("ACQUISITION ENGINE: Scheduled request: " + request.getRequestId()  + " datasource: "+ request.getDataSourceId());
-            request.setStatus(AcquisitionRequestStatus.SCHEDULED);
+            if(request.getStatus() != AcquisitionRequestStatus.NEW){
+                request.setStatus(AcquisitionRequestStatus.RESCHEDULED);
+            }else{
+                request.setStatus(AcquisitionRequestStatus.SCHEDULED);
+            }
+
+
         }catch(Exception e){
             e.printStackTrace();
             LOGGER.info("ACQUISITION ENGINE: Request Schedule Failed: " + request.getRequestId()  + " datasource: "+ request.getDataSourceId());
             request.setStatus(AcquisitionRequestStatus.ERROR);
         }
+        db.updateRequestStatus( request );
         // TODO LOG
     }
 

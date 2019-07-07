@@ -24,6 +24,7 @@ public class ProducerTask extends TimerTask {
     @Override
     public void run() {
         request.setStatus( AcquisitionRequestStatus.INPROGRESS );
+        RequestPersistanceManager.getInstance().updateRequestStatus( request );
         LOGGER.info("ACQUISITION ENGINE: Running request - "+ request.getRequestId() + " for datasource: "+ request.getDataSourceId()  );
         try{
             startConsumerThread();
