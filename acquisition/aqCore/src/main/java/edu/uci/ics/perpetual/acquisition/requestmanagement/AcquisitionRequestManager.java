@@ -55,6 +55,8 @@ public class AcquisitionRequestManager {
         try{
             handlePendingRequests(db.getPendingRequests());
         }catch(Exception e){
+            System.out.println( "Failed to load pending requests..." );
+            e.printStackTrace();
             LOGGER.error( "ACQUISITION ENGINE: Failed to load reload pending requests from database" );
         }
     }

@@ -5,6 +5,8 @@ import edu.uci.ics.perpetual.request.AcquisitionRequestStatus;
 import edu.uci.ics.perpetual.storage.MysqlStorage;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
+import org.apache.logging.log4j.util.SystemPropertiesPropertySource;
+
 import java.lang.reflect.Type;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -47,8 +49,11 @@ public class RequestPersistanceManager {
             ps.setTimestamp( 10, new Timestamp( request.getEndTime().getTime()));
             ps.setInt(11, request.getFrequency());
             ps.setString( 12, request.getStatus().name() );
+
+            System.out.println( ps );
             ps.executeUpdate();
         }catch (SQLException e){
+            e.printStackTrace();
             LOGGER.error( "ACQUISITION ENGINE: Failed to add request: " + request.getRequestId(), e);
             return false;
         }
@@ -72,7 +77,9 @@ public class RequestPersistanceManager {
         try{
             PreparedStatement ps = storage.getConn().prepareStatement( config.get( "requests.fetch.all" ) );
             ResultSet results = ps.executeQuery();
+            System.out.println( ps );
             requests = toRequests(  results );
+            System.out.println( "Found " + requests.size() + "pending requests....");
 
         }catch (SQLException e){
             LOGGER.error( "ACQUISITION ENGINE: Failed to load all requests.", e);
@@ -86,9 +93,12 @@ public class RequestPersistanceManager {
             PreparedStatement ps = storage.getConn().prepareStatement( config.get( "requests.fetch.pending" ) );
             ps.setTimestamp( 1, new Timestamp( System.currentTimeMillis() ) );
             ResultSet results = ps.executeQuery();
+            System.out.println( ps );
+
             requests = toRequests(  results );
 
         }catch (SQLException e){
+            e.printStackTrace();
             LOGGER.error( "ACQUISITION ENGINE: Failed to load old requests.", e);
         }
         return requests;
@@ -103,13 +113,13 @@ public class RequestPersistanceManager {
             request.setDataSourceId(results.getInt( 3) );
             request.setAcquisitionFunctionPath(results.getString( 4 ) );
             Gson gson = new Gson();
-            Type type = new TypeToken<Map<String, String>>(){}.getType();
+            Type type = new TypeToken<HashMap<String, String>>(){}.getType();
             request.setAcquisitionFunctionParameters(gson.fromJson( results.getString( 5 ), type ));
             request.setRawTypeScheme(gson.fromJson( results.getString( 6 ), type ));
-            request.setStartTime( results.getTime( 8 ) );
-            request.setEndTime( results.getTime( 9 ) );
-            request.setFrequency( results.getInt( 10 ) );
-            request.setStatus( AcquisitionRequestStatus.valueOf( results.getString( 11 ) ) );
+            request.setStartTime(new java.util.Date( results.getTimestamp( 9 ).getTime() ));
+            request.setEndTime(new java.util.Date( results.getTimestamp( 10 ).getTime()) );
+            request.setFrequency( results.getInt( 11 ) );
+            request.setStatus( AcquisitionRequestStatus.valueOf( results.getString( 12 ) ) );
             requests.add( request );
         }
         return requests;

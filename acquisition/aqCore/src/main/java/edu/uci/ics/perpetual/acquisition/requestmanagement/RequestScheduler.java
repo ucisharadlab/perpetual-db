@@ -21,6 +21,8 @@ public class RequestScheduler {
             Timer timer = new Timer();
             Long startTime = request.getStartTime().getTime()  - System.currentTimeMillis();
             Long endTime = request.getEndTime().getTime()  - System.currentTimeMillis();
+            if(startTime < 0)
+                startTime = System.currentTimeMillis() + 10;
             timer.schedule( task, startTime);
             ScheduledStopProducerTask stoppingTask = new ScheduledStopProducerTask(task,request, request.getRequestId()+"-stop-task");
             timer.schedule(stoppingTask,endTime);
