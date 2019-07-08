@@ -37,6 +37,7 @@ public class EpochHandler{
 	}
 	public void setBudget(double budget) {
 		this.budget = budget;
+		this.remainingBudget = budget;
 	}
 	public double getRemainingTime() {
 		return remainingBudget;

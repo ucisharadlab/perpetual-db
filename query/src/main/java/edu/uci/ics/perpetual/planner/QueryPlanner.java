@@ -1,12 +1,16 @@
 package edu.uci.ics.perpetual.planner;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
+import com.google.common.util.concurrent.Service.State;
+
 import edu.uci.ics.perpetual.enrichment.EnrichmentFunction;
 import edu.uci.ics.perpetual.FileStorage;
+import edu.uci.ics.perpetual.ObjectChecker;
 import edu.uci.ics.perpetual.SchemaManager;
 import edu.uci.ics.perpetual.data.DataObject;
 import edu.uci.ics.perpetual.enrichment.EnrichmentFunction;
@@ -30,7 +34,6 @@ public class QueryPlanner {
 	
 	private QueryPlanner()
 	{
-		StateManager.getInstance();
 		planQueue = new PriorityQueue<PlanPath>();
 		enrichmentFunctionList = new ArrayList<EnrichmentFunctionInfo>();
 		plangen = new PlanGeneration();
@@ -92,7 +95,7 @@ public class QueryPlanner {
 	public void pathGenerator(List<ObjectState> objectStateList)
 	{
 		//generation of paths
-		plangen.getInitialPlanPath(enrichmentFunctionList, objectStateList);
+		planQueue = plangen.getInitialPlanPath(enrichmentFunctionList, objectStateList);
 	}
 	
 	public double costEstimator()
@@ -109,7 +112,7 @@ public class QueryPlanner {
 	public void getEnrichmentFunctionsFromMemory()
 	{
 		//query the in-memory db to get all enrichment functions and add them to the list
-		int count = 0;
+		int count = 1;
 
 		for (Map.Entry<String, TaggingFunction> entry : SchemaManager.getInstance().getSchema().getEnrichmentFunctions().entrySet()) {
             if(entry.getValue().getReturnTag().equalsIgnoreCase(query.getiPredicate().getTag()) &&
@@ -118,18 +121,24 @@ public class QueryPlanner {
             	enrichmentFunctionList.add(new EnrichmentFunctionInfo(count,
             			EnrichmentFunction.getEnrichmentFunction(entry.getValue().getPath(), query.getiPredicate().getTag()),
             			entry.getValue().getCost(),
-            			0));
+            			entry.getValue().getQuality()));
+            	
             	count++;
             }
         }
+		sortEnrichmentFunctionsBasedOnCostAndSetID();
+	}
+	private void sortEnrichmentFunctionsBasedOnCostAndSetID() {
+		Collections.sort(enrichmentFunctionList);
+		for(int i=0;i<enrichmentFunctionList.size();i++)
+			enrichmentFunctionList.get(i).setId(i);
 	}
 	public List<ObjectState> initializeObjectStates(List<DataObject> objectList)
 	{
 		//retrieve objects from DB then send it to StateManager
 		//List<ObjectState> objectStateList = stateManager.initializeObjectStates(objectList);
-		
-		
-		return null;
+		StateManager.getInstance().initializeObjectState(objectList, enrichmentFunctionList);
+		return new ArrayList<ObjectState>(StateManager.getInstance().getStateManagerHashMap().values());
 	}
 	public List<DataObject> objectRetreival(DataObjectType type, ExpressionPredicate predicate)
 	{
@@ -151,13 +160,32 @@ public class QueryPlanner {
 	public void initializePlanner(Query query, int epochBudget)
 	{
 		// initialize the planner and call appropiate methods to retrieve objects and initialize the object state.
-		
+		this.query = query;
 		getEnrichmentFunctionsFromMemory();
-		pathGenerator(initializeObjectStates(objectRetreival(query.getType(), query.getpPredicate())));
+		List<DataObject> dataObjectsList = objectRetreival(query.getType(), query.getpPredicate());
+		CheckResolvedDataObjectsAndAddToResult(dataObjectsList);
+		pathGenerator(initializeObjectStates(dataObjectsList));
 		
 		// set the epochBudget in EpochHandler
 		EpochHandler.getInstance().setBudget(epochBudget);
 		QueryExecuter.getInstance().execute();
+	}
+	private void CheckResolvedDataObjectsAndAddToResult(List<DataObject> dataObjectsList) {
+		String tag = query.getiPredicate().getTag();
+		for(int i=0;i<dataObjectsList.size();i++)
+		{
+			if(dataObjectsList.get(i).getObject().has(tag))
+			{
+				if(ObjectChecker.getInstance().checkDataObjectTagSatisfyValue(dataObjectsList.get(i), query.getiPredicate()))
+					{
+						ObjectState tmpOS = new ObjectState();
+						tmpOS.setObject(dataObjectsList.get(i));
+						tmpOS.setResolved(true);
+						EpochHandler.getInstance().getAnswerObjectStatesList().add(tmpOS);
+					}
+				dataObjectsList.remove(i--);
+			}
+		}
 	}
 	public EnrichmentFunctionInfo getEnrichmentFunctionInfoByID(int id)
 	{

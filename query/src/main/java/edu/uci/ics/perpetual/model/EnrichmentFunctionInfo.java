@@ -2,7 +2,7 @@ package edu.uci.ics.perpetual.model;
 
 import edu.uci.ics.perpetual.enrichment.EnrichmentFunction;
 
-public class EnrichmentFunctionInfo {
+public class EnrichmentFunctionInfo implements Comparable< EnrichmentFunctionInfo >{
 	private int id;
 	private EnrichmentFunction function;
 	private double cost;
@@ -38,5 +38,14 @@ public class EnrichmentFunctionInfo {
 		this.function = function;
 		this.cost = cost;
 		this.quality = quality;
+	}
+	@Override
+	public int compareTo(EnrichmentFunctionInfo o) {
+		// TODO Auto-generated method stub
+		if(this.cost < o.cost)
+			return -1;
+		if(this.cost > o.cost)
+			return 1;
+		return 0;
 	}
 }

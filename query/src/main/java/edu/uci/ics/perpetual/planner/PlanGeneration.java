@@ -48,30 +48,36 @@ public class PlanGeneration {
 		else
 		{
 			int n = (enrichmentFunctionList.size() - startIndex);
-			double [][] C = new double [n][n];
-			boolean [][] skip = new boolean [n][n];
+			double [][] C = new double [n][n+1];
+			boolean [][] skip = new boolean [n][n+1];
+			double m [] = new double[n+1];
+			m[0] = 1;
+			double c [] = new double[n+1];
+			for(int j=1, i=0;i<n;i++,j++)
+				m[j] = 1-enrichmentFunctionList.get(i).getQuality();
+			for(int j=1, i=0;i<n;i++,j++)
+				c[j] = enrichmentFunctionList.get(i).getCost();
 			for(int i=0;i<n;i++)
 			{
-				C[i][n-1] = enrichmentFunctionList.get(i).getQuality() * enrichmentFunctionList.get(n-1).getCost();
-				skip[i][n-1] = false;
+				C[i][n] = m[i] * c[n];
+				skip[i][n] = false;
 			}
-			for(int i=n-2;i>=0;i--)
+			for(int i=n-1;i>=0;i--)
 			{
 				for(int j=0;j<i;j++)
 				{
-					double notSkipCost = enrichmentFunctionList.get(j).getQuality()*enrichmentFunctionList.get(i).getCost()+C[i][i+1];
+					double notSkipCost = m[j]*c[i]+C[i][i+1];
 					double skipCost = C[j][i+1];
 					C[j][i] = Math.min(notSkipCost, skipCost);
 					skip[j][i] = notSkipCost>skipCost;
 				}
 			}
-			double cost = C[0][0];
 			int j = 0;
-			for(int i=0;i<n-1;i++)
+			for(int i=1;i<n;i++)
 			{
 				if(!skip[j][i])
 				{
-					pp.addEnrichmentFunction(enrichmentFunctionList.get(i));
+					pp.addEnrichmentFunction(enrichmentFunctionList.get(i-1));
 					j = i;
 				}
 			}

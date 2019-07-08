@@ -6,6 +6,7 @@ import edu.uci.ics.perpetual.types.DataObjectType;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -30,10 +31,21 @@ public class FileStorage implements StorageManager{
         writers = new HashMap<String, Writer>();
         for (String rawType : schemaManager.getSchema().getRawMap().keySet()) {
             try {
-                writers.put(rawType, new BufferedWriter(
-                        new FileWriter(
-                                Paths.get(StorageConfig.STORAGE_DIR, rawType+StorageConfig.FILE_EX ).toString()))
-                );
+            	if(new File(Paths.get(StorageConfig.STORAGE_DIR, rawType+StorageConfig.FILE_EX ).toString()).exists())
+            	{
+            		writers.put(rawType, new BufferedWriter(
+                            new FileWriter(
+                                    Paths.get(StorageConfig.STORAGE_DIR, rawType+StorageConfig.FILE_EX ).toString(),true))
+                    );
+            	}
+            	else
+            	{
+            		writers.put(rawType, new BufferedWriter(
+                            new FileWriter(
+                                    Paths.get(StorageConfig.STORAGE_DIR, rawType+StorageConfig.FILE_EX ).toString()))
+                    );
+            	}
+                
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -41,7 +53,17 @@ public class FileStorage implements StorageManager{
 
     }
 
-    public static FileStorage getInstance(SchemaManager schemaManager) {
+    public Map<String, Writer> getWriters() {
+		return writers;
+	}
+
+	public void setWriters(Map<String, Writer> writers) {
+		this.writers = writers;
+	}
+
+
+
+	public static FileStorage getInstance(SchemaManager schemaManager) {
 
         if (INSTANCE == null) {
             INSTANCE = new FileStorage(schemaManager);

@@ -52,6 +52,7 @@ public class StateManager {
 		int objectListSize = objectList.size();
 		for(int i = 0; i< objectListSize; i++) {
 			ObjectState objState = new ObjectState();
+			objState.setObject(objectList.get(i));
 			objState.setFunctionBitmap(functionBitmap);			
 			stateManagerHashMap.put(i, objState);
 		}
@@ -90,7 +91,6 @@ public class StateManager {
 	}
 
 	public void updateObjectState(DataObject dataObject, int functionId, String result) {
-		// return 0 for yes, 1 for no, 2 for maybe
 		try {
 			int dataObjectIndex = dataObjectList.indexOf(dataObject);
 			ObjectState objectState = stateManagerHashMap.get(dataObjectIndex);			
@@ -99,23 +99,18 @@ public class StateManager {
 			objectState.setFunctionBitmap(functionBitmap);
 			stateManagerHashMap.put(dataObjectIndex, objectState);
 			EnrichmentFunctionInfo tmpFunction = QueryPlanner.getInstance().getFunction(functionId);
-			checkResolved(objectState, tmpFunction);
-			if(objectState.isResolved()) {
+			
+			if(result != null) {
 				/*
 				 * Update the tag.
 				 */
 				String tag = queryPlanner.getQuery().getiPredicate().getTag();
 				dataObject.getObject().addProperty(tag, result);
+				objectState.setResolved(true);;
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-	}
-	private void checkResolved(ObjectState objectState, EnrichmentFunctionInfo tmpFunction) {
-		// TODO Auto-generated method stub
-		Random r = new Random();
-		if(r.nextDouble() <= tmpFunction.getQuality())
-			objectState.setResolved(true);
 	}
 	public void deleteObjectState(ObjectState objectState) {
 		

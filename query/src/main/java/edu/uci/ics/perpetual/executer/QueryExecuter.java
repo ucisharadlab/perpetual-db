@@ -3,6 +3,7 @@ package edu.uci.ics.perpetual.executer;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.uci.ics.perpetual.ObjectChecker;
 import edu.uci.ics.perpetual.answer_handler.AnswerSetGenerator;
 import edu.uci.ics.perpetual.epochhandler.EpochHandler;
 import edu.uci.ics.perpetual.model.AnswerSet;
@@ -34,8 +35,6 @@ public class QueryExecuter{
 
         return instance;
     }
-
-	// add, get and remove for enrichmentFunctionList
 	
 	public void execute()
 	{
@@ -60,7 +59,7 @@ public class QueryExecuter{
 	}
 	private void executeOneEpoch() {
 		PlanPath pp;
-		while(epochHandler.availableBudgetToRunFunction(queryPlanner.peekPlanPath().getCost()))
+		while(!queryPlanner.getPlanQueue().isEmpty() && epochHandler.availableBudgetToRunFunction(queryPlanner.peekPlanPath().getCost()))
 		{
 			pp = queryPlanner.pollPlanPath();
 			executeOneObjectFunctionPair(pp);
@@ -71,13 +70,15 @@ public class QueryExecuter{
 			}
 			else
 			{
-				epochHandler.getAnswerObjectStatesList().add(pp.getObject());
+				if(ObjectChecker.getInstance().checkDataObjectTagSatisfyValue(pp.getObject().getObject(), QueryPlanner.getInstance().getQuery().getiPredicate()))
+					epochHandler.getAnswerObjectStatesList().add(pp.getObject());
 			}
 		}
 	}
 	public void executeOneObjectFunctionPair(PlanPath pp)
 	{
 		EnrichmentFunctionInfo tmpFunc = pp.removeFunction(0);
+		//System.out.println("Executing enrichment Functions: "+tmpFunc.getId() +" on object id:" +pp.getObject().getObject().getObject().get("id").getAsString());
 		String result = tmpFunc.getFunction().executeAndReturnResult(pp.getObject().getObject());
 		epochHandler.deductFromRemainingBudget(tmpFunc.getCost());
 		stateManager.updateObjectState(pp.getObject().getObject(), tmpFunc.getId(), result);
