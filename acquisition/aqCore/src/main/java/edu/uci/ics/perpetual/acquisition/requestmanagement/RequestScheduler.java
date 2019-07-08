@@ -21,22 +21,25 @@ public class RequestScheduler {
             Timer timer = new Timer();
             Long startTime = request.getStartTime().getTime()  - System.currentTimeMillis();
             Long endTime = request.getEndTime().getTime()  - System.currentTimeMillis();
-            if(startTime < 0)
+            if(startTime < 0){
+                LOGGER.debug( "ACQUISITION ENGINE: Got a request with past start time. Scheduling it immediately." );
                 startTime = System.currentTimeMillis() + 10;
+            }
+
             timer.schedule( task, startTime);
             ScheduledStopProducerTask stoppingTask = new ScheduledStopProducerTask(task,request, request.getRequestId()+"-stop-task");
             timer.schedule(stoppingTask,endTime);
-            LOGGER.info("ACQUISITION ENGINE: Scheduled request: " + request.getRequestId()  + " datasource: "+ request.getDataSourceId());
             if(request.getStatus() != AcquisitionRequestStatus.NEW){
+                LOGGER.info("ACQUISITION ENGINE: ReScheduled request: " + request.getRequestId()  + " datasource: "+ request.getDataSourceId());
                 request.setStatus(AcquisitionRequestStatus.RESCHEDULED);
             }else{
+                LOGGER.info("ACQUISITION ENGINE: Scheduled request: " + request.getRequestId()  + " datasource: "+ request.getDataSourceId());
                 request.setStatus(AcquisitionRequestStatus.SCHEDULED);
             }
 
 
         }catch(Exception e){
-            e.printStackTrace();
-            LOGGER.info("ACQUISITION ENGINE: Request Schedule Failed: " + request.getRequestId()  + " datasource: "+ request.getDataSourceId());
+            LOGGER.error("ACQUISITION ENGINE: Request Schedule Failed: " + request.getRequestId()  + " datasource: "+ request.getDataSourceId(),e);
             request.setStatus(AcquisitionRequestStatus.ERROR);
         }
         db.updateRequestStatus( request );

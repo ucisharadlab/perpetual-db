@@ -3,25 +3,13 @@ package edu.uci.ics.perpetual.acquisition.requestmanagement;
 import edu.uci.ics.perpetual.SchemaManager;
 import edu.uci.ics.perpetual.request.AcquisitionRequest;
 import edu.uci.ics.perpetual.request.AcquisitionRequestStatus;
-import edu.uci.ics.perpetual.statement.*;
-import edu.uci.ics.perpetual.statement.add.AddAcquisitionFunction;
-import edu.uci.ics.perpetual.statement.add.AddDataSource;
+import edu.uci.ics.perpetual.statement.Statement;
+import edu.uci.ics.perpetual.statement.StatementVisitorAdapter;
 import edu.uci.ics.perpetual.statement.add.AddRequest;
-import edu.uci.ics.perpetual.statement.add.AddTag;
-import edu.uci.ics.perpetual.statement.create.type.CreateDataSourceType;
-import edu.uci.ics.perpetual.statement.create.type.CreateFunction;
-import edu.uci.ics.perpetual.statement.create.type.CreateMetadataType;
-import edu.uci.ics.perpetual.statement.create.type.CreateRawType;
-import edu.uci.ics.perpetual.statement.drop.Drop;
-import edu.uci.ics.perpetual.statement.insert.Insert;
-import edu.uci.ics.perpetual.statement.select.Select;
-import edu.uci.ics.perpetual.statement.values.ValuesStatement;
 import edu.uci.ics.perpetual.types.DataObjectType;
-import edu.uci.ics.perpetual.types.DataSourceType;
 import edu.uci.ics.perpetual.util.PrettyPrintingMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -55,20 +43,12 @@ public class AcquisitionRequestManager {
         try{
             handlePendingRequests(db.getPendingRequests());
         }catch(Exception e){
-            System.out.println( "Failed to load pending requests..." );
-            e.printStackTrace();
-            LOGGER.error( "ACQUISITION ENGINE: Failed to load reload pending requests from database" );
+            System.out.println( "Failed to load pending requests from past session..." );
+            LOGGER.error( "ACQUISITION ENGINE: Failed to reload pending requests from database" ,e);
         }
     }
 
     private Map<Integer , AcquisitionRequest> requests = new HashMap <>();
-
-    public boolean addRequest(int requestId) throws Exception{
-      /* TODO Uncomment once schema manager code is available.
-        AcquisitionRequest request = schema.getRequest(requestId);
-        return addRequest(request);*/
-        return true;
-    }
 
     public boolean processRequest(AcquisitionRequest request) throws Exception{
         requests.put(request.getRequestId(),request);

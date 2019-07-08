@@ -1,18 +1,20 @@
 package edu.uci.ics.perpetual.acquisition.requestmanagement;
+
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import edu.uci.ics.perpetual.request.AcquisitionRequest;
 import edu.uci.ics.perpetual.request.AcquisitionRequestStatus;
 import edu.uci.ics.perpetual.storage.MysqlStorage;
-import com.google.gson.Gson;
 import org.apache.log4j.Logger;
-import org.apache.logging.log4j.util.SystemPropertiesPropertySource;
 
 import java.lang.reflect.Type;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import static edu.uci.ics.perpetual.acquisition.utils.AcquisitionConfig.config;
 
@@ -49,11 +51,9 @@ public class RequestPersistanceManager {
             ps.setTimestamp( 10, new Timestamp( request.getEndTime().getTime()));
             ps.setInt(11, request.getFrequency());
             ps.setString( 12, request.getStatus().name() );
-
-            System.out.println( ps );
+            LOGGER.info( ps );
             ps.executeUpdate();
         }catch (SQLException e){
-            e.printStackTrace();
             LOGGER.error( "ACQUISITION ENGINE: Failed to add request: " + request.getRequestId(), e);
             return false;
         }
@@ -67,6 +67,7 @@ public class RequestPersistanceManager {
             ps.setTimestamp( 2 , new Timestamp( System.currentTimeMillis()));
             ps.setInt( 3, request.getRequestId() );
             ps.executeUpdate();
+            LOGGER.debug( "ACQUISITION ENGINE: updated status for request : " + request.getRequestId());
         }catch (SQLException e){
             LOGGER.error( "ACQUISITION ENGINE: Failed to update status of request: " + request.getRequestId(), e);
         }
@@ -77,9 +78,10 @@ public class RequestPersistanceManager {
         try{
             PreparedStatement ps = storage.getConn().prepareStatement( config.get( "requests.fetch.all" ) );
             ResultSet results = ps.executeQuery();
-            System.out.println( ps );
+            LOGGER.info( ps );
             requests = toRequests(  results );
             System.out.println( "Found " + requests.size() + "pending requests....");
+            LOGGER.debug("Found " + requests.size() + "pending requests....");
 
         }catch (SQLException e){
             LOGGER.error( "ACQUISITION ENGINE: Failed to load all requests.", e);
@@ -93,12 +95,10 @@ public class RequestPersistanceManager {
             PreparedStatement ps = storage.getConn().prepareStatement( config.get( "requests.fetch.pending" ) );
             ps.setTimestamp( 1, new Timestamp( System.currentTimeMillis() ) );
             ResultSet results = ps.executeQuery();
-            System.out.println( ps );
-
+            LOGGER.info( ps );
             requests = toRequests(  results );
 
         }catch (SQLException e){
-            e.printStackTrace();
             LOGGER.error( "ACQUISITION ENGINE: Failed to load old requests.", e);
         }
         return requests;

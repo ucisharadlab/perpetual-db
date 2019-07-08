@@ -1,10 +1,10 @@
 package edu.uci.ics.perpetual.acquisition.requestmanagement;
 
-import edu.uci.ics.perpetual.request.AcquisitionRequest;
 import edu.uci.ics.perpetual.acquisition.datatypes.Producer;
-import edu.uci.ics.perpetual.request.AcquisitionRequestStatus;
 import edu.uci.ics.perpetual.acquisition.utils.JavaUtils;
 import edu.uci.ics.perpetual.ingestion.IngestionThread;
+import edu.uci.ics.perpetual.request.AcquisitionRequest;
+import edu.uci.ics.perpetual.request.AcquisitionRequestStatus;
 import org.apache.log4j.Logger;
 
 import java.util.TimerTask;
