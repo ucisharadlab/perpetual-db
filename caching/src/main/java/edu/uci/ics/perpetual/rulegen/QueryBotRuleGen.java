@@ -117,37 +117,45 @@ public class QueryBotRuleGen implements IRuleGen, Runnable  {
 
     List<String> getTopRawTypes(int N) {
 
-        List<Map.Entry<String, Integer>> types = new ArrayList<>(exInfo.getTypeInfo().entrySet());
-        types.sort((a,b) -> b.getValue() - a.getValue());
+        try {
+            List<Map.Entry<String, Integer>> types = new ArrayList<>(exInfo.getTypeInfo().entrySet());
+            types.sort((a, b) -> b.getValue() - a.getValue());
 
-        return types.stream()
-                .filter(a-> schema.getRawMap().keySet().contains(a.getKey().toUpperCase()))
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
+            return types.stream()
+                    .filter(a -> schema.getRawMap().keySet().contains(a.getKey().toUpperCase()))
+                    .map(Map.Entry::getKey)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
 
     }
 
     List<String> getTopTagsForRawType(String rawType) {
 
-        List<String> tags = schema.getTagMap().entrySet().stream()
-                .filter(a->a.getValue().getRawType().equalsIgnoreCase(rawType))
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
+        try {
+            List<String> tags = schema.getTagMap().entrySet().stream()
+                    .filter(a -> a.getValue().getRawType().equalsIgnoreCase(rawType))
+                    .map(Map.Entry::getKey)
+                    .collect(Collectors.toList());
 
-        Set<Map.Entry<String, Integer>> extractedTags = new HashSet<>();
-        exInfo.getTagInfo().forEach(
-                (key, value) -> value.entrySet().forEach( a-> {
-                    if (tags.contains(a.getKey().toUpperCase())) extractedTags.add(a);
-                })
+            Set<Map.Entry<String, Integer>> extractedTags = new HashSet<>();
+            exInfo.getTagInfo().forEach(
+                    (key, value) -> value.entrySet().forEach(a -> {
+                        if (tags.contains(a.getKey().toUpperCase())) extractedTags.add(a);
+                    })
 
-        );
+            );
 
-        List<Map.Entry<String, Integer>> extractedTagsList = new ArrayList<>(extractedTags);
-        extractedTagsList.sort((a,b) -> b.getValue() - a.getValue());
+            List<Map.Entry<String, Integer>> extractedTagsList = new ArrayList<>(extractedTags);
+            extractedTagsList.sort((a, b) -> b.getValue() - a.getValue());
 
-        return extractedTagsList.stream()
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
+            return  extractedTagsList.stream()
+                    .map(Map.Entry::getKey)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
     }
 
     @Override
