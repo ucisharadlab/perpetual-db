@@ -53,7 +53,6 @@ public class EnrichmentFunction {
     public String executeAndReturnResult(DataObject dataObject) {
         try {
             String result = (String) method.invoke(enrichmentInstance, dataObject.getObject());
-            dataObject.getObject().addProperty(functionName, result);
             return result;
         } catch (Exception e) {
             e.printStackTrace();
