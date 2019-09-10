@@ -3,12 +3,23 @@ package edu.uci.ics.perpetual.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlanPath implements Comparable<PlanPath>{
-	private ObjectState object;
+public class BlockPath implements Comparable<BlockPath>{
+	private BlockState blockState;
 	private double cost;
 	private double quality;
 	private double benefit;
+	//private int blockSize;
+	private List<EnrichmentFunctionInfo> enrichmentFunctionList;
 	
+
+	
+	public BlockPath()
+	{
+		//initializing list
+		enrichmentFunctionList = new ArrayList<EnrichmentFunctionInfo>();
+	}
+	
+
 	public double getBenefit() {
 		return benefit;
 	}
@@ -16,19 +27,22 @@ public class PlanPath implements Comparable<PlanPath>{
 	public void setBenefit(double benefit) {
 		this.benefit = benefit;
 	}
-	private List<EnrichmentFunctionInfo> enrichmentFunctionList;
-	
-	public PlanPath()
-	{
-		//initializing list
-		enrichmentFunctionList = new ArrayList<EnrichmentFunctionInfo>();
+	/*
+	public int getBlocksize() {
+		return blockSize;
 	}
+
+	public void setBlocksize(int blockSize) {
+		this.blockSize = blockSize;
+	}*/
 	
-	public ObjectState getObject() {
-		return object;
+	
+	
+	public BlockState getBlockState() {
+		return blockState;
 	}
-	public void setObject(ObjectState object) {
-		this.object = object;
+	public void setBlockState(BlockState blockState) {
+		this.blockState = blockState;
 	}
 	public double getCost() {
 		return cost;
@@ -38,6 +52,7 @@ public class PlanPath implements Comparable<PlanPath>{
 		// sum up all the cost of the enrichment funcitons.
 		for(EnrichmentFunctionInfo f: enrichmentFunctionList)
 			cost += f.getCost();
+		cost = cost * blockState.getBlocksize();
 	}
 	
 	public void calculateBenefit() {
@@ -46,8 +61,8 @@ public class PlanPath implements Comparable<PlanPath>{
 		// sum up all the cost of the enrichment funcitons.
 		
 		for(EnrichmentFunctionInfo f: enrichmentFunctionList) {
-			quality +=f.getQuality();
-			cost += f.getCost();
+			quality += (f.getQuality() * blockState.getBlocksize());
+			cost += (f.getCost() * blockState.getBlocksize());
 		}
 			
 		benefit = quality/cost;	
@@ -74,23 +89,24 @@ public class PlanPath implements Comparable<PlanPath>{
 	{
 		return enrichmentFunctionList.remove(index);
 	}
-	/*
+	
 	@Override
-	public int compareTo(PlanPath o) {
+	public int compareTo(BlockPath o) {
 		// TODO Auto-generated method stub
 		if(this.getCost() < o.getCost())
 			return -1;
 		if(this.getCost() > o.getCost())
 			return 1;
 		return 0;
-	}*/
+	}
+	/*
 	@Override
-	public int compareTo(PlanPath o) {
+	public int compareTo(BlockPath o) {
 		// TODO Auto-generated method stub
 		if(this.getBenefit() < o.getBenefit())
 			return -1;
 		if(this.getBenefit() > o.getBenefit())
 			return 1;
 		return 0;
-	}
+	}*/
 }

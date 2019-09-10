@@ -24,9 +24,11 @@ import edu.uci.ics.perpetual.predicate.ExpressionPredicate;
 import edu.uci.ics.perpetual.state.StateManager;
 import edu.uci.ics.perpetual.types.DataObjectType;
 import edu.uci.ics.perpetual.types.TaggingFunction;
+import edu.uci.ics.perpetual.model.BlockPath;
 
 public class QueryPlanner {
 	private PriorityQueue<PlanPath> planQueue;
+	private PriorityQueue<BlockPath> blockPlanQueue;
 	private List<EnrichmentFunctionInfo> enrichmentFunctionList;
 	private static QueryPlanner instance;
 	private PlanGeneration plangen;
@@ -35,6 +37,7 @@ public class QueryPlanner {
 	private QueryPlanner()
 	{
 		planQueue = new PriorityQueue<PlanPath>();
+		blockPlanQueue = new PriorityQueue<BlockPath>();
 		enrichmentFunctionList = new ArrayList<EnrichmentFunctionInfo>();
 		plangen = new PlanGeneration();
 	}
@@ -74,6 +77,28 @@ public class QueryPlanner {
 		this.planQueue = planQueue;
 	}
 	
+	// For block plan queue operations
+	
+	public PriorityQueue<BlockPath> getBlockPlanQueue() {
+		return blockPlanQueue;
+	}
+	public void setBlockPlanQueue(PriorityQueue<BlockPath> blockPlanQueue) {
+		this.blockPlanQueue = blockPlanQueue;
+	}
+	public void addBlockPlanPath(BlockPath bp)
+	{
+		blockPlanQueue.add(bp);
+	}
+	public BlockPath peekBlockPlanPath()
+	{
+		return blockPlanQueue.peek();
+	}
+	public BlockPath pollBlockPlanPath()
+	{
+		return blockPlanQueue.poll();
+	}
+	
+	
 	// add, get and remove for enrichmentFunctionList
 	public void addEnrichmentFunction(EnrichmentFunctionInfo f)
 	{
@@ -95,7 +120,9 @@ public class QueryPlanner {
 	public void pathGenerator(List<ObjectState> objectStateList)
 	{
 		//generation of paths
-		planQueue = plangen.getInitialPlanPath(enrichmentFunctionList, objectStateList);
+		//planQueue = plangen.getInitialPlanPath(enrichmentFunctionList, objectStateList);
+		blockPlanQueue = plangen.getInitialPlanPathBlockBased(enrichmentFunctionList, objectStateList);
+		System.out.println("blockPlanQueue="+blockPlanQueue);
 	}
 	
 	public double costEstimator()
@@ -163,12 +190,18 @@ public class QueryPlanner {
 		this.query = query;
 		getEnrichmentFunctionsFromMemory();
 		List<DataObject> dataObjectsList = objectRetreival(query.getType(), query.getpPredicate());
+		
 		CheckResolvedDataObjectsAndAddToResult(dataObjectsList);
 		pathGenerator(initializeObjectStates(dataObjectsList));
 		
 		// set the epochBudget in EpochHandler
-		EpochHandler.getInstance().setBudget(epochBudget);
-		QueryExecuter.getInstance().execute();
+		try {
+			EpochHandler.getInstance().setBudget(epochBudget);
+			QueryExecuter.getInstance().execute();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 	private void CheckResolvedDataObjectsAndAddToResult(List<DataObject> dataObjectsList) {
 		String tag = query.getiPredicate().getTag();
