@@ -31,18 +31,20 @@ public class PlanGeneration {
 	}
 	public PriorityQueue<BlockPath> getInitialPlanPathBlockBased(List<EnrichmentFunctionInfo> enrichmentFunctionList, List<ObjectState> objectStateList){
 		PriorityQueue<BlockPath> blockPQ = new PriorityQueue<>();
-		int blockSize = 20;
-		ArrayList<DataObject> blockObjectList =  new ArrayList<DataObject>();
+		int blockSize = 40;
+		//ArrayList<DataObject> blockObjectList =  new ArrayList<DataObject>();
+		ArrayList<ObjectState> blockObjectStateList =  new ArrayList<ObjectState>();
 		for(int i=0;i<objectStateList.size();i++)
 		{
 			if(i%blockSize == 0 && i > 0) {				
 				BlockState blockState = new BlockState();
-				blockState.setObjectList(blockObjectList);
+				blockState.setObjectStateList(blockObjectStateList);
 				blockState.setBlocksize(blockSize);
 				blockPQ.add(planOneBlock(enrichmentFunctionList, blockState));
-				blockObjectList =  new ArrayList<DataObject>();
+				//blockObjectStateList.clear();
+				blockObjectStateList =  new ArrayList<ObjectState>();
 			}
-			blockObjectList.add(objectStateList.get(i).getObject());			
+			blockObjectStateList.add(objectStateList.get(i));			
 		}
 		//System.out.println("number of blocks created = "+ blockPQ.size());
 		return blockPQ;

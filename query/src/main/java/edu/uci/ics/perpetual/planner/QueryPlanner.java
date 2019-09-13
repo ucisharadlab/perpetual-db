@@ -41,6 +41,12 @@ public class QueryPlanner {
 		enrichmentFunctionList = new ArrayList<EnrichmentFunctionInfo>();
 		plangen = new PlanGeneration();
 	}
+	public PlanGeneration getPlangen() {
+		return plangen;
+	}
+	public void setPlangen(PlanGeneration plangen) {
+		this.plangen = plangen;
+	}
 	public static QueryPlanner getInstance(){
         if (instance == null){
         	instance = new QueryPlanner();
@@ -123,6 +129,7 @@ public class QueryPlanner {
 		//planQueue = plangen.getInitialPlanPath(enrichmentFunctionList, objectStateList);
 		blockPlanQueue = plangen.getInitialPlanPathBlockBased(enrichmentFunctionList, objectStateList);
 		System.out.println("blockPlanQueue="+blockPlanQueue);
+		System.out.println("size of blockPlanQueue="+blockPlanQueue.size());
 	}
 	
 	public double costEstimator()

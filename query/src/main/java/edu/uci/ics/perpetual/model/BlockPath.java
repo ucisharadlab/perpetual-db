@@ -11,12 +11,26 @@ public class BlockPath implements Comparable<BlockPath>{
 	//private int blockSize;
 	private List<EnrichmentFunctionInfo> enrichmentFunctionList;
 	
+	
+	
 
 	
+	public List<EnrichmentFunctionInfo> getEnrichmentFunctionList() {
+		return enrichmentFunctionList;
+	}
+
+
+	public void setEnrichmentFunctionList(List<EnrichmentFunctionInfo> enrichmentFunctionList) {
+		this.enrichmentFunctionList = enrichmentFunctionList;
+	}
+
+
 	public BlockPath()
 	{
 		//initializing list
 		enrichmentFunctionList = new ArrayList<EnrichmentFunctionInfo>();
+		
+		
 	}
 	
 
@@ -52,7 +66,10 @@ public class BlockPath implements Comparable<BlockPath>{
 		// sum up all the cost of the enrichment funcitons.
 		for(EnrichmentFunctionInfo f: enrichmentFunctionList)
 			cost += f.getCost();
-		cost = cost * blockState.getBlocksize();
+		int numUnresolved = blockState.getNumMayBe();
+		cost = numUnresolved;
+		//cost = cost * numUnresolved;
+		//cost = cost * blockState.getBlocksize();
 	}
 	
 	public void calculateBenefit() {
@@ -91,6 +108,7 @@ public class BlockPath implements Comparable<BlockPath>{
 	}
 	
 	@Override
+	/*
 	public int compareTo(BlockPath o) {
 		// TODO Auto-generated method stub
 		if(this.getCost() < o.getCost())
@@ -98,7 +116,17 @@ public class BlockPath implements Comparable<BlockPath>{
 		if(this.getCost() > o.getCost())
 			return 1;
 		return 0;
+	}*/
+	// Based on number of unresolved objects. Higher cost means better. 
+	public int compareTo(BlockPath o) {
+		// TODO Auto-generated method stub
+		if(this.getCost() < o.getCost())
+			return 1;
+		if(this.getCost() > o.getCost())
+			return -1;
+		return 0;
 	}
+	
 	/*
 	@Override
 	public int compareTo(BlockPath o) {

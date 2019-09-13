@@ -15,6 +15,7 @@ import edu.uci.ics.perpetual.model.ObjectState;
 import edu.uci.ics.perpetual.model.PlanPath;
 import edu.uci.ics.perpetual.planner.QueryPlanner;
 import edu.uci.ics.perpetual.state.StateManager;
+import edu.uci.ics.perpetual.planner.PlanGeneration;
 
 public class QueryExecuter{
 	private static QueryExecuter instance;
@@ -54,8 +55,8 @@ public class QueryExecuter{
 			System.out.println("Epoch Number: "+epochHandler.getEpochNumber());
 			System.out.println("Results:");
 			int answerLen =  epochHandler.getAnswerObjectStatesList().size();
-			for(int i=0;i< answerLen ;i++)
-				printObjectToSTDout(epochHandler.getAnswerObjectStatesList().get(i));
+			//for(int i=0;i< answerLen ;i++)
+				//printObjectToSTDout(epochHandler.getAnswerObjectStatesList().get(i));
 			
 			cumulativeLenAnswer+= answerLen;
 			cumulativeAnswerList.add(cumulativeLenAnswer);
@@ -116,43 +117,39 @@ public class QueryExecuter{
 		BlockPath blockPath;
 		BlockState blockState;
 		DataObject object;
-		System.out.println("In executeOneEpochProgressiveBlock method BlockPlanQueue = " + queryPlanner.getBlockPlanQueue());
-		System.out.println("In executeOneEpochProgressiveBlock method Top Plan path = " + queryPlanner.peekBlockPlanPath().toString());
-		System.out.println("In executeOneEpochProgressiveBlock method Top Plan Cost = " + queryPlanner.peekBlockPlanPath().getCost());
 		
-		System.out.println("BlockPlanQueue size = "+ queryPlanner.getBlockPlanQueue().size());
+		//System.out.println("BlockPlanQueue size = "+ queryPlanner.getBlockPlanQueue().size());
 		
 		while(!queryPlanner.getBlockPlanQueue().isEmpty() && epochHandler.availableBudgetToRunFunction(queryPlanner.peekBlockPlanPath().getCost()))
 		{
 			blockPath = queryPlanner.pollBlockPlanPath();
 			executeOneBlockFunctionPair(blockPath);
-			//System.out.println("BlockPlanQueue size updated = "+ queryPlanner.getBlockPlanQueue().size());
-			
-			
-			if(!blockPath.getBlockState().isResolved() && blockPath.getEnrichmentFunctionInfoSize()>0)
+			blockState = blockPath.getBlockState();
+						
+			if(blockPath.getEnrichmentFunctionInfoSize()>0)
 			{
 				//pp.calculateCost();
 				blockPath.calculateCost();
-				queryPlanner.getBlockPlanQueue().add(blockPath);
+				queryPlanner.getBlockPlanQueue().add(queryPlanner.getPlangen().planOneBlock(blockPath.getEnrichmentFunctionList(), blockState));
+				//queryPlanner.getBlockPlanQueue().add(blockPath);
 			}
-			else
-			{
-				blockState = blockPath.getBlockState();
-				for(DataObject obj: blockState.getObjectList()) {
-					if(ObjectChecker.getInstance().checkDataObjectTagSatisfyValue(obj, QueryPlanner.getInstance().getQuery().getiPredicate())) {
-						ObjectState objectState = new ObjectState();
-						objectState.setObject(obj);
-						objectState.setFunctionBitmap(blockState.getFunctionBitmap());
-						objectState.setFunctionResultList(blockState.getFunctionResultList());
-						epochHandler.getAnswerObjectStatesList().add(objectState);
-					}
+			
+			
+			for(ObjectState objState: blockState.getObjectStateList()) {
+				if(ObjectChecker.getInstance().checkDataObjectTagSatisfyValue(objState.getObject(), QueryPlanner.getInstance().getQuery().getiPredicate())) {
+					ObjectState objectState = new ObjectState();
+					objectState.setObject(objState.getObject());
+					objectState.setFunctionBitmap(blockState.getFunctionBitmap());
+					objectState.setFunctionResultList(blockState.getFunctionResultList());
+					epochHandler.getAnswerObjectStatesList().add(objectState);
+				}
+				
+				//epochHandler.getAnswerObjectStatesList().add(objectState.get);
+			}					
+				
+			 
 					
-					//epochHandler.getAnswerObjectStatesList().add(objectState.get);
-				}					
-					
-			 }
-					
-			}
+		}
 	}
 	
 	
@@ -162,17 +159,40 @@ public class QueryExecuter{
 	private void executeOneBlockFunctionPair(BlockPath blockPath) {
 		// TODO Auto-generated method stub
 		try {
-			System.out.println("Number of objects in the block path: "+blockPath.getBlockState().getObjectList().size());	
+			System.out.println("Befor execution, number of objects in the block path: "+blockPath.getBlockState().getObjectStateList().size());	
 			if(blockPath.getEnrichmentFunctionInfoSize() > 0) {
 				EnrichmentFunctionInfo tmpFunc = blockPath.removeFunction(0);
-				List<DataObject> objectList = blockPath.getBlockState().getObjectList();
-				for(int i = 0;i<objectList.size();i++) {
-					//System.out.println("Executing enrichment Functions: "+tmpFunc.getId() +" on object id:" +objectList.get(i));					
-					String result = tmpFunc.getFunction().executeAndReturnResult(objectList.get(i));
+				BlockState blockState = blockPath.getBlockState();
+				List<ObjectState> objectStateList = blockState.getObjectStateList();
+				List<ObjectState> newObjectList = new ArrayList<ObjectState>();
+				String result = null;
+				
+				for(ObjectState objectState:objectStateList) {
+					//System.out.println("Executing enrichment Functions: "+tmpFunc.getId() +" on object id:" +object);
+					//if(!objectState.isResolved())
+					result = tmpFunc.getFunction().executeAndReturnResult(objectState.getObject());
+					//System.out.println("result = "+result);  // result = Positive, null, Negative	
+					if(result!= null && result.equalsIgnoreCase("Positive")) {
+						int numPositive = blockState.getNumPositive();
+						blockState.setNumPositive(numPositive++);
+					}else if(result!= null && result.equalsIgnoreCase("Negative")) {
+						int numNegative = blockState.getNumNegative();
+						blockState.setNumPositive(numNegative++);
+					}else {
+						int numMaybe = blockState.getNumMayBe();
+						blockState.setNumPositive(numMaybe++);
+						newObjectList.add(objectState);
+					}
+					
 					epochHandler.deductFromRemainingBudget(tmpFunc.getCost());
-					stateManager.updateObjectState(objectList.get(i), tmpFunc.getId(), result);
+					stateManager.updateObjectState(objectState.getObject(), tmpFunc.getId(), result);
 				}	
+				//blockState.setObjectList(newObjectList);
+				//blockState.setBlocksize(newObjectList.size());
+				
 			}
+			//System.out.println("After Execution, number of objects in the block path: "+blockPath.getBlockState().getObjectStateList().size());	
+			
 			
 		}catch(Exception e) {
 			e.printStackTrace();

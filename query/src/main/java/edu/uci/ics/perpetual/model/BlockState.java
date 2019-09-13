@@ -6,13 +6,59 @@ import java.util.List;
 import edu.uci.ics.perpetual.data.*;
 
 public final class BlockState{
-	private List<DataObject> objectList;
+	private List<ObjectState> objectStateList;
 	private int blockSize;
 	private List<Integer> functionBitmap;
 	private List<String> functionResultList;  // For deterministic functions
 	private List<Double> functionProbResultList; // For probabilistic functions
 	private boolean isResolved;
+	private int numPositive;
+	private int numNegative;
+	private int numMayBe;
 	
+	
+	
+	public int getBlockSize() {
+		return blockSize;
+	}
+
+	public void setBlockSize(int blockSize) {
+		this.blockSize = blockSize;
+	}
+
+	public int getNumPositive() {
+		return numPositive;
+	}
+
+	public void setNumPositive(int numPositive) {
+		this.numPositive = numPositive;
+	}
+
+	public int getNumMayBe() {
+		return numMayBe;
+	}
+
+	public void setNumMayBe(int numMayBe) {
+		this.numMayBe = numMayBe;
+	}
+
+	public int getNumNegative() {
+		return numNegative;
+	}
+
+	public void setNumNegative(int numNegative) {
+		this.numNegative = numNegative;
+	}
+	
+	public BlockState(){
+		//initializing lists
+		functionBitmap = new ArrayList<Integer>();
+		functionResultList = new ArrayList<String>();
+		functionProbResultList = new ArrayList<Double>();
+		numPositive = 0;
+		numMayBe = 0;
+		numNegative = 0;
+	}
 	
 	public boolean isResolved() {
 		return isResolved;
@@ -55,18 +101,13 @@ public final class BlockState{
 		this.functionProbResultList = functionProbResultList;
 	}
 
-	public BlockState(){
-		//initializing lists
-		functionBitmap = new ArrayList<Integer>();
-		functionResultList = new ArrayList<String>();
-		functionProbResultList = new ArrayList<Double>();
-	}
 	
-	public List<DataObject> getObjectList() {
-		return objectList;
+	
+	public List<ObjectState> getObjectStateList() {
+		return objectStateList;
 	}
-	public void setObjectList(List<DataObject> objectList) {
-		this.objectList = objectList;
+	public void setObjectStateList(List<ObjectState> objectStateList) {
+		this.objectStateList = objectStateList;
 	}
 	
 	// add, get and remove for functionBitmap
@@ -122,4 +163,5 @@ public final class BlockState{
 	{
 		return functionProbResultList.remove(index);
 	}
+
 }

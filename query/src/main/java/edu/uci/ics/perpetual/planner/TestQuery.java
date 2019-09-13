@@ -37,7 +37,7 @@ public class TestQuery{
 		Query query = new Query(1, type, null, null, iPredicate);
 		
 		//public void initializePlanner(Query query, int epochBudget)
-		QueryPlanner.getInstance().initializePlanner(query,20000);
+		QueryPlanner.getInstance().initializePlanner(query,100000);
 		
 		
 	}
