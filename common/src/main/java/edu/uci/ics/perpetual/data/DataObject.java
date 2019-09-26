@@ -16,6 +16,11 @@ public class DataObject {
         this.type = type;
     }
 
+    public DataObject(JsonObject data, DataObjectType type){
+        this.object = data;
+        this.type = type;
+    }
+
     public JsonObject getObject() {
         return object;
     }
