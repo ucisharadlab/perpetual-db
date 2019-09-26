@@ -55,8 +55,8 @@ public class QueryExecuter{
 			System.out.println("Epoch Number: "+epochHandler.getEpochNumber());
 			System.out.println("Results:");
 			int answerLen =  epochHandler.getAnswerObjectStatesList().size();
-			//for(int i=0;i< answerLen ;i++)
-				//printObjectToSTDout(epochHandler.getAnswerObjectStatesList().get(i));
+			for(int i=0;i< answerLen ;i++)
+				printObjectToSTDout(epochHandler.getAnswerObjectStatesList().get(i));
 			
 			cumulativeLenAnswer+= answerLen;
 			cumulativeAnswerList.add(cumulativeLenAnswer);

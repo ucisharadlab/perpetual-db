@@ -1,6 +1,8 @@
 import com.google.gson.JsonObject;
 import org.apache.log4j.Logger;
 import java.util.Random;
+
+
 import java.util.HashSet; 
 import java.util.Set;
 import java.util.ArrayList;
@@ -23,14 +25,12 @@ import org.json.JSONObject;
 
 
 
-public class TweetSentiment9 {
+public class TweetSentimentLogisticRegression{
 
-    Logger LOGGER = Logger.getLogger(TweetSentiment9.class);
-    public List<String> listPositive, listNegative;
-    public Set<String> hashSetPositive, hashSetNegative; 
-    
-   public String enrich(JsonObject data) {
-        LOGGER.info("Running Enrichment");
+    Logger LOGGER = Logger.getLogger(TweetSentimentLogisticRegression.class);
+
+    public String enrich(JsonObject data) {
+    	LOGGER.info("Running Enrichment");
         Random r = new Random();
 		double rand = r.nextDouble();
 		double resoultionProb = 0.1;
@@ -54,7 +54,7 @@ public class TweetSentiment9 {
 	        	System.out.println("text ="+text);
 	        
 			jsonObject.put("text",text);
-			jsonObject.put("classifier","DT");
+			jsonObject.put("classifier","LR");
 			
 		    String urlParameters = jsonObject.toString();
 		    //System.out.println("urlParameters = "+urlParameters);
@@ -101,47 +101,5 @@ public class TweetSentiment9 {
 			
 		return null;
     }
-
-    
-    /*
-     * 
-    
-    public String enrich(JsonObject data) {
-        LOGGER.info("Running Enrichment");
-        System.out.println("data = "+data);
-        double resoultionProb = 1.0;
-        String text = "";
-        try {
-        		text = data.get("text").toString();
-        		System.out.println("text ="+text);
-        }catch(Exception e) {
-        		e.printStackTrace();
-        }
-        
-        		
-        
-        while(text.length()>0) {
-        		text = text.trim();
-        		int index = text.indexOf(" ");
-        		if(index == -1)
-        			break;
-        		String word = text.substring(0,index);
-        		
-        		if(hashSetPositive.contains(word)) {
-        			System.out.println("result = Positive");
-        			return "Positive";
-        		}
-        		else if(hashSetNegative.contains(word)) {
-        			System.out.println("result = Negative");
-        			return "Negative";
-        		}
-        		text = text.substring(index+1);
-        		
-        				
-        }
-        return null;
-        
-    }
-     */
 
 }

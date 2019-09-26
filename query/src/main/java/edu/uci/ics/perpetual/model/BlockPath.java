@@ -64,8 +64,11 @@ public class BlockPath implements Comparable<BlockPath>{
 	public void calculateCost() {
 		cost = 0;
 		// sum up all the cost of the enrichment funcitons.
-		for(EnrichmentFunctionInfo f: enrichmentFunctionList)
+		
+		for(EnrichmentFunctionInfo f: enrichmentFunctionList) {
+			System.out.println("function = "+f.getId()+", Cost = "+f.getCost()+", quality ="+f.getQuality());
 			cost += f.getCost();
+		}
 		int numUnresolved = blockState.getNumMayBe();
 		cost = numUnresolved;
 		//cost = cost * numUnresolved;
@@ -75,14 +78,17 @@ public class BlockPath implements Comparable<BlockPath>{
 	public void calculateBenefit() {
 		cost = 0.0;
 		quality = 0.0;
+		benefit = 0.0;
 		// sum up all the cost of the enrichment funcitons.
+		int numUnresolved = blockState.getNumMayBe();
 		
 		for(EnrichmentFunctionInfo f: enrichmentFunctionList) {
-			quality += (f.getQuality() * blockState.getBlocksize());
-			cost += (f.getCost() * blockState.getBlocksize());
+			quality = f.getQuality();
+			cost = f.getCost();
+			benefit += (quality/cost);
 		}
-			
-		benefit = quality/cost;	
+		benefit = numUnresolved * benefit;
+		//benefit = quality/cost;	
 	}
 	
 	// add, get and remove for enrichmentFunctionList
@@ -107,7 +113,7 @@ public class BlockPath implements Comparable<BlockPath>{
 		return enrichmentFunctionList.remove(index);
 	}
 	
-	@Override
+	//@Override
 	/*
 	public int compareTo(BlockPath o) {
 		// TODO Auto-generated method stub
@@ -118,6 +124,7 @@ public class BlockPath implements Comparable<BlockPath>{
 		return 0;
 	}*/
 	// Based on number of unresolved objects. Higher cost means better. 
+	/*
 	public int compareTo(BlockPath o) {
 		// TODO Auto-generated method stub
 		if(this.getCost() < o.getCost())
@@ -125,16 +132,16 @@ public class BlockPath implements Comparable<BlockPath>{
 		if(this.getCost() > o.getCost())
 			return -1;
 		return 0;
-	}
+	}*/
 	
-	/*
+	
 	@Override
 	public int compareTo(BlockPath o) {
 		// TODO Auto-generated method stub
 		if(this.getBenefit() < o.getBenefit())
-			return -1;
-		if(this.getBenefit() > o.getBenefit())
 			return 1;
+		if(this.getBenefit() > o.getBenefit())
+			return -1;
 		return 0;
-	}*/
+	}
 }

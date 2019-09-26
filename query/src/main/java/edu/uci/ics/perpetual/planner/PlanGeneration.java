@@ -58,7 +58,6 @@ public class PlanGeneration {
 			return blockPath;
 		OGP_Block(index+1, enrichmentFunctionList, blockPath);
 		blockPath.calculateCost();
-		//pp.calculateCost();
 		return blockPath;
 	}
 	

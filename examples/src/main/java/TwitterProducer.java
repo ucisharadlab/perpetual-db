@@ -25,6 +25,7 @@ public class TwitterProducer extends Producer {
 
         Map<String, String> params = request.getAcquisitionFunctionParameters();
         String tempFilePath = params.get("filePath");
+        System.out.println("temp file path ="+tempFilePath);
         br = new BufferedReader(new FileReader(tempFilePath));
         String line;
         int idx = 0;
@@ -32,18 +33,24 @@ public class TwitterProducer extends Producer {
         JsonParser parser = new JsonParser();
 
         while(line != null) {
-            JsonObject tweet = (JsonObject) parser.parse(line);
-            JsonObject sendTweet = new JsonObject();
-            sendTweet.addProperty("id", tweet.getAsJsonObject("_id").get("$numberLong").getAsLong());
-            sendTweet.addProperty("text", tweet.getAsJsonObject("status").get("text").getAsString());
-            sendTweet.addProperty("timestamp", tweet.getAsJsonObject("timestamp").get("$numberLong").getAsLong());
-            sendTweet.addProperty("user", tweet.getAsJsonObject("status").getAsJsonObject("user").get("name").getAsString());
-
-            LOGGER.info("PRODUCER UDF : Sending..." + sendTweet.toString());
-            sendMessage(0, sendTweet.toString());
-            LOGGER.info("Sending data");
-
-            line = br.readLine();
+        		try {
+	        		System.out.println("line = "+line);
+	            JsonObject tweet = (JsonObject) parser.parse(line);
+	            System.out.println("tweet "+tweet);
+	            JsonObject sendTweet = new JsonObject();
+	            sendTweet.add("id", tweet.get("id"));
+	            sendTweet.add("text", tweet.get("text"));
+	            sendTweet.add("timestamp", tweet.get("timestamp"));
+	            sendTweet.add("user", tweet.get("user"));
+	
+	            LOGGER.info("PRODUCER UDF : Sending..." + sendTweet.toString());
+	            sendMessage(0, sendTweet.toString());
+	            LOGGER.info("Sending data");
+	
+	            line = br.readLine();
+        		}catch(Exception e) {
+        			e.printStackTrace();
+        		}
             Thread.sleep(1000);
 
         }
