@@ -43,6 +43,7 @@ public class ExpressionPredicate implements IPredicate {
     @Override
     public boolean evaluate(DataObject dataObject) {
 
+
         boolean flag = false;
         if (lop == LogicalOperator.AND)
             flag = true;

@@ -31,6 +31,10 @@ public class WorkloadManager {
                 workloadParser = new QueryBotWorkloadParser(dataDir);
                 extractor = new QueryBotExtractor(workloadParser);
                 break;
+            case INGEST_EXP:
+                workloadParser = new QueryBotWorkloadParser(dataDir);
+                extractor = new QueryBotExtractor(workloadParser);
+                break;
             default:
                 break;
         }

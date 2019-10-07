@@ -20,7 +20,7 @@ public class RequestScheduler {
             ProducerTask task = new ProducerTask(request);
             Timer timer = new Timer();
             Long startTime = request.getStartTime().getTime()  - System.currentTimeMillis();
-            // startTime = 10L; // For debugging
+            startTime = 10L; // For debugging
 
             Long endTime = request.getEndTime().getTime()  - System.currentTimeMillis();
             timer.schedule( task, startTime);

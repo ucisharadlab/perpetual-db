@@ -13,7 +13,7 @@ public class CachingConfig {
 
     // Twitter Data
     public static final String DATADIR = "/home/peeyush/Downloads/perpetual-db/scripts/twitter_queries.txt";
-    public static final WorkloadType WTYPE = WorkloadType.Twitter;
+    public static final WorkloadType WTYPE = WorkloadType.INGEST_EXP;
 
     public static final RuleType ruleType = RuleType.List;
 

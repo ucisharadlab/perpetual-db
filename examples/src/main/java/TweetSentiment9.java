@@ -1,4 +1,5 @@
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.apache.log4j.Logger;
 import java.util.Random;
 import java.util.HashSet; 
@@ -18,18 +19,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-
 
 public class TweetSentiment9 {
 
     Logger LOGGER = Logger.getLogger(TweetSentiment9.class);
     public List<String> listPositive, listNegative;
-    public Set<String> hashSetPositive, hashSetNegative; 
-    
-   public String enrich(JsonObject data) {
+    public Set<String> hashSetPositive, hashSetNegative;
+	JsonParser parser = new JsonParser();
+	int count = 0;
+
+	public String enrich(JsonObject data) {
         LOGGER.info("Running Enrichment");
         Random r = new Random();
 		double rand = r.nextDouble();
@@ -38,8 +37,11 @@ public class TweetSentiment9 {
 		String text = "";
 		
 		try {
+			count += 1;
+
+			if (count%20 != 0) return null;
             URL url = new URL("http://localhost:5000/sentiment/");
-			System.out.println("url:"+url);
+//			System.out.println("url:"+url);
 			
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("POST");
@@ -47,14 +49,14 @@ public class TweetSentiment9 {
 			conn.setRequestProperty("Content-Type", "application/json");
 			
 	
-			JSONObject jsonObject = new JSONObject();
+			JsonObject jsonObject = new JsonObject();
 			
 	        
 	        	text = data.get("text").toString();
-	        	System.out.println("text ="+text);
+//	        	System.out.println("text ="+text);
 	        
-			jsonObject.put("text",text);
-			jsonObject.put("classifier","DT");
+			jsonObject.addProperty("text",text);
+			jsonObject.addProperty("classifier","RF");
 			
 		    String urlParameters = jsonObject.toString();
 		    //System.out.println("urlParameters = "+urlParameters);
@@ -67,7 +69,7 @@ public class TweetSentiment9 {
 		    wr.close();
 
 		    int responseCode = conn.getResponseCode();
-		    System.out.println("\nSending 'POST' request to URL : " + url);
+//		    System.out.println("\nSending 'POST' request to URL : " + url);
 		    //System.out.println("Post parameters : " + urlParameters);
 		    //System.out.println("Response Code : " + responseCode);
 
@@ -84,19 +86,21 @@ public class TweetSentiment9 {
 		    //System.out.println(response.toString());
 		    String responseValue = response.toString();
 		    
-		    JSONObject responseObject = new JSONObject(responseValue);
-		    double probVal = responseObject.getDouble("probVal");
-		    System.out.println("probVal = "+probVal);
-		    
+		    JsonObject responseObject = (JsonObject) parser.parse(responseValue);
+		    double probVal = responseObject.get("probVal").getAsDouble();
+//		    System.out.println("probVal = "+probVal);
+
+			conn.disconnect();
 		    if(probVal > 0.55) {
 		    		return "Positive";
 		    }else if(probVal < 0.35){
 		    		return "Negative";
-		    }
-		    
-		    conn.disconnect();
+		    } else {
+		    	return "Neutral";
+			}
+
         }catch(Exception e) {
-        		e.printStackTrace();
+//        		e.printStackTrace();
         }
 			
 		return null;
