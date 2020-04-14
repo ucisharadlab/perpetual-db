@@ -8,11 +8,11 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.log4j.Logger;
 
-import static edu.uci.ics.perpetual.acquisition.utils.AcquisitionConfig.config;
-
 import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
+
+import static edu.uci.ics.perpetual.acquisition.utils.AcquisitionConfig.config;
 public abstract class Producer {
 
     protected AcquisitionRequest request;

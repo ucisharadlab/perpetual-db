@@ -5,10 +5,9 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.uci.ics.perpetual.request.AcquisitionRequestStatus;
 import edu.uci.ics.perpetual.acquisition.requestmanagement.AcquisitionRequestManager;
 import edu.uci.ics.perpetual.data.DataObject;
-import edu.uci.ics.perpetual.types.DataObjectType;
+import edu.uci.ics.perpetual.request.AcquisitionRequestStatus;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -18,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
+
 import static edu.uci.ics.perpetual.acquisition.utils.AcquisitionConfig.config;
 
 public class AcquisitionManager {
