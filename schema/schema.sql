@@ -78,9 +78,12 @@ CREATE TABLE AcquisitionRequests (
     acquisitionFunctionPath VARCHAR(300),
     acquisitionFunctionParameters TEXT,
     rawTypeScheme TEXT,
-    startTime DATE,
-    endTime DATE,
+    creationTime TIMESTAMP,
+    updateTime TIMESTAMP,
+    startTime TIMESTAMP,
+    endTime TIMESTAMP,
     frequency INT,
+    status VARCHAR(30)
 
     PRIMARY KEY(requestId)
 );

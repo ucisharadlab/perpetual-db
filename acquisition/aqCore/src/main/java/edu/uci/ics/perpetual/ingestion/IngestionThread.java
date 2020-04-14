@@ -9,7 +9,6 @@ import edu.uci.ics.perpetual.data.DataObject;
 import edu.uci.ics.perpetual.enrichment.EnrichmentFunction;
 import org.apache.log4j.Logger;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;

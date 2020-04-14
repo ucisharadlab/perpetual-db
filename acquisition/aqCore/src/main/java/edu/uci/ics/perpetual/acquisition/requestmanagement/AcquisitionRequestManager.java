@@ -3,66 +3,57 @@ package edu.uci.ics.perpetual.acquisition.requestmanagement;
 import edu.uci.ics.perpetual.SchemaManager;
 import edu.uci.ics.perpetual.request.AcquisitionRequest;
 import edu.uci.ics.perpetual.request.AcquisitionRequestStatus;
-import edu.uci.ics.perpetual.statement.*;
-import edu.uci.ics.perpetual.statement.add.AddAcquisitionFunction;
-import edu.uci.ics.perpetual.statement.add.AddDataSource;
+import edu.uci.ics.perpetual.statement.Statement;
+import edu.uci.ics.perpetual.statement.StatementVisitorAdapter;
 import edu.uci.ics.perpetual.statement.add.AddRequest;
-import edu.uci.ics.perpetual.statement.add.AddTag;
-import edu.uci.ics.perpetual.statement.create.type.CreateDataSourceType;
-import edu.uci.ics.perpetual.statement.create.type.CreateFunction;
-import edu.uci.ics.perpetual.statement.create.type.CreateMetadataType;
-import edu.uci.ics.perpetual.statement.create.type.CreateRawType;
-import edu.uci.ics.perpetual.statement.drop.Drop;
-import edu.uci.ics.perpetual.statement.insert.Insert;
-import edu.uci.ics.perpetual.statement.select.Select;
-import edu.uci.ics.perpetual.statement.values.ValuesStatement;
 import edu.uci.ics.perpetual.types.DataObjectType;
-import edu.uci.ics.perpetual.types.DataSourceType;
 import edu.uci.ics.perpetual.util.PrettyPrintingMap;
 import org.apache.commons.lang3.StringUtils;
-
+import org.apache.log4j.Logger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AcquisitionRequestManager {
-
     private SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-
+    private static RequestPersistanceManager db;
+    private static AcquisitionRequestManager instance;
+    private static SchemaManager schema;
+    private static Logger LOGGER = Logger.getLogger(RequestPersistanceManager.class);
 
     private AcquisitionRequestManager(){
         super();
+        db =  RequestPersistanceManager.getInstance();
+        schema = SchemaManager.getInstance();
+        loadRequests();
     }
 
-    private static AcquisitionRequestManager instance;
-    private static SchemaManager schema;
     public static AcquisitionRequestManager getInstance(){
         if(null != instance){
             return instance;
         }
         instance = new AcquisitionRequestManager();
-        schema = SchemaManager.getInstance();
+
         return instance;
+    }
+
+    private void loadRequests(){
+        try{
+            handlePendingRequests(db.getPendingRequests());
+        }catch(Exception e){
+            System.out.println( "Failed to load pending requests from past session..." );
+            LOGGER.error( "ACQUISITION ENGINE: Failed to reload pending requests from database" ,e);
+        }
     }
 
     private Map<Integer , AcquisitionRequest> requests = new HashMap <>();
 
-    public boolean addRequest(int requestId) throws Exception{
-      /* TODO Uncomment once schema manager code is available.
-        AcquisitionRequest request = schema.getRequest(requestId);
-        return addRequest(request);*/
+    public boolean processRequest(AcquisitionRequest request) throws Exception{
+        requests.put(request.getRequestId(),request);
+        RequestScheduler.scheduleRequest(request);
         return true;
-    }
-
-    public boolean addRequest(AcquisitionRequest request) throws Exception{
-        if(validateRequest(request)){
-            request.setStatus( AcquisitionRequestStatus.NEW );
-            requests.put(request.getRequestId(),request);
-            RequestScheduler.scheduleRequest(request);
-            return true;
-        }
-        return false;
     }
 
     public boolean addRequest(Statement stmt) throws Exception {
@@ -83,6 +74,7 @@ public class AcquisitionRequestManager {
                     String end = StringUtils.strip(addRequest.getEndTime(), "'");
                     acquisitionRequest.setStartTime(formatter.parse(start));
                     acquisitionRequest.setEndTime(formatter.parse(end));
+                    acquisitionRequest.setStatus( AcquisitionRequestStatus.NEW );
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -91,8 +83,10 @@ public class AcquisitionRequestManager {
 
         });
 
-        return addRequest(acquisitionRequest);
+        if(validateRequest(acquisitionRequest) && db.insertRequest( acquisitionRequest))
+            return processRequest(acquisitionRequest);
 
+        return false;
     }
 
     public AcquisitionRequest getRequest(int requestId){
@@ -108,16 +102,16 @@ public class AcquisitionRequestManager {
     }
 
     private boolean validateRequest(AcquisitionRequest request) {
-        //  if (PolicyManager.isAcquisitionAllowed(request)){};
+        //  TODO: Invoke PolicyManager once ready, if (PolicyManager.isAcquisitionAllowed(request)){};
         return true;
     }
-    /* FOR FUTURE SUPPORT TO ADD MULTIPLE REQUESTS AT ONCE
-    public boolean addRequests(List<Request> newRequests) throws Exception{
-        for(Request request: newRequests){
-            addRequest( request );
+
+    public boolean handlePendingRequests(List<AcquisitionRequest> requests) throws Exception{
+        for(AcquisitionRequest request: requests){
+            processRequest( request );
         }
         return true;
-    }*/
+    }
 
     @Override
     public String toString() {
