@@ -7,14 +7,21 @@ import edu.uci.ics.perpetual.acquisition.AcquisitionManager;
 
 public class Server {
 
-    private PerpetualCMDClient cmdClient;
-    private SchemaManager schemaManager;
-    private CachingManager cachingManager;
-    private AcquisitionManager acquisitionManager;
+    public PerpetualCMDClient cmdClient;
+    public SchemaManager schemaManager;
+    public CachingManager cachingManager;
+    public AcquisitionManager acquisitionManager;
 
 
     public void start() {
 
+        initialize();
+
+        cmdClient = new PerpetualCMDClient(schemaManager, cachingManager, acquisitionManager);
+        cmdClient.start();
+    }
+
+    public void initialize() {
         System.out.println("Starting PerpetualDB Server ...........................\n");
 
         System.out.println("Starting Schema Manager ...........................\n");
@@ -27,9 +34,6 @@ public class Server {
         acquisitionManager = AcquisitionManager.getInstance();
 
         System.out.println("Server Initialization Complete ...........................\n\n");
-
-        cmdClient = new PerpetualCMDClient(schemaManager, cachingManager, acquisitionManager);
-        cmdClient.start();
     }
 
     public void stop() {
@@ -44,5 +48,6 @@ public class Server {
         Server server = new Server();
         server.start();
     }
+
 
 }

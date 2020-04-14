@@ -19,6 +19,7 @@ public class CachingManager {
 
     private WorkloadManager workloadManager;
     private SchemaManager  schemaManager;
+
     private QueryBotRuleGen ruleGen;
 
     private IRuleStore ruleStore;
@@ -65,6 +66,11 @@ public class CachingManager {
         }
 
     }
+
+    public QueryBotRuleGen getRuleGen() {
+        return ruleGen;
+    }
+
 
     public ListRule getRules() {
 

@@ -34,7 +34,7 @@ public class PrettyPrintingMap<K, V> {
                 sb.append(entry.getValue());
             }
             if (iter.hasNext()) {
-                sb.append('\n');
+                sb.append("\n\n");
             }
         }
         return sb.toString();
