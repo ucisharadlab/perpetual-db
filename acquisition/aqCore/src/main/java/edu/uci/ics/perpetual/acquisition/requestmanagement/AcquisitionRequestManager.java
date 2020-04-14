@@ -1,5 +1,6 @@
 package edu.uci.ics.perpetual.acquisition.requestmanagement;
 
+import com.google.gson.JsonObject;
 import edu.uci.ics.perpetual.SchemaManager;
 import edu.uci.ics.perpetual.request.AcquisitionRequest;
 import edu.uci.ics.perpetual.request.AcquisitionRequestStatus;
@@ -13,6 +14,7 @@ import org.apache.log4j.Logger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -123,5 +125,15 @@ public class AcquisitionRequestManager {
 
         return sb.toString();
 
+    }
+
+    public String toJsonString() {
+        JsonObject sb = new JsonObject();
+        Iterator<Map.Entry<Integer, AcquisitionRequest>> iter = requests.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry<Integer, AcquisitionRequest> entry = (Map.Entry) iter.next();
+            sb.add(entry.getKey().toString(), entry.getValue().toJson());
+        }
+        return sb.toString();
     }
 }

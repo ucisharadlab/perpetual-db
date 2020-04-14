@@ -1,5 +1,6 @@
 package edu.uci.ics.perpetual.rule.list;
 
+import com.google.gson.JsonObject;
 import edu.uci.ics.perpetual.action.IAction;
 import edu.uci.ics.perpetual.data.DataObject;
 import edu.uci.ics.perpetual.predicate.IPredicate;
@@ -84,6 +85,17 @@ public class Rule {
         return String.format("List Rule: Type = %s, Predicate = %s, Action = %s, Priority = %s",
                 type, predicate, action, priority);
 
+    }
+
+    public JsonObject toJson() {
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("Type", type.getName());
+        jsonObject.addProperty("Predicate", predicate.toString());
+        jsonObject.addProperty("Action", action.toString());
+        jsonObject.addProperty("Priority", priority);
+
+        return jsonObject;
     }
 
 }

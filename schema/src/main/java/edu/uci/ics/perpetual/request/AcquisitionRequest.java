@@ -1,5 +1,7 @@
 package edu.uci.ics.perpetual.request;
 
+import com.google.gson.JsonObject;
+
 import java.util.Date;
 import java.util.HashMap;
 
@@ -124,5 +126,17 @@ public class AcquisitionRequest {
         return String.format("RequestId = %s, DataSourceId = %s, Status = %s, FunctionPath = %s",
                 requestId, dataSourceId, status, acquisitionFunctionPath);
 
+    }
+
+    public JsonObject toJson() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("RequestId", requestId);
+        jsonObject.addProperty("DataSourceId", dataSourceId);
+        jsonObject.addProperty("Status", status.name());
+        jsonObject.addProperty("FunctionPath", acquisitionFunctionPath);
+        jsonObject.addProperty("StartTime", startTime.toString());
+        jsonObject.addProperty("EndTime", endTime.toString());
+
+        return jsonObject;
     }
 }

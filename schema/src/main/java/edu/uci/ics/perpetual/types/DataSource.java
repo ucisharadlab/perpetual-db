@@ -1,5 +1,7 @@
 package edu.uci.ics.perpetual.types;
 
+import com.google.gson.JsonObject;
+
 import java.util.HashMap;
 
 public class DataSource {
@@ -56,5 +58,18 @@ public class DataSource {
         return String.format("Data Source Type = %s, Function Path = %s, Function Params = %s", sourceType.getName(),
                 functionPath, functionParams);
 
+    }
+
+    public JsonObject toJson() {
+        JsonObject sb = new JsonObject();
+
+        sb.addProperty("Id", id);
+        sb.addProperty("Description", sourceDescription);
+        sb.addProperty("DataSourceType", sourceType.getName());
+
+        sb.addProperty("FunctionPath", functionPath);
+
+        sb.addProperty("Parameters", functionParams.toString());
+        return sb;
     }
 }

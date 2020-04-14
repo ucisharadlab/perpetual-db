@@ -1,5 +1,6 @@
 package edu.uci.ics.perpetual.rule.list;
 
+import com.google.gson.JsonObject;
 import edu.uci.ics.perpetual.rule.IRuleStore;
 
 import java.util.ArrayList;
@@ -40,6 +41,21 @@ public class ListRule implements IRuleStore {
         return sb.toString();
 
     }
+
+    public JsonObject toJson() {
+
+        JsonObject sb = new JsonObject();
+
+        int i = 1;
+        for (Rule rule: rules) {
+            sb.add(Integer.toString(i), rule.toJson());
+            i += 1;
+        }
+
+        return sb;
+
+    }
+
 
 
 }

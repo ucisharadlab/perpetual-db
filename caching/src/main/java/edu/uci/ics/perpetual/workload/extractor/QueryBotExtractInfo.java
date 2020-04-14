@@ -33,4 +33,27 @@ public class QueryBotExtractInfo implements IExtractInfo{
                 new PrettyPrintingMap(typeInfo), new PrettyPrintingMap(tagInfo));
     }
 
+    public String toHTML() {
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Types And Corresponding Number Of Queries\n\n");
+        sb.append(new PrettyPrintingMap(typeInfo));
+        sb.append("\n\n");
+
+//        return String.format(
+//                        "Type : Count ==> \n%s\n\nType :: Tag : Count ==>\n%s" +
+//                        "------------------------------------\n\n",
+//                new PrettyPrintingMap(typeInfo), new PrettyPrintingMap(tagInfo));
+//
+
+        for (String key:tagInfo.keySet()) {
+            sb.append(String.format("Extracted Tags And Their Count For Type: %s \n\n", key));
+            sb.append(new PrettyPrintingMap(tagInfo.get(key)));
+            sb.append("\n\n");
+        }
+
+        return sb.toString();
+    }
+
 }

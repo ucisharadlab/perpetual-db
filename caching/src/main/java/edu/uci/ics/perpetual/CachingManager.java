@@ -74,7 +74,6 @@ public class CachingManager {
 
     public ListRule getRules() {
 
-        System.out.println(((QueryBotRuleGen)ruleGen).getExInfo());
         ruleStore = ruleGen.generateRules();
         return (ListRule) ruleStore;
 

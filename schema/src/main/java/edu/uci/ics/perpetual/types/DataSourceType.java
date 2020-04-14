@@ -1,5 +1,7 @@
 package edu.uci.ics.perpetual.types;
 
+import com.google.gson.JsonObject;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -81,11 +83,33 @@ public class DataSourceType {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 //        sb.append(name).append(": ");
-        for (String param: paramList) {
+        for (String param : paramList) {
             sb.append(String.format("%s, ", param));
         }
         sb.append("Acquisition Functions, ").append(sourceFunctions);
         return sb.toString();
 
     }
+
+    public JsonObject toJson() {
+        JsonObject sb = new JsonObject();
+
+        sb.addProperty("Name", name);
+        sb.addProperty("ReturnType", returnType.getName());
+        sb.addProperty("ReturnType", returnType.getName());
+
+        StringBuilder builder = new StringBuilder();
+        for (String param : paramList) {
+            builder.append(String.format("%s, ", param));
+        }
+        sb.addProperty("Params", builder.toString());
+
+        builder = new StringBuilder();
+        for (String function : sourceFunctions.keySet()) {
+            builder.append(String.format("%s, ", function));
+        }
+        sb.addProperty("Acquisition Functions", builder.toString());
+        return sb;
+    }
+
 }
