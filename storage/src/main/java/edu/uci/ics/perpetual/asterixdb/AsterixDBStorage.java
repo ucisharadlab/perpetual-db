@@ -26,6 +26,7 @@ public class AsterixDBStorage implements StorageManager {
     private AsterixDBConnectionManager connectionManager;
     private static AsterixDBStorage INSTANCE;
     private static JsonParser parser = new JsonParser();
+    private AsterixDataFeed dataFeed;
 
     private static final String CREATE_FORMAT = "CREATE DATASET %s";
     private static final String INSERT_FORMAT = "INSERT INTO %s(%s)";
@@ -49,6 +50,8 @@ public class AsterixDBStorage implements StorageManager {
                 e.printStackTrace();
             }
         }
+        dataFeed = new AsterixDataFeed("Tweets", connectionManager);
+
     }
 
     public static AsterixDBStorage getInstance(SchemaManager schemaManager) {
@@ -63,6 +66,18 @@ public class AsterixDBStorage implements StorageManager {
 
     @Override
     public void addRawObject(DataObject object) {
+
+//        String insert = String.format(
+//                INSERT_FORMAT,
+//                object.getType().getName(),
+//                object.getObject().toString());
+//        HttpResponse response = connectionManager.sendQuery(insert);
+        dataFeed.sendDataToFeed(object.getObject().toString());
+
+    }
+
+
+    public void addRawObjectSingle(DataObject object) {
 
         String insert = String.format(
                 INSERT_FORMAT,

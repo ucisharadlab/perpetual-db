@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Created-By: PeeyushGupta
+Class-Path: aqClientKit-1.0-SNAPSHOT-jar-with-dependencies.jar
+

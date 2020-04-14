@@ -3,6 +3,8 @@ package edu.uci.ics.perpetual.ingestion;
 import com.google.gson.JsonElement;
 import edu.uci.ics.perpetual.*;
 import edu.uci.ics.perpetual.acquisition.AcquisitionManager;
+import edu.uci.ics.perpetual.asterixdb.AsterixDBStorage;
+import edu.uci.ics.perpetual.asterixdb.mysql.MySQLStorage;
 import edu.uci.ics.perpetual.data.DataObject;
 import edu.uci.ics.perpetual.enrichment.EnrichmentFunction;
 import org.apache.log4j.Logger;
@@ -18,7 +20,8 @@ public class IngestionThread implements Runnable {
     private HashSet<JsonElement> seenTimeStamps = new HashSet<>();
     private CachingManager cachingManager = CachingManagerFactory.getCachingManager();
     private SchemaManager schemaManager = SchemaManager.getInstance();
-    private StorageManager storageManager = FileStorage.getInstance(schemaManager);
+//    private StorageManager storageManager = FileStorage.getInstance(schemaManager);
+    private StorageManager storageManager = MySQLStorage.getInstance(schemaManager);
 
     Logger LOGGER = Logger.getLogger(IngestionThread.class);
 

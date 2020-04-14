@@ -8,6 +8,7 @@ import edu.uci.ics.perpetual.enrichment.EnrichmentFunction;
 import edu.uci.ics.perpetual.rule.IRuleStore;
 import edu.uci.ics.perpetual.rule.list.ListRule;
 import edu.uci.ics.perpetual.rule.list.Rule;
+import edu.uci.ics.perpetual.rulegen.IngestExpRuleGen;
 import edu.uci.ics.perpetual.rulegen.QueryBotRuleGen;
 import edu.uci.ics.perpetual.rulegen.TwitterRuleGen;
 import edu.uci.ics.perpetual.workload.WorkloadManager;
@@ -18,6 +19,7 @@ public class CachingManager {
 
     private WorkloadManager workloadManager;
     private SchemaManager  schemaManager;
+
     private QueryBotRuleGen ruleGen;
 
     private IRuleStore ruleStore;
@@ -32,6 +34,9 @@ public class CachingManager {
                 break;
             case Twitter:
                 ruleGen = new TwitterRuleGen(workloadManager, schemaManager.getSchema());
+                break;
+            case INGEST_EXP:
+                ruleGen = new IngestExpRuleGen(workloadManager, schemaManager.getSchema());
                 break;
             default:
                 ruleGen = new TwitterRuleGen(workloadManager, schemaManager.getSchema());
@@ -61,6 +66,11 @@ public class CachingManager {
         }
 
     }
+
+    public QueryBotRuleGen getRuleGen() {
+        return ruleGen;
+    }
+
 
     public ListRule getRules() {
 

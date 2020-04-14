@@ -15,6 +15,8 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +27,9 @@ public class FileStorage implements StorageManager{
     private static FileStorage INSTANCE;
     private SchemaManager schemaManager;
     private Map<String, Writer> writers;
+
+    private int count = 0;
+    private Instant start;
 
     private FileStorage(SchemaManager schemaManager){
 
@@ -61,8 +66,6 @@ public class FileStorage implements StorageManager{
 		this.writers = writers;
 	}
 
-
-
 	public static FileStorage getInstance(SchemaManager schemaManager) {
 
         if (INSTANCE == null) {
@@ -76,7 +79,7 @@ public class FileStorage implements StorageManager{
     public void addRawObject(DataObject object) {
 
         String rawType = object.getType().getName();
-
+		if (count == 0) start = Instant.now();
         try {
             if (!writers.containsKey(rawType)) {
                 writers.put(rawType, new BufferedWriter(
@@ -86,6 +89,11 @@ public class FileStorage implements StorageManager{
             }
             writers.get(rawType).write(object.toString()+"\n");
             writers.get(rawType).flush();
+
+            count += 1;
+
+            if (count%10000 ==0 ) System.out.println(count + " IN " + Duration.between(start, Instant.now()));
+
         } catch (IOException e) {
             e.printStackTrace();
         }

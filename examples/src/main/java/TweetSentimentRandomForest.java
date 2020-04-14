@@ -1,4 +1,5 @@
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.apache.log4j.Logger;
 import java.util.Random;
 
@@ -19,9 +20,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 
 public class TweetSentimentRandomForest {
 
@@ -34,7 +32,9 @@ public class TweetSentimentRandomForest {
 		double resoultionProb = 0.1;
 		double thresholdProb = 0.5;
 		String text = "";
-		
+		JsonParser parser = new JsonParser();
+
+
 		try {
             URL url = new URL("http://localhost:5000/sentiment/");
 			System.out.println("url:"+url);
@@ -45,14 +45,14 @@ public class TweetSentimentRandomForest {
 			conn.setRequestProperty("Content-Type", "application/json");
 			
 	
-			JSONObject jsonObject = new JSONObject();
+			JsonObject jsonObject = new JsonObject();
 			
 	        
 	        	text = data.get("text").toString();
 	        	System.out.println("text ="+text);
 	        
-			jsonObject.put("text",text);
-			jsonObject.put("classifier","RF");
+			jsonObject.addProperty("text",text);
+			jsonObject.addProperty("classifier","RF");
 			
 		    String urlParameters = jsonObject.toString();
 		    //System.out.println("urlParameters = "+urlParameters);
@@ -82,8 +82,8 @@ public class TweetSentimentRandomForest {
 		    //System.out.println(response.toString());
 		    String responseValue = response.toString();
 		    
-		    JSONObject responseObject = new JSONObject(responseValue);
-		    double probVal = responseObject.getDouble("probVal");
+		    JsonObject responseObject = (JsonObject) parser.parse(responseValue);
+		    double probVal = responseObject.get("probVal").getAsDouble();
 		    System.out.println("probVal = "+probVal);
 		    
 		    if(probVal > 0.55) {

@@ -4,6 +4,7 @@ public enum WorkloadType {
 
     QueryBot,
     Twitter,
-    Tippers
+    Tippers,
+    INGEST_EXP
 
 }
