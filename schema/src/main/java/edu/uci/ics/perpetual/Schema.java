@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 public class Schema {
 
+    private HashMap<String, Table> tableMap;
     private HashMap<String, MetadataType> metadataMap;
     private HashMap<String, RawType> rawMap;
     private HashMap<String, DataSourceType> dataSourceTypeMap;
@@ -22,6 +23,7 @@ public class Schema {
         this.dataSourceMap = new HashMap<>();
         this.tagMap = new HashMap<>();
         this.enrichmentFunctions = new HashMap<>();
+        this.tableMap = new HashMap<>();
     }
 
     // region Raw Type
@@ -47,6 +49,14 @@ public class Schema {
         metadataMap.put(metadataType.getName().toUpperCase(), metadataType);
     }
     // endregion
+
+    boolean existTable(String typeName) {
+        return tableMap.containsKey(typeName.toUpperCase());
+    }
+
+    public void addTable(Table table) {
+        tableMap.put(table.getName().toUpperCase(), table);
+    }
 
     // region DataSource Type
     boolean existDataSourceType(String typeName) {
@@ -149,6 +159,13 @@ public class Schema {
         this.enrichmentFunctions = enrichmentFunctions;
     }
 
+    public HashMap<String, Table> getTableMap() {
+        return tableMap;
+    }
+
+    public void setTableMap(HashMap<String, Table> tableMap) {
+        this.tableMap = tableMap;
+    }
 
     public String toString() {
 

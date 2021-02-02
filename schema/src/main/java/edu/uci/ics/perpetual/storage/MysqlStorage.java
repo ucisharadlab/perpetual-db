@@ -3,11 +3,20 @@ package edu.uci.ics.perpetual.storage;
 import com.zaxxer.hikari.HikariDataSource;
 import edu.uci.ics.perpetual.Relation;
 import edu.uci.ics.perpetual.Schema;
+import edu.uci.ics.perpetual.expressions.LongValue;
+import edu.uci.ics.perpetual.expressions.StringValue;
+import edu.uci.ics.perpetual.expressions.operators.relational.ExpressionList;
 import edu.uci.ics.perpetual.request.LoadRequest;
 import edu.uci.ics.perpetual.request.RequestStatus;
 import edu.uci.ics.perpetual.request.StorageRequest;
+import edu.uci.ics.perpetual.statement.create.type.ColumnDefinition;
+import edu.uci.ics.perpetual.statement.create.type.Index;
+import edu.uci.ics.perpetual.statement.insert.Insert;
+import edu.uci.ics.perpetual.statement.select.PlainSelect;
+import edu.uci.ics.perpetual.statement.select.Select;
 import edu.uci.ics.perpetual.types.*;
 import edu.uci.ics.perpetual.util.StringUtils;
+import edu.uci.ics.perpetual.util.deparser.InsertDeParser;
 import javafx.util.Pair;
 
 import java.io.IOException;
@@ -16,6 +25,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 
 public class MysqlStorage implements Storage {
@@ -57,6 +69,14 @@ public class MysqlStorage implements Storage {
                     MetadataType metadataType = new MetadataType(rs.getString("name"),
                             StringUtils.toMap(rs.getString("attributes")));
                     schema.addMetadataType(metadataType);
+                }
+
+                rs = conn.prepareStatement("SELECT name, attributes, observables FROM Tables;").executeQuery();
+                while (rs.next()) {
+                    Table table = new Table(rs.getString("name"),
+                            StringUtils.toMap(rs.getString("attributes")),
+                                    StringUtils.toList(rs.getString("observables")));
+                    schema.addTable(table);
                 }
 
                 rs = conn.prepareStatement("SELECT name, attributes FROM RawType;").executeQuery();
@@ -136,6 +156,33 @@ public class MysqlStorage implements Storage {
 
     // endregion
 
+    @Override
+    public void addData(Insert insert, Table table) {
+        String typeName = insert.getType().getName();
+
+        PreparedStatement ps = null;
+        try {
+            ps = conn.prepareStatement(insert.toString());
+            ps.execute();
+
+            for (String attr : table.getAttributeObservables()) {
+                ps = conn.prepareStatement(String.format("INSERT INTO %s__%s(%s, start, end, id) VALUE (NULL, ?, ?, ?);",
+                        typeName, attr, attr));
+                ps.setLong(1, 0);
+                ps.setLong(2, 2524608000L);
+                ps.setInt(3,
+                        (int)((LongValue)((ExpressionList) insert.getItemsList()).getExpressions().get(0)).getValue());
+                ps.execute();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
+
     // region save
     @Override
     public void persist(StorageRequest request) {
@@ -192,6 +239,9 @@ public class MysqlStorage implements Storage {
                     ps.setInt(5, function.getCost());
                     ps.setDouble(6, function.getQuality());
                     ps.setString(7, function.getPath());
+                } else if (object instanceof Table) {
+                    Table table = (Table) object;
+                    persistTable(table);
                 }
             } else {
                 Pair<String, String> relation = request.getRelation();
@@ -209,6 +259,65 @@ public class MysqlStorage implements Storage {
             status.setErrMsg("Unable to save information to Mysql.");
             request.setStatus(status);
         }
+    }
+
+
+    private void persistTable(Table table) {
+        PreparedStatement ps = null;
+        try {
+
+            ps = conn.prepareStatement("INSERT INTO Tables(name, attributes, observables) VALUE (?, ?, ?);");
+            ps.setString(1, table.getName());
+            ps.setString(2, StringUtils.fromMap(table.getAttributeDataTypes()));
+            ps.setString(3, StringUtils.fromList(table.getAttributeObservables()));
+            ps.execute();
+
+            StringBuffer buffer = new StringBuffer();
+            buffer.append("CREATE ");
+            buffer.append("TABLE ");
+
+
+            buffer.append(table.getName());
+
+            buffer.append(" (");
+            for (Map.Entry<String, String> entry : table.getAttributeDataTypes().entrySet()) {
+
+                if (!table.getAttributeObservables().contains(entry.getKey())) {
+                    buffer.append(entry.getKey());
+                    buffer.append(" ");
+                    buffer.append(entry.getValue());
+                    buffer.append(", ");
+                }
+
+            }
+
+            buffer.append(" id INT AUTO_INCREMENT PRIMARY KEY )");
+
+            ps = conn.prepareStatement(buffer.toString());
+            ps.execute();
+
+            for (String attr : table.getAttributeObservables()) {
+                buffer = new StringBuffer();
+                buffer.append("CREATE ");
+                buffer.append("TABLE ");
+
+                buffer.append(String.format("%s__%s", table.getName(), attr));
+                buffer.append(" (");
+
+                buffer.append(attr);
+                buffer.append(" ");
+                buffer.append(table.getAttributeDataTypes().get(attr));
+                buffer.append(", ");
+                buffer.append(" start BIGINT, end BIGINT, id INT )");
+
+                ps = conn.prepareStatement(buffer.toString());
+                ps.execute();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override

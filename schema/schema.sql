@@ -87,3 +87,11 @@ CREATE TABLE AcquisitionRequests (
 
     PRIMARY KEY(requestId)
 );
+
+
+CREATE TABLE Tables (
+    name VARCHAR(40) NOT NULL,
+    attributes TEXT NOT NULL,
+    observables TEXT NOT NULL
+    PRIMARY KEY (name)
+);

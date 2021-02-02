@@ -236,6 +236,7 @@ TOKEN: /* SQL Keywords. prefixed with K_ to avoid name clashes */
 |   <K_RAW:"RAW">
 |   <K_TAG:"TAG">
 |   <K_TYPE:"TYPE">
+|   <K_TABLE: "TABLE">
 |   <K_TABLESPACE : "TABLESPACE">
 |   <K_THEN:"THEN">
 |   <K_TEMP:"TEMP">
@@ -353,6 +354,9 @@ Statement SingleStatement() :
         |
         LOOKAHEAD(CreateMetadataType())
         stm = CreateMetadataType()
+        |
+        LOOKAHEAD(CreateTable())
+        stm = CreateTable()
         |
         LOOKAHEAD(CreateRawType())
         stm = CreateRawType()
@@ -2933,6 +2937,206 @@ CreateMetadataType CreateMetadataType():
         return createType;
     }
 }
+
+
+CreateTable CreateTable():
+{
+    CreateTable createTable = new CreateTable();
+    Type type = null;
+    List columnDefinitions = new ArrayList();
+    List columnSpecs = null;
+    List<String> TypeOptions = new ArrayList<String>();
+    List<String> createOptions = new ArrayList<String>();
+    String name;
+    Token tk = null;
+    Token tk2 = null;
+    Token tk3 = null;
+    String sk3 = null;
+    ColDataType colDataType = null;
+    String stringList = null;
+    ColumnDefinition coldef = null;
+    List indexes = new ArrayList();
+    List colNames = null;
+    Index index = null;
+    ForeignKeyIndex fkIndex = null;
+    List<String> parameter = new ArrayList<String>();
+    List<String> idxSpec = new ArrayList<String>();
+    Type fkType = null;
+    Select select = null;
+    CheckConstraint checkCs = null;
+    ExcludeConstraint excludeC = null;
+}
+{
+    <K_CREATE>
+    [ <K_UNLOGGED> { createTable.setUnlogged(true); } ]
+
+    /* [ [ (tk=<K_GLOBAL> | tk=<K_LOCAL>) {createOptions.add(tk.image);} ]
+       ( tk=<K_TEMPORARY> | tk=<K_TEMP> ) {createOptions.add(tk.image);}] */
+
+    (parameter = CreateParameter() { createOptions.addAll(parameter); })*
+
+    <K_TABLE>
+    [ <K_IF> <K_NOT> <K_EXISTS> { createTable.setIfNotExists(true); }]
+    type=Type()
+    [
+        ("("
+        name=RelObjectName()
+
+        colDataType = ColDataType()
+        {
+            columnSpecs = new ArrayList();
+        }
+
+        ( parameter=CreateParameter() { columnSpecs.addAll(parameter); } )*
+
+        {
+            coldef = new ColumnDefinition();
+            coldef.setColumnName(name);
+            coldef.setColDataType(colDataType);
+            if (columnSpecs.size() > 0)
+                coldef.setColumnSpecStrings(columnSpecs);
+            columnDefinitions.add(coldef);
+        }
+
+        (
+            ","
+
+            (
+                LOOKAHEAD(3) (
+                    tk=<K_INDEX>
+                        sk3=RelObjectName()
+                        colNames=ColumnsNamesList()
+                        {
+                            index = new Index();
+                            index.setIndexType(tk.image);
+                            index.setName(sk3);
+                            index.setColumnsNames(colNames);
+                            indexes.add(index);
+                        }
+                )
+                |
+                LOOKAHEAD(3) (
+                    {
+                        index = new NamedConstraint();
+                    }
+                    [<K_CONSTRAINT> sk3=RelObjectName() {index.setName(sk3);} ]
+
+                    (tk=<K_PRIMARY> tk2=<K_KEY> {index.setIndexType(tk.image + " " + tk2.image);}
+                     | tk=<K_UNIQUE> [ tk2=<K_KEY> ] {index.setIndexType(tk.image + (tk2!=null?" " + tk2.image:""));}
+                     )
+                        colNames=ColumnsNamesList()
+                        ( parameter=CreateParameter() { idxSpec.addAll(parameter); } )*
+                        {
+                            index.setColumnsNames(colNames);
+                            index.setIndexSpec(idxSpec);
+                            indexes.add(index);
+                        }
+                )
+                |
+                LOOKAHEAD(3) ( {tk=null;}
+                     [ tk=<K_UNIQUE> ] [ tk3=<K_FULLTEXT> ] tk2=<K_KEY>
+                        sk3=RelObjectName()
+                        colNames=ColumnsNamesList()
+                        {
+                            index = new Index();
+                            index.setIndexType((tk!=null?tk.image + " ":"") + (tk3!=null?tk3.image + " ":"") + tk2.image);
+                            index.setName(sk3);
+                            index.setColumnsNames(colNames);
+                            indexes.add(index);
+                        }
+                )
+                |
+                LOOKAHEAD(3)(
+                    {
+                        fkIndex = new ForeignKeyIndex();
+                    }
+                    [<K_CONSTRAINT> sk3=RelObjectName() {fkIndex.setName(sk3);} ]
+                    tk=<K_FOREIGN> tk2=<K_KEY>
+                        colNames=ColumnsNamesList()
+                        {
+                            fkIndex.setIndexType(tk.image + " " + tk2.image);
+                            fkIndex.setColumnsNames(colNames);
+                        }
+                        <K_REFERENCES> fkType=Type() colNames=ColumnsNamesList()
+                        {
+                            fkIndex.setType(fkType);
+                            fkIndex.setReferencedColumnNames(colNames);
+                            indexes.add(fkIndex);
+                        }
+                        [LOOKAHEAD(2) (<K_ON> <K_DELETE>
+                                  (<K_CASCADE> {fkIndex.setOnDeleteReferenceOption("CASCADE");}
+                                   |
+                                   <K_NO> <K_ACTION> {fkIndex.setOnDeleteReferenceOption("NO ACTION");}
+                                   |
+                                   <K_SET> <K_NULL> {fkIndex.setOnDeleteReferenceOption("SET NULL");}
+                                    ))]
+                        [LOOKAHEAD(2) (<K_ON> <K_UPDATE> (<K_CASCADE> {fkIndex.setOnUpdateReferenceOption("CASCADE");}|<K_NO> <K_ACTION> {fkIndex.setOnUpdateReferenceOption("NO ACTION");}))]
+                )
+                |
+                 LOOKAHEAD(3)(
+                    [<K_CONSTRAINT>  sk3 = RelObjectName()]
+                    {Expression exp = null;}
+                    <K_CHECK>  ("(" exp = Expression() ")")* {
+                       checkCs = new CheckConstraint();
+                       checkCs.setName(sk3);
+                       checkCs.setExpression(exp);
+                       indexes.add(checkCs);
+                       }
+                )
+                |
+                    tk=<K_EXCLUDE> {excludeC = new ExcludeConstraint(); Expression exp = null;}
+                    (tk2=<K_WHERE>
+                        ("(" exp = Expression() ")")* {excludeC.setExpression(exp);})
+                    {
+                        indexes.add(excludeC);
+                    }
+                |
+                (
+                    name=RelObjectName()
+
+                    colDataType = ColDataType()
+                    {
+                        columnSpecs = new ArrayList();
+                    }
+
+                    (     parameter=CreateParameter() { columnSpecs.addAll(parameter); }     )*
+
+                    {
+                        coldef = new ColumnDefinition();
+                        coldef.setColumnName(name);
+                        coldef.setColDataType(colDataType);
+                        if (columnSpecs.size() > 0)
+                            coldef.setColumnSpecStrings(columnSpecs);
+                        columnDefinitions.add(coldef);
+                    }
+                )
+            )
+        )*
+
+        ")"
+        (     parameter=CreateParameter() { TypeOptions.addAll(parameter); } )*
+        )
+        |
+        (
+        <K_AS> ( LOOKAHEAD("(" Select() ")") "(" select = Select() { createTable.setSelect(select, true); } ")"
+                 | select = Select() { createTable.setSelect(select, false); } )
+        )
+    ]
+
+    {
+        createTable.setType(type);
+        if (indexes.size() > 0)
+            createTable.setIndexes(indexes);
+        if (createOptions.size() > 0)
+            createTable.setCreateOptionsStrings(createOptions);
+        if (TypeOptions.size() > 0)
+            createTable.setTypeOptionsStrings(TypeOptions);
+        if (columnDefinitions.size() > 0)
+            createTable.setColumnDefinitions(columnDefinitions);
+        return createTable;
+    }
+}
+
 
 CreateRawType CreateRawType():
 {

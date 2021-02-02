@@ -2,6 +2,7 @@ package edu.uci.ics.perpetual;
 
 
 import edu.uci.ics.perpetual.request.*;
+import edu.uci.ics.perpetual.statement.insert.Insert;
 import edu.uci.ics.perpetual.storage.MysqlStorage;
 import edu.uci.ics.perpetual.storage.Storage;
 import edu.uci.ics.perpetual.types.TaggingFunction;
@@ -15,6 +16,7 @@ import edu.uci.ics.perpetual.statement.add.AddTag;
 import edu.uci.ics.perpetual.statement.create.type.*;
 import edu.uci.ics.perpetual.types.*;
 import edu.uci.ics.perpetual.util.StringUtils;
+import edu.uci.ics.perpetual.util.deparser.InsertDeParser;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
@@ -128,6 +130,21 @@ public class SchemaManager {
         RequestStatus status = new RequestStatus();
 
         request.getStatement().accept(new StatementVisitorAdapter() {
+
+            @Override
+            public void visit(Insert insert) {
+
+                String typeName = insert.getType().getName();
+
+                if (!schema.existTable(typeName)) {
+                    status.setErrMsg(String.format("Table '%s' does not exist existed", typeName));
+                    return;
+                }
+
+                storage.addData(insert, schema.getTableMap().get(typeName.toUpperCase()));
+
+            }
+
             @Override
             public void visit(CreateMetadataType createMetadataType) {
                 String typeName = createMetadataType.getType().getName();
@@ -145,6 +162,30 @@ public class SchemaManager {
                 schema.addMetadataType(metadataType);
 
                 storage.persist(new StorageRequest(metadataType));
+            }
+
+            @Override
+            public void visit(CreateTable createTable) {
+                String typeName = createTable.getType().getName();
+
+                if (schema.existTable(typeName)) {
+                    status.setErrMsg(String.format("Table '%s' has already existed", typeName));
+                    return;
+                }
+                HashMap<String, String> attributes = new HashMap<>();
+                List<String> observables = new ArrayList<>();
+
+                for (ColumnDefinition cd : createTable.getColumnDefinitions()) {
+                    attributes.put(cd.getColumnName(), cd.getColDataType().toString());
+                    if (cd.getColumnSpecStrings() != null && cd.getColumnSpecStrings().contains("OBSERVABLE")) {
+                        observables.add(cd.getColumnName());
+                    }
+                }
+                Table table = new Table(typeName, attributes, observables);
+
+                schema.addTable(table);
+
+                storage.persist(new StorageRequest(table));
             }
 
             @Override

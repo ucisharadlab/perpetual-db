@@ -26,10 +26,7 @@ import edu.uci.ics.perpetual.statement.add.AddAcquisitionFunction;
 import edu.uci.ics.perpetual.statement.add.AddDataSource;
 import edu.uci.ics.perpetual.statement.add.AddRequest;
 import edu.uci.ics.perpetual.statement.add.AddTag;
-import edu.uci.ics.perpetual.statement.create.type.CreateDataSourceType;
-import edu.uci.ics.perpetual.statement.create.type.CreateFunction;
-import edu.uci.ics.perpetual.statement.create.type.CreateMetadataType;
-import edu.uci.ics.perpetual.statement.create.type.CreateRawType;
+import edu.uci.ics.perpetual.statement.create.type.*;
 import edu.uci.ics.perpetual.statement.drop.Drop;
 import edu.uci.ics.perpetual.statement.insert.Insert;
 import edu.uci.ics.perpetual.statement.select.Select;
@@ -54,6 +51,11 @@ public class StatementVisitorAdapter implements StatementVisitor {
 
     @Override
     public void visit(CreateMetadataType createMetadataType) {
+
+    }
+
+    @Override
+    public void visit(CreateTable createTable) {
 
     }
 

@@ -6,10 +6,7 @@ import edu.uci.ics.perpetual.statement.add.AddAcquisitionFunction;
 import edu.uci.ics.perpetual.statement.add.AddDataSource;
 import edu.uci.ics.perpetual.statement.add.AddRequest;
 import edu.uci.ics.perpetual.statement.add.AddTag;
-import edu.uci.ics.perpetual.statement.create.type.CreateDataSourceType;
-import edu.uci.ics.perpetual.statement.create.type.CreateFunction;
-import edu.uci.ics.perpetual.statement.create.type.CreateMetadataType;
-import edu.uci.ics.perpetual.statement.create.type.CreateRawType;
+import edu.uci.ics.perpetual.statement.create.type.*;
 import edu.uci.ics.perpetual.statement.drop.Drop;
 import edu.uci.ics.perpetual.statement.insert.Insert;
 import edu.uci.ics.perpetual.statement.select.Select;
@@ -22,6 +19,9 @@ public interface StatementVisitor {
     void visit(Drop drop);
 
     void visit(CreateMetadataType createMetadataType);
+
+    void visit(CreateTable createTable);
+
 
     void visit(CreateRawType createRawType);
 

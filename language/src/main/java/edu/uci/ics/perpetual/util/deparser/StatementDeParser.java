@@ -11,10 +11,7 @@ import edu.uci.ics.perpetual.statement.add.AddAcquisitionFunction;
 import edu.uci.ics.perpetual.statement.add.AddDataSource;
 import edu.uci.ics.perpetual.statement.add.AddRequest;
 import edu.uci.ics.perpetual.statement.add.AddTag;
-import edu.uci.ics.perpetual.statement.create.type.CreateDataSourceType;
-import edu.uci.ics.perpetual.statement.create.type.CreateFunction;
-import edu.uci.ics.perpetual.statement.create.type.CreateMetadataType;
-import edu.uci.ics.perpetual.statement.create.type.CreateRawType;
+import edu.uci.ics.perpetual.statement.create.type.*;
 import edu.uci.ics.perpetual.statement.drop.Drop;
 import edu.uci.ics.perpetual.statement.insert.Insert;
 import edu.uci.ics.perpetual.statement.select.Select;
@@ -44,6 +41,13 @@ public class StatementDeParser implements StatementVisitor {
         CreateTableDeParser createTableDeParser = new CreateTableDeParser(this, buffer);
         createTableDeParser.deParse(createMetadataType);
     }
+
+    @Override
+    public void visit(CreateTable createTable) {
+//        CreateTableDeParser createTableDeParser = new CreateTableDeParser(this, buffer);
+//        createTableDeParser.deParse(createTable);
+    }
+
 
     @Override
     public void visit(CreateRawType createRawType) {

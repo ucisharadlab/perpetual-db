@@ -12,10 +12,7 @@ import edu.uci.ics.perpetual.statement.add.AddAcquisitionFunction;
 import edu.uci.ics.perpetual.statement.add.AddDataSource;
 import edu.uci.ics.perpetual.statement.add.AddRequest;
 import edu.uci.ics.perpetual.statement.add.AddTag;
-import edu.uci.ics.perpetual.statement.create.type.CreateDataSourceType;
-import edu.uci.ics.perpetual.statement.create.type.CreateFunction;
-import edu.uci.ics.perpetual.statement.create.type.CreateMetadataType;
-import edu.uci.ics.perpetual.statement.create.type.CreateRawType;
+import edu.uci.ics.perpetual.statement.create.type.*;
 import edu.uci.ics.perpetual.statement.drop.Drop;
 import edu.uci.ics.perpetual.statement.insert.Insert;
 import edu.uci.ics.perpetual.statement.select.*;
@@ -540,6 +537,13 @@ public class TypesVisitor implements SelectVisitor, FromItemVisitor, ExpressionV
         }
     }
 
+    @Override
+    public void visit(CreateTable create) {
+        visit(create.getType());
+        if (create.getSelect() != null) {
+            create.getSelect().accept(this);
+        }
+    }
     @Override
     public void visit(CreateRawType createRawType) {
 
