@@ -14,7 +14,6 @@ import edu.uci.ics.perpetual.storage.MysqlStorage;
 import edu.uci.ics.perpetual.storage.Storage;
 import edu.uci.ics.perpetual.types.*;
 import edu.uci.ics.perpetual.util.StringUtils;
-import javafx.util.Pair;
 import org.apache.http.HttpResponse;
 
 import java.io.IOException;

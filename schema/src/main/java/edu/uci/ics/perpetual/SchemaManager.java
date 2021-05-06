@@ -14,8 +14,8 @@ import edu.uci.ics.perpetual.statement.add.AddDataSource;
 import edu.uci.ics.perpetual.statement.add.AddTag;
 import edu.uci.ics.perpetual.statement.create.type.*;
 import edu.uci.ics.perpetual.types.*;
+import edu.uci.ics.perpetual.util.Pair;
 import edu.uci.ics.perpetual.util.StringUtils;
-import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -7,8 +7,8 @@ import edu.uci.ics.perpetual.request.LoadRequest;
 import edu.uci.ics.perpetual.request.RequestStatus;
 import edu.uci.ics.perpetual.request.StorageRequest;
 import edu.uci.ics.perpetual.types.*;
+import edu.uci.ics.perpetual.util.Pair;
 import edu.uci.ics.perpetual.util.StringUtils;
-import javafx.util.Pair;
 
 import java.io.IOException;
 import java.io.InputStream;

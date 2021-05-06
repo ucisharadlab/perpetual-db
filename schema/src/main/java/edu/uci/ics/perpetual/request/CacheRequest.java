@@ -1,6 +1,6 @@
 package edu.uci.ics.perpetual.request;
 
-import javafx.util.Pair;
+import edu.uci.ics.perpetual.util.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
