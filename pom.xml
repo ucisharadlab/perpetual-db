@@ -21,6 +21,7 @@
         <module>language</module>
         <module>app</module>
         <module>sensors</module>
+        <module>translation</module>
     </modules>
 
 
