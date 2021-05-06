@@ -4,7 +4,7 @@ import edu.uci.ics.perpetual.parser.CCJSqlParserManager;
 import edu.uci.ics.perpetual.parser.ParseException;
 import edu.uci.ics.perpetual.request.CacheRequest;
 import edu.uci.ics.perpetual.request.SqlRequest;
-import javafx.util.Pair;
+import edu.uci.ics.perpetual.util.Pair;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
