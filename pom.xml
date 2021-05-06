@@ -20,6 +20,7 @@
         <module>query</module>
         <module>language</module>
         <module>app</module>
+        <module>sensors</module>
     </modules>
 
 
