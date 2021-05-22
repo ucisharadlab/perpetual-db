@@ -2,6 +2,8 @@ package edu.uci.ics.perpetual.sensors;
 
 import edu.uci.ics.perpetual.util.Pair;
 
+import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
 
 public class SensorManager {
@@ -58,5 +60,15 @@ public class SensorManager {
 
     public List<Observation> fetchObservations(SensorType type, List<String> predicates) {
         return repo.getObservations(type.getDataTableName(), predicates, fetchObservationType(type.observationType));
+    }
+
+    public List<Pair<LocalDateTime, Location>> fetchLocations(int sensorId, LocalDateTime start, LocalDateTime end) {
+        // return temporal map of locations where the sensor was situated in the time range
+        return null;
+    }
+
+    public List<Sensor> fetchSensors(Location location, LocalDateTime start, LocalDateTime end) {
+        // return available sensors at that location in the time range
+        return new LinkedList<>();
     }
 }
