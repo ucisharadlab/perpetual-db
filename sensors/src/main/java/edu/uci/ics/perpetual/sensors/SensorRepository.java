@@ -40,12 +40,6 @@ public class SensorRepository {
         return new ObservationType(name, attributes);
     }
 
-    public SensorType getSensorTypeFromSensor(int sensorId) {
-        return fetchEntities(String.format("SELECT id, name, observationType FROM sensorTypes WHERE id IN " +
-                        "(SELECT type FROM sensors WHERE id = %d LIMIT 1);", sensorId),
-                SqlAdapter::sensorTypeFromRow).get(0);
-    }
-
     public void insertObservationType(ObservationType type) throws Exception {
         String sql = String.format("INSERT INTO ObservationTypes (name, attribute, valueType) " +
                 "VALUES %s", StringUtils.repeat("(?, ?, ?),", type.attributes.size()));
@@ -66,6 +60,17 @@ public class SensorRepository {
         } catch (SQLException ignored) {
             String message = ignored.getMessage();
         }
+    }
+
+    public SensorType getSensorType(String sensorTypeName) {
+        return fetchEntities(String.format("SELECT id, name, observationType FROM sensorTypes WHERE name = '%s';", sensorTypeName),
+                SqlAdapter::sensorTypeFromRow).get(0);
+    }
+
+    public SensorType getSensorTypeFromSensor(int sensorId) {
+        return fetchEntities(String.format("SELECT id, name, observationType FROM sensorTypes WHERE id IN " +
+                        "(SELECT type FROM sensors WHERE id = %d LIMIT 1);", sensorId),
+                SqlAdapter::sensorTypeFromRow).get(0);
     }
 
     public void insertSensorType(SensorType type) throws Exception {
@@ -118,6 +123,28 @@ public class SensorRepository {
         }
     }
 
+    public List<Observation> getObservations(String dataTableName, List<String> predicates, ObservationType observationType) {
+        List<Observation> observations = new LinkedList<>();
+
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
+
+            ResultSet resultSet = statement.executeQuery(String.format(
+                    "SELECT * FROM %s WHERE %s ORDER BY time, sensor;",
+                    dataTableName,
+                    String.join(" AND ", predicates)));
+            while (resultSet.next()) {
+                Observation observation = SqlAdapter.convertToObservation(resultSet, observationType);
+                if (null != observation)
+                    observations.add(observation);
+            }
+        } catch (SQLException ignored) {
+            String message = ignored.getMessage();
+        }
+
+        return observations;
+    }
+
     public void insertObservation(String table, int sensorId, LocalDateTime time, List<ObservedAttribute> values) throws Exception {
         String timeString = time.format(formatter);
         List<String> columns = new LinkedList<>();
@@ -129,7 +156,7 @@ public class SensorRepository {
         }
 
         String sql = String.format("INSERT INTO %s (sensor, time, %s) " +
-                "VALUES (%d, %s, %s);", table, String.join(", ", columns),
+                "VALUES (%d, '%s', %s);", table, String.join(", ", columns),
                 sensorId, timeString, String.join(", ", insertionValues));
 
         try (Connection connection = dataSource.getConnection();

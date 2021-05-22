@@ -8,7 +8,7 @@ CREATE TABLE ObservationTypes (
 
 CREATE TABLE SensorTypes (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
+    name VARCHAR(50) UNIQUE NOT NULL,
     observationType VARCHAR(50) NOT NULL
 );
 
