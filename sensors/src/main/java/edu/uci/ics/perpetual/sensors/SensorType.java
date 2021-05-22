@@ -2,8 +2,8 @@ package edu.uci.ics.perpetual.sensors;
 
 public class SensorType {
     int id;
-    String name;
-    String observationType;
+    public String name;
+    public String observationType;
 
     public SensorType(int id, String name, String observationType) {
         this.id = id;

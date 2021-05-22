@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class ObservationType {
-    String name;
-    List<Pair<String, String>> attributes;
+    public String name;
+    public List<Pair<String, String>> attributes;
 
     public ObservationType(String name, List<Pair<String, String>> attributes) {
         this.name = name;

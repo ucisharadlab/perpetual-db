@@ -5,8 +5,8 @@ import java.util.List;
 
 public class Observation {
     int sensorId;
-    LocalDateTime time;
-    List<ObservedAttribute> attributes;
+    public LocalDateTime time;
+    public List<ObservedAttribute> attributes;
 
     public Observation(int sensorId, LocalDateTime time, List<ObservedAttribute> attributes) {
         this.sensorId = sensorId;

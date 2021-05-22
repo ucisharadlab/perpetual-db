@@ -2,7 +2,6 @@ package edu.uci.ics.perpetual.sensors;
 
 import edu.uci.ics.perpetual.util.Pair;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class SensorManager {
@@ -25,6 +24,24 @@ public class SensorManager {
 
     public void createSensor(Sensor sensor) throws Exception {
         repo.insertSensor(sensor);
+    }
+
+    public void createMobileSensor(MobileSensor sensor) throws Exception {
+        repo.insertSensor(sensor);
+    }
+
+    public void createPlatform(Platform platform) throws Exception {
+        for (Sensor sensor : platform.components) {
+            sensor.platformName = platform.name;
+            repo.insertSensor(sensor);
+        }
+    }
+
+    public void createMobilePlatform(MobilePlatform platform) throws Exception {
+        for (Sensor sensor : platform.components) {
+            sensor.locationSourceId = platform.locationSource;
+        }
+        createPlatform(platform);
     }
 
     public void storeObservation(SensorType type, Observation observation) throws Exception {

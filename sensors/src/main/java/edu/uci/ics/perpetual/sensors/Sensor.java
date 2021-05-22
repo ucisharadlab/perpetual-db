@@ -2,17 +2,18 @@ package edu.uci.ics.perpetual.sensors;
 
 public class Sensor {
     int id;
-    String name;
-    int typeId;
-    String platformName;
-    int locationSourceId;
-    Location location;
-    Location viewArea;
-    String spec;
+    public String name;
+    public int typeId;
+    public String platformName;
+    public int locationSourceId;
+    public Location location;
+    public Location viewArea;
+    public String spec;
 
     public static final int UNSET = -1;
 
     public Sensor(int id, String name, int typeId, String platformName, int locationSourceId, Location location, Location viewArea, String spec) {
+        this.id = id;
         this.name = name;
         this.typeId = typeId;
         this.platformName = platformName;

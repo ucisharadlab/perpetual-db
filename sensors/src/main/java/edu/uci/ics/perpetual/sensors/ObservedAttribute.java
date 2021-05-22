@@ -1,9 +1,9 @@
 package edu.uci.ics.perpetual.sensors;
 
 public class ObservedAttribute {
-    String name;
-    String valueType;
-    String value;
+    public String name;
+    public String valueType;
+    public String value;
 
     ObservedAttribute(String name, String valueType, String value) {
         this.name = name;
@@ -18,7 +18,7 @@ public class ObservedAttribute {
 
         final ObservedAttribute that = (ObservedAttribute) obj;
         return this.name.equals(that.name)
-                && this.valueType.equals(that.valueType)
+                // && this.valueType.equals(that.valueType)
                 && this.value.equals(that.value);
     }
 }
