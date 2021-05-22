@@ -1,10 +1,10 @@
-package edu.uci.ics.perpetual.sensors;
+package edu.uci.ics.perpetual.sensors.model;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class Observation {
-    int sensorId;
+    public int sensorId;
     public LocalDateTime time;
     public List<ObservedAttribute> attributes;
 

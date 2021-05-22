@@ -1,4 +1,4 @@
-package edu.uci.ics.perpetual.sensors;
+package edu.uci.ics.perpetual.sensors.model;
 
 import java.time.LocalDateTime;
 

@@ -1,5 +1,6 @@
 package edu.uci.ics.perpetual.sensors;
 
+import edu.uci.ics.perpetual.sensors.model.*;
 import edu.uci.ics.perpetual.util.Pair;
 
 import java.time.LocalDateTime;

@@ -1,5 +1,9 @@
 package edu.uci.ics.perpetual.sensors;
 
+import edu.uci.ics.perpetual.sensors.model.Location;
+import edu.uci.ics.perpetual.sensors.model.Observation;
+import edu.uci.ics.perpetual.sensors.model.ObservedAttribute;
+import edu.uci.ics.perpetual.sensors.model.Sensor;
 import edu.uci.ics.perpetual.util.Pair;
 import org.apache.log4j.BasicConfigurator;
 

@@ -1,11 +1,11 @@
-package edu.uci.ics.perpetual.sensors;
+package edu.uci.ics.perpetual.sensors.model;
 
 public class ObservedAttribute {
     public String name;
     public String valueType;
     public String value;
 
-    ObservedAttribute(String name, String valueType, String value) {
+    public ObservedAttribute(String name, String valueType, String value) {
         this.name = name;
         this.valueType = valueType;
         this.value = value;

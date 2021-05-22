@@ -1,4 +1,4 @@
-package edu.uci.ics.perpetual.sensors;
+package edu.uci.ics.perpetual.sensors.model;
 
 public class SensorType {
     int id;

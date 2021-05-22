@@ -1,5 +1,9 @@
 package edu.uci.ics.perpetual.sensors;
 
+import edu.uci.ics.perpetual.sensors.model.Observation;
+import edu.uci.ics.perpetual.sensors.model.ObservationType;
+import edu.uci.ics.perpetual.sensors.model.ObservedAttribute;
+import edu.uci.ics.perpetual.sensors.model.SensorType;
 import edu.uci.ics.perpetual.util.Pair;
 
 import java.sql.ResultSet;

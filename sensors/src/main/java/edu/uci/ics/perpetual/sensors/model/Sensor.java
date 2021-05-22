@@ -1,4 +1,6 @@
-package edu.uci.ics.perpetual.sensors;
+package edu.uci.ics.perpetual.sensors.model;
+
+import edu.uci.ics.perpetual.sensors.model.Location;
 
 public class Sensor {
     int id;

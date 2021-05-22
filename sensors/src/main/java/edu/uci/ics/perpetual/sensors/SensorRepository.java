@@ -1,7 +1,7 @@
 package edu.uci.ics.perpetual.sensors;
 
-import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import edu.uci.ics.perpetual.sensors.model.*;
 import edu.uci.ics.perpetual.util.Pair;
 import org.apache.commons.lang3.StringUtils;
 
