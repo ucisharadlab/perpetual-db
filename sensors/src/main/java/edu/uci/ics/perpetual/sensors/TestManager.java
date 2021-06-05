@@ -105,4 +105,8 @@ public class TestManager {
         attributes.add(new ObservedAttribute("macAddress", "VARCHAR(50)", macAddress));
         return new Observation(sensorId, LocalDateTime.from(formatter.parse(timeString)), attributes);
     }
+
+    private static void testPredicates() {
+
+    }
 }
