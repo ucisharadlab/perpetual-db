@@ -16,12 +16,13 @@ public class Predicate {
                 + field + Constants.SPACE + condition.toString() + Constants.SPACE + value);
 
         if (!children.isEmpty())
-            str.append(childOperator.toString())
-                    .append(Constants.OPEN_PARENTHESIS)
-                    .append(childOperator.combine(children))
-                    .append(Constants.CLOSE_PARENTHESIS);
+            str.append(childOperator.toString()).append(Constants.SPACE).append(getChildPredicates());
 
         str.append(Constants.CLOSE_PARENTHESIS);
         return str.toString();
+    }
+
+    protected String getChildPredicates() {
+        return Constants.OPEN_PARENTHESIS + childOperator.combine(children) + Constants.CLOSE_PARENTHESIS;
     }
 }
