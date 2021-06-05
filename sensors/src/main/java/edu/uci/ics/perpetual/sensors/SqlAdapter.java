@@ -1,9 +1,6 @@
 package edu.uci.ics.perpetual.sensors;
 
-import edu.uci.ics.perpetual.sensors.model.Observation;
-import edu.uci.ics.perpetual.sensors.model.ObservationType;
-import edu.uci.ics.perpetual.sensors.model.ObservedAttribute;
-import edu.uci.ics.perpetual.sensors.model.SensorType;
+import edu.uci.ics.perpetual.sensors.model.*;
 import edu.uci.ics.perpetual.util.Pair;
 
 import java.sql.ResultSet;
@@ -45,6 +42,17 @@ public class SqlAdapter {
                     attributes);
         } catch (SQLException ignored) {
             return null;
+        }
+    }
+
+    public static Sensor sensorFromRow(ResultSet row) {
+        try {
+            return new Sensor(row.getInt("id"), row.getString("name"), row.getInt("type"),
+                    row.getString("platformName"), row.getInt("locationSource"),
+                    new Location(row.getString("location")), new Location(row.getString("viewArea")),
+                    row.getString("spec"));
+        } catch (SQLException ignored) {
+            return null; // TODO: Change all catch blocks to log the exception before returning null
         }
     }
 }

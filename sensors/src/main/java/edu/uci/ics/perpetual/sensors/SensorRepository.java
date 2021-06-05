@@ -87,6 +87,18 @@ public class SensorRepository {
         }
     }
 
+    public Sensor getSensor(String name) {
+        return fetchEntities(
+                String.format("SELECT id, name, type, platformName, locationSource, location, viewArea, spec FROM Sensors WHERE name = '%s'", name),
+                SqlAdapter::sensorFromRow).get(0);
+    }
+
+    public Sensor getSensor(int id) {
+        return fetchEntities(
+                String.format("SELECT id, name, type, platformName, locationSource, location, viewArea, spec FROM Sensors WHERE id = '%d'", id),
+                SqlAdapter::sensorFromRow).get(0);
+    }
+
     public void insertSensor(Sensor sensor) throws Exception {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(
@@ -105,6 +117,12 @@ public class SensorRepository {
         } catch (SQLException ignored) {
             String message = ignored.getMessage();
         }
+    }
+
+    public List<Sensor> getPlatformComponents(String platformName) {
+        return fetchEntities(
+                String.format("SELECT id, name, type, platformName, locationSource, location, viewArea, spec FROM Sensors WHERE platformName = '%s'", platformName),
+                SqlAdapter::sensorFromRow);
     }
 
     public void createObservationsTable(String tableName, ObservationType type) {

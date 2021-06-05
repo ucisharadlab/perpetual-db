@@ -11,6 +11,10 @@ public class MobileSensor extends Sensor implements MobileObject{
         super(name, typeId, platformName, locationSourceId, location, viewArea, spec);
     }
 
+    public MobileSensor(Sensor sensor) {
+        super(sensor.id, sensor.name, sensor.typeId, sensor.platformName, sensor.locationSourceId, sensor.location, sensor. viewArea, sensor.spec);
+    }
+
     @Override
     public int getLocationSource() {
         return locationSourceId;

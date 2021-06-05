@@ -83,7 +83,7 @@ public class TestManager {
         // fetch some rows
         List<String> predicates = new LinkedList<>();
         predicates.add("time > '2021-05-21 18:52:26.932'");
-        List<Observation> observations = manager.fetchObservations("WIFI_AP", predicates);
+        List<Observation> observations = manager.getObservations("WIFI_AP", predicates);
 
         for (int i = 0; i < testData.size(); i++) {
             if (!testData.get(i).equals(observations.get(i)))

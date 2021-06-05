@@ -6,7 +6,7 @@ import java.util.List;
 public class MobilePlatform extends Platform implements MobileObject{
     public int locationSource;
 
-    MobilePlatform(String name, List<Sensor> components) {
+    public MobilePlatform(String name, List<Sensor> components) {
         super(name, components);
     }
 

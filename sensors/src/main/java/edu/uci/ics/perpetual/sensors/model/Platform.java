@@ -6,7 +6,7 @@ public class Platform {
     public String name;
     public List<Sensor> components;
 
-    Platform(String name, List<Sensor> components) {
+    public Platform(String name, List<Sensor> components) {
         this.name = name;
         this.components = components;
     }
