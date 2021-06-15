@@ -31,41 +31,39 @@ public class SensorManager {
 
     public void createMobileSensor(MobileSensor sensor) throws Exception {
         repo.insertSensor(sensor);
+        Sensor newSensor = repo.getSensor(sensor.name);
+        repo.insertMobileObject(newSensor.id, "Sensor", sensor.getLocationSource());
     }
 
     public void createPlatform(Platform platform) throws Exception {
         for (Sensor sensor : platform.components) {
-            sensor.platformName = platform.name;
+            sensor.platformId = platform.id;
             repo.insertSensor(sensor);
         }
     }
 
     public void createMobilePlatform(MobilePlatform platform) throws Exception {
         for (Sensor sensor : platform.components) {
-            sensor.locationSourceId = platform.locationSource;
+            sensor.mobile = true;
         }
         createPlatform(platform);
+        Platform newPlatform = repo.getPlatform(platform.name);
+        repo.insertMobileObject(newPlatform.id, "Sensor", platform.getLocationSource());
     }
 
     public Sensor getSensor(String name) {
         Sensor sensor = repo.getSensor(name);
-        if (Sensor.UNSET != sensor.locationSourceId)
-            return new MobileSensor(sensor);
-        return sensor;
+        return sensor.mobile ? new MobileSensor(sensor, repo.getLocationSource(sensor.id, "Sensor")) : sensor;
     }
 
     public Sensor getSensor(int id) {
         Sensor sensor = repo.getSensor(id);
-        if (Sensor.UNSET != sensor.locationSourceId)
-            return new MobileSensor(sensor);
-        return sensor;
+        return sensor.mobile ? new MobileSensor(sensor, repo.getLocationSource(sensor.id, "Sensor")) : sensor;
     }
 
     public Platform getPlatform(String name) {
-        List<Sensor> components = repo.getPlatformComponents(name);
-        if (Sensor.UNSET != components.get(0).locationSourceId)
-            return new MobilePlatform(name, components);
-        return new Platform(name, components);
+        Platform platform = repo.getPlatform(name);
+        return platform.mobile ? new MobilePlatform(platform, repo.getLocationSource(platform.id, "Platform")) : platform;
     }
 
     public void storeObservation(SensorType type, Observation observation) throws Exception {

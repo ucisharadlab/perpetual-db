@@ -48,9 +48,17 @@ public class SqlAdapter {
     public static Sensor sensorFromRow(ResultSet row) {
         try {
             return new Sensor(row.getInt("id"), row.getString("name"), row.getInt("type"),
-                    row.getString("platformName"), row.getInt("locationSource"),
+                    row.getInt("platformId"), row.getBoolean("mobile"),
                     new Location(row.getString("location")), new Location(row.getString("viewArea")),
                     row.getString("spec"));
+        } catch (SQLException ignored) {
+            return null;
+        }
+    }
+
+    public static Platform platformFromRow(ResultSet row) {
+        try {
+            return new Platform(row.getInt("id"), row.getString("name"), row.getBoolean("mobile"), null);
         } catch (SQLException ignored) {
             return null; // TODO: Change all catch blocks to log the exception before returning null
         }

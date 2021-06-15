@@ -16,16 +16,21 @@ CREATE TABLE Sensors (
     id SERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     type int NOT NULL,
-    platformName VARCHAR(50),
-    locationSource int,
+    platformId int,
+    mobile bit,
     location VARCHAR(50),
     viewArea VARCHAR(50),
     spec TEXT
 );
 
--- CREATE TABLE Platforms (
---     id SERIAL PRIMARY KEY,
---     name VARCHAR(50) NOT NULL,
---     sensor int NOT NULL
--- );
+CREATE TABLE Platforms (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    mobile bit
+);
 
+CREATE TABLE MobileObjects (
+    id int,
+    locationSource int,
+    type VARCHAR(10)
+);

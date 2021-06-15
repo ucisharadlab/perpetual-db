@@ -10,6 +10,12 @@ public class MobilePlatform extends Platform implements MobileObject{
         super(name, components);
     }
 
+    public MobilePlatform(Platform platform, int locationSource) {
+        super(platform.name, platform.components);
+        this.mobile = true;
+        this.locationSource = locationSource;
+    }
+
     @Override
     public int getLocationSource() {
         return locationSource;

@@ -40,27 +40,27 @@ public class TestManager {
 
     private static void testCreateSensors() throws Exception {
         // create 5 camera sensors: location, view frustum, etc
-        manager.createSensor(new Sensor("camera1", 1, "", Sensor.UNSET,
+        manager.createSensor(new Sensor("camera1", 1, Sensor.UNSET, false,
                 new Location("a1,b1,c1"), new Location("d1,e1,f1"), "{}"));
-        manager.createSensor(new Sensor("camera2", 1, "", Sensor.UNSET,
+        manager.createSensor(new Sensor("camera2", 1, Sensor.UNSET, false,
                 new Location("a2,b2,c2"), new Location("d2,e2,f2"), "{}"));
-        manager.createSensor(new Sensor("camera3", 1, "", Sensor.UNSET,
+        manager.createSensor(new Sensor("camera3", 1, Sensor.UNSET, false,
                 new Location("a3,b3,c3"), new Location("d3,e3,f3"), "{}"));
-        manager.createSensor(new Sensor("camera4", 1, "", Sensor.UNSET,
+        manager.createSensor(new Sensor("camera4", 1, Sensor.UNSET, false,
                 new Location("a4,b4,c4"), new Location("d4,e4,f4"), "{}"));
-        manager.createSensor(new Sensor("camera5", 1, "", Sensor.UNSET,
+        manager.createSensor(new Sensor("camera5", 1, Sensor.UNSET, false,
                 new Location("a5,b5,c5"), new Location("d5,e5,f5"), "{}"));
 
         // create 5 wifi ap sensors
-        manager.createSensor(new Sensor("wifi1", 2, "", Sensor.UNSET,
+        manager.createSensor(new Sensor("wifi1", 2, Sensor.UNSET, false,
                 new Location("a1,b1,c1"), new Location("d1,e1,f1"), "{}"));
-        manager.createSensor(new Sensor("wifi2", 2, "", Sensor.UNSET,
+        manager.createSensor(new Sensor("wifi2", 2, Sensor.UNSET, false,
                 new Location("a2,b2,c2"), new Location("d2,e2,f2"), "{}"));
-        manager.createSensor(new Sensor("wifi3", 2, "", Sensor.UNSET,
+        manager.createSensor(new Sensor("wifi3", 2, Sensor.UNSET, false,
                 new Location("a3,b3,c3"), new Location("d3,e3,f3"), "{}"));
-        manager.createSensor(new Sensor("wifi4", 2, "", Sensor.UNSET,
+        manager.createSensor(new Sensor("wifi4", 2, Sensor.UNSET, false,
                 new Location("a4,b4,c4"), new Location("d4,e4,f4"), "{}"));
-        manager.createSensor(new Sensor("wifi5", 2, "", Sensor.UNSET,
+        manager.createSensor(new Sensor("wifi5", 2, Sensor.UNSET, false,
                 new Location("a5,b5,c5"), new Location("d5,e5,f5"), "{}"));
     }
 

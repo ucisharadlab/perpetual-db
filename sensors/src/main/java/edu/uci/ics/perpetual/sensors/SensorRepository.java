@@ -89,25 +89,35 @@ public class SensorRepository {
 
     public Sensor getSensor(String name) {
         return fetchEntities(
-                String.format("SELECT id, name, type, platformName, locationSource, location, viewArea, spec FROM Sensors WHERE name = '%s'", name),
+                String.format("SELECT id, name, type, platformId, mobile, location, viewArea, spec FROM Sensors WHERE name = '%s'", name),
                 SqlAdapter::sensorFromRow).get(0);
     }
 
     public Sensor getSensor(int id) {
         return fetchEntities(
-                String.format("SELECT id, name, type, platformName, locationSource, location, viewArea, spec FROM Sensors WHERE id = '%d'", id),
+                String.format("SELECT id, name, type, platformId, mobile, location, viewArea, spec FROM Sensors WHERE id = '%d'", id),
                 SqlAdapter::sensorFromRow).get(0);
+    }
+
+    public int getLocationSource(int id, String type) {
+        return fetchEntities(String.format("SELECT locationSource FROM mobileobjects WHERE id = %d AND type = '%s'", id, type), (row) -> {
+            try {
+                return row.getInt("locationSource");
+            } catch (SQLException ignored) {
+                return -1; // Default
+            }
+        }).get(0);
     }
 
     public void insertSensor(Sensor sensor) throws Exception {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(
-                     "INSERT INTO Sensors (name, type, platformName, locationSource, location, viewArea, spec) " +
+                     "INSERT INTO Sensors (name, type, platformId, mobile, location, viewArea, spec) " +
                              "VALUES (?, ?, ?, ?, ?, ?, ?);")) {
             statement.setString(1, sensor.name);
             statement.setInt(2, sensor.typeId);
-            statement.setString(3, sensor.platformName);
-            statement.setInt(4, sensor.locationSourceId);
+            statement.setInt(3, sensor.platformId);
+            statement.setInt(4, sensor.mobile ? 1 : 0);
             statement.setString(5, sensor.location.coordinates);
             statement.setString(6, sensor.viewArea.coordinates);
             statement.setString(7, sensor.spec);
@@ -119,9 +129,16 @@ public class SensorRepository {
         }
     }
 
-    public List<Sensor> getPlatformComponents(String platformName) {
+    public Platform getPlatform(String platformName) {
+        Platform platform = fetchEntities(String.format("SELECT id, name, mobile FROM platforms WHERE name = '%s'", platformName),
+                SqlAdapter::platformFromRow).get(0);
+        platform.components = getPlatformComponents(platform.id);
+        return platform;
+    }
+
+    public List<Sensor> getPlatformComponents(int platformId) {
         return fetchEntities(
-                String.format("SELECT id, name, type, platformName, locationSource, location, viewArea, spec FROM Sensors WHERE platformName = '%s'", platformName),
+                String.format("SELECT id, name, type, platformId, mobile, location, viewArea, spec FROM Sensors WHERE platformId = %d", platformId),
                 SqlAdapter::sensorFromRow);
     }
 
@@ -181,6 +198,21 @@ public class SensorRepository {
              PreparedStatement statement = connection.prepareStatement(sql)) {
             if (1 != statement.executeUpdate())
                 throw new Exception("Error while adding sensor type");
+        } catch (SQLException ignored) {
+            String message = ignored.getMessage();
+        }
+    }
+
+    public void insertMobileObject(int id, String type, int locationSource) throws Exception {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(
+                     "INSERT INTO MobileObject (id, type, locationSource) VALUES (?, ?, ?);")) {
+            statement.setInt(1, id);
+            statement.setString(2, type);
+            statement.setInt(3, locationSource);
+
+            if (1 != statement.executeUpdate())
+                throw new Exception("Error while adding mobile object");
         } catch (SQLException ignored) {
             String message = ignored.getMessage();
         }
