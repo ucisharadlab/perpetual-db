@@ -52,18 +52,15 @@ public class SensorManager {
     }
 
     public Sensor getSensor(String name) {
-        Sensor sensor = repo.getSensor(name);
-        return sensor.mobile ? new MobileSensor(sensor, repo.getLocationSource(sensor.id, "Sensor")) : sensor;
+        return repo.getSensor(name);
     }
 
     public Sensor getSensor(int id) {
-        Sensor sensor = repo.getSensor(id);
-        return sensor.mobile ? new MobileSensor(sensor, repo.getLocationSource(sensor.id, "Sensor")) : sensor;
+        return repo.getSensor(id);
     }
 
     public Platform getPlatform(String name) {
-        Platform platform = repo.getPlatform(name);
-        return platform.mobile ? new MobilePlatform(platform, repo.getLocationSource(platform.id, "Platform")) : platform;
+        return repo.getPlatform(name);
     }
 
     public void storeObservation(SensorType type, Observation observation) throws Exception {

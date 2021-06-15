@@ -89,13 +89,17 @@ public class SensorRepository {
 
     public Sensor getSensor(String name) {
         return fetchEntities(
-                String.format("SELECT id, name, type, platformId, mobile, location, viewArea, spec FROM Sensors WHERE name = '%s'", name),
+                String.format("SELECT S.id, name, type, platformId, mobile, location, viewArea, spec," +
+                        "CASE WHEN M.locationSource IS NULL THEN -1 WHEN M.locationSource IS NOT NULL THEN M.locationSource END locationSource " +
+                        "FROM Sensors S INNER JOIN MobileObjects M ON S.id = M.id WHERE S.name = '%s' AND M.type = '%s'", name, "Sensor"),
                 SqlAdapter::sensorFromRow).get(0);
     }
 
     public Sensor getSensor(int id) {
         return fetchEntities(
-                String.format("SELECT id, name, type, platformId, mobile, location, viewArea, spec FROM Sensors WHERE id = '%d'", id),
+                String.format("SELECT S.id, name, type, platformId, mobile, location, viewArea, spec," +
+                        "CASE WHEN M.locationSource IS NULL THEN -1 WHEN M.locationSource IS NOT NULL THEN M.locationSource END locationSource " +
+                        "FROM Sensors S INNER JOIN MobileObjects M ON S.id = M.id WHERE S.id = %d AND M.type = '%s'", id, "Sensor"),
                 SqlAdapter::sensorFromRow).get(0);
     }
 
@@ -130,7 +134,9 @@ public class SensorRepository {
     }
 
     public Platform getPlatform(String platformName) {
-        Platform platform = fetchEntities(String.format("SELECT id, name, mobile FROM platforms WHERE name = '%s'", platformName),
+        Platform platform = fetchEntities(String.format("SELECT id, name, mobile," +
+                        "CASE WHEN M.locationSource IS NULL THEN -1 WHEN M.locationSource IS NOT NULL THEN M.locationSource END locationSource " +
+                        " FROM Platforms P INNER JOIN MobileObjects M ON P.id = M.id WHERE name = '%s' AND M.type = '%s'", platformName, "Platform"),
                 SqlAdapter::platformFromRow).get(0);
         platform.components = getPlatformComponents(platform.id);
         return platform;

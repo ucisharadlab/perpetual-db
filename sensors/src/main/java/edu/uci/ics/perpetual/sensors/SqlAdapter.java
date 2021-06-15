@@ -47,10 +47,12 @@ public class SqlAdapter {
 
     public static Sensor sensorFromRow(ResultSet row) {
         try {
-            return new Sensor(row.getInt("id"), row.getString("name"), row.getInt("type"),
-                    row.getInt("platformId"), row.getBoolean("mobile"),
+            boolean mobile = row.getBoolean("mobile");
+            Sensor sensor = new Sensor(row.getInt("id"), row.getString("name"), row.getInt("type"),
+                    row.getInt("platformId"), mobile,
                     new Location(row.getString("location")), new Location(row.getString("viewArea")),
                     row.getString("spec"));
+            return mobile ? new MobileSensor(sensor, row.getInt("locationSource")) : sensor;
         } catch (SQLException ignored) {
             return null;
         }
@@ -58,7 +60,9 @@ public class SqlAdapter {
 
     public static Platform platformFromRow(ResultSet row) {
         try {
-            return new Platform(row.getInt("id"), row.getString("name"), row.getBoolean("mobile"), null);
+            boolean mobile = row.getBoolean("mobile");
+            Platform platform = new Platform(row.getInt("id"), row.getString("name"), mobile, null);
+            return mobile ? new MobilePlatform(platform, row.getInt("locationSource")) : platform;
         } catch (SQLException ignored) {
             return null; // TODO: Change all catch blocks to log the exception before returning null
         }
