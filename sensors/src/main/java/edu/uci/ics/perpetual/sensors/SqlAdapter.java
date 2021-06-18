@@ -52,7 +52,7 @@ public class SqlAdapter {
                     row.getInt("platformId"), mobile,
                     new Location(row.getString("location")), new Location(row.getString("viewArea")),
                     row.getString("spec"));
-            return mobile ? new MobileSensor(sensor, row.getInt("locationSource")) : sensor;
+            return mobile ? new MobileSensor(sensor, row.getString("locationSource")) : sensor;
         } catch (SQLException ignored) {
             return null;
         }
@@ -62,7 +62,7 @@ public class SqlAdapter {
         try {
             boolean mobile = row.getBoolean("mobile");
             Platform platform = new Platform(row.getInt("id"), row.getString("name"), mobile, null);
-            return mobile ? new MobilePlatform(platform, row.getInt("locationSource")) : platform;
+            return mobile ? new MobilePlatform(platform, row.getString("locationSource")) : platform;
         } catch (SQLException ignored) {
             return null; // TODO: Change all catch blocks to log the exception before returning null
         }

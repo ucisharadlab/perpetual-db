@@ -89,26 +89,36 @@ public class SensorRepository {
 
     public Sensor getSensor(String name) {
         return fetchEntities(
-                String.format("SELECT S.id, name, type, platformId, mobile, location, viewArea, spec," +
-                        "CASE WHEN M.locationSource IS NULL THEN -1 WHEN M.locationSource IS NOT NULL THEN M.locationSource END locationSource " +
-                        "FROM Sensors S INNER JOIN MobileObjects M ON S.id = M.id WHERE S.name = '%s' AND M.type = '%s'", name, "Sensor"),
+                String.format("SELECT S.id, name, S.type, platformId, mobile, location, viewArea, spec," +
+                        "CASE WHEN M.locationSource IS NULL THEN '' WHEN M.locationSource IS NOT NULL THEN M.locationSource END locationSource " +
+                        "FROM Sensors S LEFT OUTER JOIN MobileObjects M ON S.id = M.id WHERE S.name = '%s' AND (M.type IS NULL OR M.type = '%s')", name, "Sensor"),
                 SqlAdapter::sensorFromRow).get(0);
     }
 
     public Sensor getSensor(int id) {
         return fetchEntities(
-                String.format("SELECT S.id, name, type, platformId, mobile, location, viewArea, spec," +
-                        "CASE WHEN M.locationSource IS NULL THEN -1 WHEN M.locationSource IS NOT NULL THEN M.locationSource END locationSource " +
-                        "FROM Sensors S INNER JOIN MobileObjects M ON S.id = M.id WHERE S.id = %d AND M.type = '%s'", id, "Sensor"),
+                String.format("SELECT S.id, name, S.type, platformId, mobile, location, viewArea, spec," +
+                        "CASE WHEN M.locationSource IS NULL THEN '' WHEN M.locationSource IS NOT NULL THEN M.locationSource END locationSource " +
+                        "FROM Sensors S LEFT OUTER JOIN MobileObjects M ON S.id = M.id WHERE S.id = %d AND (M.type IS NULL OR M.type = '%s')", id, "Sensor"),
                 SqlAdapter::sensorFromRow).get(0);
     }
 
-    public int getLocationSource(int id, String type) {
-        return fetchEntities(String.format("SELECT locationSource FROM mobileobjects WHERE id = %d AND type = '%s'", id, type), (row) -> {
+    public int getNewSensorId(String name) {
+        return fetchEntities(String.format("SELECT id FROM Sensors WHERE name = '%s'", name), (row) -> {
             try {
-                return row.getInt("locationSource");
+                return row.getInt("id");
             } catch (SQLException ignored) {
                 return -1; // Default
+            }
+        }).get(0);
+    }
+
+    public String getLocationSource(int id, String type) {
+        return fetchEntities(String.format("SELECT locationSource FROM MobileObjects WHERE id = %d AND type = '%s'", id, type), (row) -> {
+            try {
+                return row.getString("locationSource");
+            } catch (SQLException ignored) {
+                return ""; // Default
             }
         }).get(0);
     }
@@ -121,31 +131,57 @@ public class SensorRepository {
             statement.setString(1, sensor.name);
             statement.setInt(2, sensor.typeId);
             statement.setInt(3, sensor.platformId);
-            statement.setInt(4, sensor.mobile ? 1 : 0);
+            statement.setBoolean(4, sensor.mobile);
             statement.setString(5, sensor.location.coordinates);
             statement.setString(6, sensor.viewArea.coordinates);
             statement.setString(7, sensor.spec);
 
             if (1 != statement.executeUpdate())
-                throw new Exception("Error while adding sensor type");
+                throw new Exception("Error while adding sensor");
         } catch (SQLException ignored) {
             String message = ignored.getMessage();
         }
     }
 
     public Platform getPlatform(String platformName) {
-        Platform platform = fetchEntities(String.format("SELECT id, name, mobile," +
-                        "CASE WHEN M.locationSource IS NULL THEN -1 WHEN M.locationSource IS NOT NULL THEN M.locationSource END locationSource " +
-                        " FROM Platforms P INNER JOIN MobileObjects M ON P.id = M.id WHERE name = '%s' AND M.type = '%s'", platformName, "Platform"),
+        Platform platform = fetchEntities(String.format("SELECT P.id, name, mobile," +
+                        "CASE WHEN M.locationSource IS NULL THEN '' WHEN M.locationSource IS NOT NULL THEN M.locationSource END locationSource " +
+                        " FROM Platforms P LEFT OUTER JOIN MobileObjects M ON P.id = M.id WHERE name = '%s' AND (M.type IS NULL OR M.type = '%s')", platformName, "Platform"),
                 SqlAdapter::platformFromRow).get(0);
         platform.components = getPlatformComponents(platform.id);
         return platform;
     }
 
+    public int getNewPlatformId(String name) {
+        return fetchEntities(String.format("SELECT id FROM Platforms WHERE name = '%s'", name), (row) -> {
+            try {
+                return row.getInt("id");
+            } catch (SQLException ignored) {
+                return -1; // Default
+            }
+        }).get(0);
+    }
+
     public List<Sensor> getPlatformComponents(int platformId) {
         return fetchEntities(
-                String.format("SELECT id, name, type, platformId, mobile, location, viewArea, spec FROM Sensors WHERE platformId = %d", platformId),
+                String.format("SELECT S.id, name, S.type, platformId, mobile, location, viewArea, spec, " +
+                        "M.locationSource " +
+                        "FROM Sensors S LEFT OUTER JOIN MobileObjects M ON S.platformId = M.id WHERE platformId = %d AND (M.type IS NULL OR M.type = '%s')", platformId, "Platform"),
                 SqlAdapter::sensorFromRow);
+    }
+
+    public void insertPlatform(Platform platform) throws Exception {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(
+                     "INSERT INTO Platforms (name, mobile) VALUES (?, ?);")) {
+            statement.setString(1, platform.name);
+            statement.setBoolean(2, platform.mobile);
+
+            if (1 != statement.executeUpdate())
+                throw new Exception("Error while adding platform");
+        } catch (SQLException ignored) {
+            String message = ignored.getMessage();
+        }
     }
 
     public void createObservationsTable(String tableName, ObservationType type) {
@@ -209,13 +245,13 @@ public class SensorRepository {
         }
     }
 
-    public void insertMobileObject(int id, String type, int locationSource) throws Exception {
+    public void insertMobileObject(int id, String type, String locationSource) throws Exception {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(
-                     "INSERT INTO MobileObject (id, type, locationSource) VALUES (?, ?, ?);")) {
+                     "INSERT INTO MobileObjects (id, type, locationSource) VALUES (?, ?, ?);")) {
             statement.setInt(1, id);
             statement.setString(2, type);
-            statement.setInt(3, locationSource);
+            statement.setString(3, locationSource);
 
             if (1 != statement.executeUpdate())
                 throw new Exception("Error while adding mobile object");

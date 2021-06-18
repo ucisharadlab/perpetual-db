@@ -31,11 +31,13 @@ public class SensorManager {
 
     public void createMobileSensor(MobileSensor sensor) throws Exception {
         repo.insertSensor(sensor);
-        Sensor newSensor = repo.getSensor(sensor.name);
-        repo.insertMobileObject(newSensor.id, "Sensor", sensor.getLocationSource());
+        int newId = repo.getNewSensorId(sensor.name);
+        repo.insertMobileObject(newId, "Sensor", sensor.getLocationSource());
     }
 
     public void createPlatform(Platform platform) throws Exception {
+        repo.insertPlatform(platform);
+        platform.id = repo.getNewPlatformId(platform.name);
         for (Sensor sensor : platform.components) {
             sensor.platformId = platform.id;
             repo.insertSensor(sensor);
@@ -47,8 +49,7 @@ public class SensorManager {
             sensor.mobile = true;
         }
         createPlatform(platform);
-        Platform newPlatform = repo.getPlatform(platform.name);
-        repo.insertMobileObject(newPlatform.id, "Sensor", platform.getLocationSource());
+        repo.insertMobileObject(platform.id, "Platform", platform.getLocationSource());
     }
 
     public Sensor getSensor(String name) {

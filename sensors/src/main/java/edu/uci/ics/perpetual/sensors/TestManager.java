@@ -1,9 +1,6 @@
 package edu.uci.ics.perpetual.sensors;
 
-import edu.uci.ics.perpetual.sensors.model.Location;
-import edu.uci.ics.perpetual.sensors.model.Observation;
-import edu.uci.ics.perpetual.sensors.model.ObservedAttribute;
-import edu.uci.ics.perpetual.sensors.model.Sensor;
+import edu.uci.ics.perpetual.sensors.model.*;
 import edu.uci.ics.perpetual.util.Pair;
 import org.apache.log4j.BasicConfigurator;
 
@@ -20,8 +17,11 @@ public class TestManager {
         BasicConfigurator.configure();
 //        testCreateTypes();
 //        testCreateSensors();
+//        testMobileSensor();
+//        testFetchSensor();
 //        testStoreData();
-        testFetchData();
+//        testFetchData();
+        testPlatformCreateAndFetch();
     }
 
     public static void testCreateTypes() throws Exception {
@@ -40,28 +40,31 @@ public class TestManager {
 
     private static void testCreateSensors() throws Exception {
         // create 5 camera sensors: location, view frustum, etc
-        manager.createSensor(new Sensor("camera1", 1, Sensor.UNSET, false,
-                new Location("a1,b1,c1"), new Location("d1,e1,f1"), "{}"));
-        manager.createSensor(new Sensor("camera2", 1, Sensor.UNSET, false,
-                new Location("a2,b2,c2"), new Location("d2,e2,f2"), "{}"));
-        manager.createSensor(new Sensor("camera3", 1, Sensor.UNSET, false,
-                new Location("a3,b3,c3"), new Location("d3,e3,f3"), "{}"));
-        manager.createSensor(new Sensor("camera4", 1, Sensor.UNSET, false,
-                new Location("a4,b4,c4"), new Location("d4,e4,f4"), "{}"));
-        manager.createSensor(new Sensor("camera5", 1, Sensor.UNSET, false,
-                new Location("a5,b5,c5"), new Location("d5,e5,f5"), "{}"));
+        for (int i = 1; i <= 5; i++) {
+            manager.createSensor(new Sensor("camera" + i, 1,
+                    new Location(String.format("a%d,b%d,c%d", i, i, i)), new Location(String.format("d%d,e%d,f%d", i, i, i))));
+        }
 
         // create 5 wifi ap sensors
-        manager.createSensor(new Sensor("wifi1", 2, Sensor.UNSET, false,
-                new Location("a1,b1,c1"), new Location("d1,e1,f1"), "{}"));
-        manager.createSensor(new Sensor("wifi2", 2, Sensor.UNSET, false,
-                new Location("a2,b2,c2"), new Location("d2,e2,f2"), "{}"));
-        manager.createSensor(new Sensor("wifi3", 2, Sensor.UNSET, false,
-                new Location("a3,b3,c3"), new Location("d3,e3,f3"), "{}"));
-        manager.createSensor(new Sensor("wifi4", 2, Sensor.UNSET, false,
-                new Location("a4,b4,c4"), new Location("d4,e4,f4"), "{}"));
-        manager.createSensor(new Sensor("wifi5", 2, Sensor.UNSET, false,
-                new Location("a5,b5,c5"), new Location("d5,e5,f5"), "{}"));
+        for (int i = 1; i <= 5; i++) {
+            manager.createSensor(new Sensor("wifi" + i, 2,
+                    new Location(String.format("a%d,b%d,c%d", i, i, i)), new Location(String.format("d%d,e%d,f%d", i, i, i))));
+        }
+    }
+
+    private static void testMobileSensor() throws Exception {
+        manager.createMobileSensor(new MobileSensor("mobileCamera1", 1, new Location(""), "camera1"));
+        MobileSensor sensor = (MobileSensor) manager.getSensor("mobileCamera1");
+        if (!sensor.mobile || !"1".equals(sensor.getLocationSource()))
+            throw new Exception("Error in mobile sensor flow");
+    }
+
+    private static void testFetchSensor() throws Exception {
+        Sensor sensorFromId = manager.getSensor(1);
+        Sensor sensorFromName = manager.getSensor("camera1");
+
+        if (!sensorFromName.equals(sensorFromId))
+            throw new Exception("Error fetching sensor");
     }
 
     private static void testStoreData() throws Exception {
@@ -106,7 +109,22 @@ public class TestManager {
         return new Observation(sensorId, LocalDateTime.from(formatter.parse(timeString)), attributes);
     }
 
-    private static void testPredicates() {
+    private static void testPlatformCreateAndFetch() throws Exception {
+        List<Sensor> sensors = new LinkedList<>();
+        sensors.add(new Sensor("platformCamera1", 7, new Location(""), new Location("")));
+        sensors.add(new Sensor("platformCamera2", 7, new Location(""), new Location("")));
+        sensors.add(new Sensor("platformWifi1", 8, new Location(""), new Location("")));
+        MobilePlatform platform = new MobilePlatform("platform1", sensors, "platformCamera1");
+//        manager.createMobilePlatform(platform);
 
+        MobilePlatform newPlatform = (MobilePlatform) manager.getPlatform("platform1");
+        if (!newPlatform.equals(platform)
+                || !(newPlatform.mobile == platform.mobile)
+                || !(newPlatform.components.size() == platform.components.size()))
+            throw new Exception("Error creating platform");
+    }
+
+    private static void testPredicates() {
+        
     }
 }

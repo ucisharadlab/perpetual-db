@@ -26,4 +26,20 @@ public class Sensor {
     public Sensor(String name, int typeId, int platformId, boolean mobile, Location location, Location viewArea, String spec) {
         this(UNSET, name, typeId, platformId, mobile, location, viewArea, spec);
     }
+
+    public Sensor(String name, int typeId, Location location, Location viewArea) {
+        this(name, typeId, UNSET, false, location, viewArea, "");
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (null == obj || obj.getClass() != this.getClass())
+            return false;
+
+        Sensor that = (Sensor) obj;
+        return this.name.equals(that.name) && this.typeId == that.typeId && this.platformId == that.platformId
+                && this.mobile == that.mobile; // TODO: Are things other than id/name comparison required? && this.location.equals(that.location)
+    }
 }

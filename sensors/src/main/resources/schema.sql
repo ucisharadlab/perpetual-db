@@ -14,7 +14,7 @@ CREATE TABLE SensorTypes (
 
 CREATE TABLE Sensors (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
+    name VARCHAR(50) UNIQUE NOT NULL,
     type int NOT NULL,
     platformId int,
     mobile bit,
@@ -25,12 +25,12 @@ CREATE TABLE Sensors (
 
 CREATE TABLE Platforms (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
+    name VARCHAR(50) UNIQUE NOT NULL,
     mobile bit
 );
 
 CREATE TABLE MobileObjects (
     id int,
-    locationSource int,
+    locationSource VARCHAR(50),
     type VARCHAR(10)
 );

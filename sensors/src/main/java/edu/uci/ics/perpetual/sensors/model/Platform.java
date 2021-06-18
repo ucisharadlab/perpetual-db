@@ -18,4 +18,15 @@ public class Platform {
     public Platform(String name, List<Sensor> components) {
         this(-1, name, false, components);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (null == obj || obj.getClass() != this.getClass())
+            return false;
+
+        Platform that = (Platform) obj;
+        return this.name.equals(that.name); // TODO: Is the rest required? && this.mobile == that.mobile;
+    }
 }

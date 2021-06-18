@@ -10,8 +10,7 @@ public class Predicate {
     public RelationalOperator childOperator;
     public List<Predicate> children;
 
-    @Override
-    public String toString() {
+    public String toSql() {
         StringBuilder str = new StringBuilder(Constants.OPEN_PARENTHESIS
                 + field + Constants.SPACE + condition.toString() + Constants.SPACE + value);
 

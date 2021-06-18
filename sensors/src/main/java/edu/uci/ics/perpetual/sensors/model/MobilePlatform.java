@@ -4,20 +4,21 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class MobilePlatform extends Platform implements MobileObject{
-    public int locationSource;
+    public String locationSource;
 
-    public MobilePlatform(String name, List<Sensor> components) {
+    public MobilePlatform(String name, List<Sensor> components, String locationSource) {
         super(name, components);
-    }
-
-    public MobilePlatform(Platform platform, int locationSource) {
-        super(platform.name, platform.components);
         this.mobile = true;
         this.locationSource = locationSource;
     }
 
+    public MobilePlatform(Platform platform, String locationSource) {
+        super(platform.id, platform.name, true, platform.components);
+        this.locationSource = locationSource;
+    }
+
     @Override
-    public int getLocationSource() {
+    public String getLocationSource() {
         return locationSource;
     }
 
