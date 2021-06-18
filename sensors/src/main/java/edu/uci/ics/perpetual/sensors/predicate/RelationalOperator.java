@@ -13,7 +13,7 @@ public abstract class RelationalOperator {
 
     public String combine(List<Predicate> predicates) {
         return Constants.OPEN_PARENTHESIS
-                + predicates.stream().map(Predicate::toString)
+                + predicates.stream().map(Predicate::toSql)
                         .collect(Collectors.joining(Constants.SPACE + this + Constants.SPACE))
                 + Constants.CLOSE_PARENTHESIS;
     }

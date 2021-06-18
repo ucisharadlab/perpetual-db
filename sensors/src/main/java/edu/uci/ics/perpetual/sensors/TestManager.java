@@ -1,6 +1,7 @@
 package edu.uci.ics.perpetual.sensors;
 
 import edu.uci.ics.perpetual.sensors.model.*;
+import edu.uci.ics.perpetual.sensors.predicate.*;
 import edu.uci.ics.perpetual.util.Pair;
 import org.apache.log4j.BasicConfigurator;
 
@@ -21,7 +22,8 @@ public class TestManager {
 //        testFetchSensor();
 //        testStoreData();
 //        testFetchData();
-        testPlatformCreateAndFetch();
+//        testPlatformCreateAndFetch();
+        testPredicates();
     }
 
     public static void testCreateTypes() throws Exception {
@@ -115,7 +117,7 @@ public class TestManager {
         sensors.add(new Sensor("platformCamera2", 7, new Location(""), new Location("")));
         sensors.add(new Sensor("platformWifi1", 8, new Location(""), new Location("")));
         MobilePlatform platform = new MobilePlatform("platform1", sensors, "platformCamera1");
-//        manager.createMobilePlatform(platform);
+        manager.createMobilePlatform(platform);
 
         MobilePlatform newPlatform = (MobilePlatform) manager.getPlatform("platform1");
         if (!newPlatform.equals(platform)
@@ -124,7 +126,34 @@ public class TestManager {
             throw new Exception("Error creating platform");
     }
 
-    private static void testPredicates() {
-        
+    private static void testPredicates() throws Exception {
+        Predicate filter = new Predicate("field1", Condition.EQUAL, "value1");
+
+        filter.children = new LinkedList<>();
+        filter.childOperator = new RelationalAnd();
+        filter.children.add(new Predicate("level1_field1", Condition.GREATER_EQ, "level1_value1"));
+        filter.children.add(new Predicate("level1_field2", Condition.GREATER_EQ, "level1_value2"));
+
+        Predicate child3 = new Predicate("level1_field3", Condition.LESSER, "level1_value3");
+        child3.children = new LinkedList<>();
+        child3.childOperator = new RelationalOr();
+        child3.children.add(new Predicate("level2_field1", Condition.LESSER, "level2_value1"));
+        child3.children.add(new Predicate("level2_field2", Condition.NOT_EQUAL, "level2_value2"));
+
+        filter.children.add(child3);
+
+        Predicate notWrapper = new Predicate();
+        notWrapper.children = new LinkedList<>();
+        notWrapper.children.add(filter);
+        notWrapper.childOperator = new RelationalNot();
+
+        String resultFilter = notWrapper.toSql();
+        String expectedFilter = "( NOT ((field1 = value1 AND (" +
+                "(level1_field1 >= level1_value1) AND (level1_field2 >= level1_value2) AND (" +
+                    "level1_field3 < level1_value3 OR ((level2_field1 < level2_value1) OR (level2_field2 <> level2_value2))" +
+                ")))))";
+
+        if (!expectedFilter.equals(resultFilter))
+            throw new Exception("Error converting predicates to string");
     }
 }

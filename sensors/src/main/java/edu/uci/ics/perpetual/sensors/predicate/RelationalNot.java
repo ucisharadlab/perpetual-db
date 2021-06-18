@@ -14,8 +14,7 @@ public class RelationalNot extends RelationalOperator {
             return null; // exception?
 
         return Constants.OPEN_PARENTHESIS
-                + this + Constants.SPACE
-                + predicates.get(0).toString()
+                + predicates.get(0).toSql()
                 + Constants.CLOSE_PARENTHESIS;
     }
 }
