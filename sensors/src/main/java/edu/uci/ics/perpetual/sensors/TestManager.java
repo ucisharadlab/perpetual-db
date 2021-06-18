@@ -130,13 +130,13 @@ public class TestManager {
         Predicate filter = new Predicate("field1", Condition.EQUAL, "value1");
 
         filter.children = new LinkedList<>();
-        filter.childOperator = new RelationalAnd();
+        filter.childOperator = RelationalOperator.AND;
         filter.children.add(new Predicate("level1_field1", Condition.GREATER_EQ, "level1_value1"));
         filter.children.add(new Predicate("level1_field2", Condition.GREATER_EQ, "level1_value2"));
 
         Predicate child3 = new Predicate("level1_field3", Condition.LESSER, "level1_value3");
         child3.children = new LinkedList<>();
-        child3.childOperator = new RelationalOr();
+        child3.childOperator = RelationalOperator.OR;
         child3.children.add(new Predicate("level2_field1", Condition.LESSER, "level2_value1"));
         child3.children.add(new Predicate("level2_field2", Condition.NOT_EQUAL, "level2_value2"));
 
@@ -145,7 +145,7 @@ public class TestManager {
         Predicate notWrapper = new Predicate();
         notWrapper.children = new LinkedList<>();
         notWrapper.children.add(filter);
-        notWrapper.childOperator = new RelationalNot();
+        notWrapper.childOperator = RelationalOperator.NOT;
 
         String resultFilter = notWrapper.toSql();
         String expectedFilter = "( NOT ((field1 = value1 AND (" +
