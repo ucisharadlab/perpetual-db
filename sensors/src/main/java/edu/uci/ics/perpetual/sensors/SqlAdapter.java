@@ -6,12 +6,10 @@ import edu.uci.ics.perpetual.util.Pair;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 
 public class SqlAdapter {
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
     public static Pair<String, String> convertToAttribute(ResultSet row) {
         try {
@@ -38,7 +36,7 @@ public class SqlAdapter {
                 attributes.add(new ObservedAttribute(attribute.getKey(), attribute.getValue(), row.getString(attribute.getKey())));
 
             return new Observation(row.getInt("sensor"),
-                    LocalDateTime.from(formatter.parse(row.getString("time"))),
+                    LocalDateTime.parse(row.getString("time").replace( " " , "T" )),
                     attributes);
         } catch (SQLException ignored) {
             return null;

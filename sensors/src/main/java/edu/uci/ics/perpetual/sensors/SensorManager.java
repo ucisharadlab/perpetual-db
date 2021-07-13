@@ -1,6 +1,7 @@
 package edu.uci.ics.perpetual.sensors;
 
 import edu.uci.ics.perpetual.sensors.model.*;
+import edu.uci.ics.perpetual.sensors.predicate.Predicate;
 import edu.uci.ics.perpetual.util.Pair;
 
 import java.time.LocalDateTime;
@@ -23,6 +24,10 @@ public class SensorManager {
         SensorType type = new SensorType(name, typeName);
         repo.insertSensorType(type);
         repo.createObservationsTable(type.getDataTableName(), getObservationType(typeName));
+    }
+
+    public SensorType getSensorType(String name) {
+        return repo.getSensorType(name);
     }
 
     public void createSensor(Sensor sensor) throws Exception {
@@ -73,11 +78,16 @@ public class SensorManager {
     }
 
     public List<Observation> getObservations(String sensorType, List<String> predicates) {
-        return getObservations(repo.getSensorType(sensorType), predicates);
+        return getObservations(getSensorType(sensorType), predicates);
     }
 
     public List<Observation> getObservations(SensorType type, List<String> predicates) {
         return repo.getObservations(type.getDataTableName(), predicates, getObservationType(type.observationType));
+    }
+
+    public List<Observation> getObservations(String sensorType, Predicate predicate) {
+        SensorType type = getSensorType(sensorType);
+        return repo.getObservations(type.getDataTableName(), predicate, getObservationType(type.observationType));
     }
 
     public List<Pair<LocalDateTime, Location>> getLocations(int sensorId, LocalDateTime start, LocalDateTime end) {

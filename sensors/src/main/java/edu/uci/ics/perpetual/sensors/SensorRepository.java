@@ -2,6 +2,7 @@ package edu.uci.ics.perpetual.sensors;
 
 import com.zaxxer.hikari.HikariDataSource;
 import edu.uci.ics.perpetual.sensors.model.*;
+import edu.uci.ics.perpetual.sensors.predicate.Predicate;
 import edu.uci.ics.perpetual.util.Pair;
 import org.apache.commons.lang3.StringUtils;
 
@@ -201,15 +202,21 @@ public class SensorRepository {
     }
 
     public List<Observation> getObservations(String dataTableName, List<String> predicates, ObservationType observationType) {
+        return getObservations(dataTableName, String.join(" AND ", predicates), observationType);
+    }
+
+    public List<Observation> getObservations(String dataTableName, Predicate predicate, ObservationType observationType) {
+        return getObservations(dataTableName, predicate.toSql(), observationType);
+    }
+
+    public List<Observation> getObservations(String dataTableName, String whereClause, ObservationType observationType) {
+
         List<Observation> observations = new LinkedList<>();
 
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
 
-            ResultSet resultSet = statement.executeQuery(String.format(
-                    "SELECT * FROM %s WHERE %s ORDER BY time, sensor;",
-                    dataTableName,
-                    String.join(" AND ", predicates)));
+            ResultSet resultSet = statement.executeQuery(String.format("SELECT * FROM %s WHERE %s ORDER BY time, sensor;", dataTableName, whereClause));
             while (resultSet.next()) {
                 Observation observation = SqlAdapter.convertToObservation(resultSet, observationType);
                 if (null != observation)

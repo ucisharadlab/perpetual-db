@@ -7,12 +7,12 @@ import org.apache.log4j.BasicConfigurator;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAmount;
 import java.util.LinkedList;
 import java.util.List;
 
 public class TestManager {
     static SensorManager manager = new SensorManager();
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
     public static void main(String[] args) throws Exception {
         BasicConfigurator.configure();
@@ -23,7 +23,11 @@ public class TestManager {
 //        testStoreData();
 //        testFetchData();
 //        testPlatformCreateAndFetch();
-        testPredicates();
+//        testPredicates();
+//        testPredicateQuery();
+//        testCreate50Sensors();
+//        storeMillionRows();
+        testPredicate_OccupancyOverlap();
     }
 
     public static void testCreateTypes() throws Exception {
@@ -43,13 +47,13 @@ public class TestManager {
     private static void testCreateSensors() throws Exception {
         // create 5 camera sensors: location, view frustum, etc
         for (int i = 1; i <= 5; i++) {
-            manager.createSensor(new Sensor("camera" + i, 1,
+            manager.createSensor(new Sensor("camera" + i, 7,
                     new Location(String.format("a%d,b%d,c%d", i, i, i)), new Location(String.format("d%d,e%d,f%d", i, i, i))));
         }
 
         // create 5 wifi ap sensors
         for (int i = 1; i <= 5; i++) {
-            manager.createSensor(new Sensor("wifi" + i, 2,
+            manager.createSensor(new Sensor("wifi" + i, 8,
                     new Location(String.format("a%d,b%d,c%d", i, i, i)), new Location(String.format("d%d,e%d,f%d", i, i, i))));
         }
     }
@@ -98,17 +102,21 @@ public class TestManager {
 
     private static List<Observation> getTestData() {
         List<Observation> testAttributes = new LinkedList<>();
-        testAttributes.add(createWifiObservation(7, "2021-05-21 18:52:26.933", "01:23:45:96:96"));
-        testAttributes.add(createWifiObservation(8, "2021-05-21 18:52:26.934", "01:23:45:97:97"));
-        testAttributes.add(createWifiObservation(9, "2021-05-21 18:52:26.934", "01:23:45:98:98"));
-        testAttributes.add(createWifiObservation(10, "2021-05-21 18:52:26.935", "01:23:45:99:99"));
+        testAttributes.add(createWifiObservation(7, "2021-05-21T18:52:26.933", "01:23:45:96:96"));
+        testAttributes.add(createWifiObservation(8, "2021-05-21T18:52:26.934", "01:23:45:97:97"));
+        testAttributes.add(createWifiObservation(9, "2021-05-21T18:52:26.934", "01:23:45:98:98"));
+        testAttributes.add(createWifiObservation(10, "2021-05-21T18:52:26.935", "01:23:45:99:99"));
         return testAttributes;
     }
 
     private static Observation createWifiObservation(int sensorId, String timeString, String macAddress) {
+        return createWifiObservation(sensorId, LocalDateTime.parse(timeString), macAddress);
+    }
+
+    private static Observation createWifiObservation(int sensorId, LocalDateTime time, String macAddress) {
         List<ObservedAttribute> attributes = new LinkedList<>();
         attributes.add(new ObservedAttribute("macAddress", "VARCHAR(50)", macAddress));
-        return new Observation(sensorId, LocalDateTime.from(formatter.parse(timeString)), attributes);
+        return new Observation(sensorId, time, attributes);
     }
 
     private static void testPlatformCreateAndFetch() throws Exception {
@@ -128,24 +136,19 @@ public class TestManager {
 
     private static void testPredicates() throws Exception {
         Predicate filter = new Predicate("field1", Condition.EQUAL, "value1");
-
-        filter.children = new LinkedList<>();
-        filter.childOperator = RelationalOperator.AND;
-        filter.children.add(new Predicate("level1_field1", Condition.GREATER_EQ, "level1_value1"));
-        filter.children.add(new Predicate("level1_field2", Condition.GREATER_EQ, "level1_value2"));
+        filter.initialiseOperator(RelationalOperator.AND);
+        filter.addChild(new Predicate("level1_field2", Condition.GREATER_EQ, "level1_value2"));
+        filter.addChild(new Predicate("level1_field1", Condition.GREATER_EQ, "level1_value1"));
 
         Predicate child3 = new Predicate("level1_field3", Condition.LESSER, "level1_value3");
-        child3.children = new LinkedList<>();
-        child3.childOperator = RelationalOperator.OR;
-        child3.children.add(new Predicate("level2_field1", Condition.LESSER, "level2_value1"));
-        child3.children.add(new Predicate("level2_field2", Condition.NOT_EQUAL, "level2_value2"));
+        child3.initialiseOperator(RelationalOperator.OR);
+        child3.addChild(new Predicate("level2_field1", Condition.LESSER, "level2_value1"));
+        child3.addChild(new Predicate("level2_field2", Condition.NOT_EQUAL, "level2_value2"));
 
-        filter.children.add(child3);
+        filter.addChild(child3);
 
-        Predicate notWrapper = new Predicate();
-        notWrapper.children = new LinkedList<>();
-        notWrapper.children.add(filter);
-        notWrapper.childOperator = RelationalOperator.NOT;
+        Predicate notWrapper = Predicate.getWrapper(RelationalOperator.NOT);
+        notWrapper.addChild(filter);
 
         String resultFilter = notWrapper.toSql();
         String expectedFilter = "( NOT ((field1 = value1 AND (" +
@@ -155,5 +158,98 @@ public class TestManager {
 
         if (!expectedFilter.equals(resultFilter))
             throw new Exception("Error converting predicates to string");
+    }
+
+    private static void testPredicateQuery() throws Exception {
+        Predicate filter = Predicate.getWrapper(RelationalOperator.AND);
+        filter.addChild(new Predicate("time", Condition.GREATER, "'2021-05-21 18:52:26.922'"));
+        filter.addChild(new Predicate("sensor", Condition.EQUAL, "10"));
+
+        List<Observation> result = manager.getObservations("WIFI_AP", filter);
+        if (result.size() != 4)
+            throw new Exception("Incorrect count, predicate query not working as expected");
+    }
+
+    private static void testCreate50Sensors() throws Exception {
+        for (int i = 5; i <= 55; i++) {
+            manager.createSensor(new Sensor("wifi" + i, 8,
+                    new Location(String.format("a%d,b%d,c%d", i, i, i)), new Location(String.format("d%d,e%d,f%d", i, i, i))));
+        }
+    }
+
+    private static void storeMillionRows() throws Exception {
+        for (int i = 0; i < 1000000; i++)
+            manager.storeObservation(createWifiObservation(i % 50 + 44, getDate(i), getMacAddress(i)));
+    }
+
+    private static void testPredicateQuery2() throws Exception {
+        Predicate filter = new Predicate("macaddress", Condition.EQUAL, "'87:87:87:87'");
+        filter.initialiseOperator(RelationalOperator.AND);
+        Predicate orWrapper = Predicate.getWrapper(RelationalOperator.OR);
+        filter.addChild(orWrapper);
+
+        Predicate sensor1 = Predicate.getWrapper(RelationalOperator.AND);
+        sensor1.addChild(new Predicate("sensor", Condition.EQUAL, "64"));
+        sensor1.addChild(new Predicate("time", Condition.GREATER_EQ, "'2021-06-15'"));
+        orWrapper.addChild(sensor1);
+
+        Predicate sensor2 = Predicate.getWrapper(RelationalOperator.AND);
+        sensor2.addChild(new Predicate("sensor", Condition.EQUAL, "49"));
+        sensor2.addChild(new Predicate("time", Condition.GREATER_EQ, "'2021-06-30'"));
+        orWrapper.addChild(sensor2);
+
+        List<Observation> result = manager.getObservations("WIFI_AP", filter);
+        if (!(result.size() == 434))
+            throw new Exception("Incorrect count, predicate query not working as expected");
+    }
+
+    private static void testPredicateQuery3() throws Exception {
+        Predicate filter = new Predicate("time", Condition.GREATER, "'2021-06-30'");
+        filter.initialiseOperator(RelationalOperator.AND);
+        Predicate orWrapper = Predicate.getWrapper(RelationalOperator.OR);
+        filter.addChild(orWrapper);
+
+        Predicate person1 = Predicate.getWrapper(RelationalOperator.AND);
+        person1.addChild(new Predicate("sensor", Condition.EQUAL, "64"));
+        person1.addChild(new Predicate("macaddress", Condition.EQUAL, "'14:14:14:14'"));
+        orWrapper.addChild(person1);
+
+        Predicate person2 = Predicate.getWrapper(RelationalOperator.AND);
+        person2.addChild(new Predicate("sensor", Condition.EQUAL, "49"));
+        person2.addChild(new Predicate("macaddress", Condition.EQUAL, "'C3:C3:C3:C3'"));
+        orWrapper.addChild(person2);
+
+        List<Observation> result = manager.getObservations("WIFI_AP", filter);
+        if (!(result.size() == 84))
+            throw new Exception("Incorrect count, predicate query not working as expected");
+    }
+
+    private static void testPredicate_OccupancyOverlap() throws Exception {
+        Predicate filter = new Predicate("sensor", Condition.EQUAL, "50");
+        filter.initialiseOperator(RelationalOperator.AND);
+
+        Predicate timeFilter = Predicate.getWrapper(RelationalOperator.AND);
+        timeFilter.addChild(new Predicate("time", Condition.GREATER_EQ, "'2021-06-30'"));
+        timeFilter.addChild(new Predicate("time", Condition.LESSER, "'2021-06-30 00:30'"));
+
+        Predicate persons = Predicate.getWrapper(RelationalOperator.OR);
+        persons.addChild(new Predicate("macaddress", Condition.EQUAL, "'92:92:92:92'"));
+        persons.addChild(new Predicate("macaddress", Condition.EQUAL, "'60:60:60:60'"));
+
+        filter.addChild(timeFilter);
+        filter.addChild(persons);
+
+        List<Observation> result = manager.getObservations("WIFI_AP", filter);
+        if (!(result.size() == 2))
+            throw new Exception("Incorrect count, predicate query not working as expected");
+    }
+
+    private static String getMacAddress(int number) {
+        number = number % 255;
+        return String.format("%02X:%02X:%02X:%02X", number, number, number, number);
+    }
+
+    private static LocalDateTime getDate(int number) {
+        return LocalDateTime.now().minusDays(20).plusSeconds(number);
     }
 }
