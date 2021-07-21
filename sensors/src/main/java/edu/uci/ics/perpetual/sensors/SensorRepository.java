@@ -41,6 +41,19 @@ public class SensorRepository {
         return new ObservationType(name, attributes);
     }
 
+    public List<String> fetchObservationTypeNames(String attribute) {
+        return fetchEntities(
+            String.format("SELECT name FROM ObservationTypes WHERE attribute = '%s'", attribute),
+            (row) -> {
+                try {
+                    return row.getString("name");
+                } catch (SQLException ignored) {
+                    return ""; // Default
+                }
+            }
+        );
+    }
+
     public void insertObservationType(ObservationType type) throws Exception {
         String sql = String.format("INSERT INTO ObservationTypes (name, attribute, valueType) " +
                 "VALUES %s", StringUtils.repeat("(?, ?, ?),", type.attributes.size()));
@@ -86,6 +99,20 @@ public class SensorRepository {
         } catch (SQLException ignored) {
             String message = ignored.getMessage();
         }
+    }
+
+    public List<SensorType> fetchSensorTypesByObservation(String type) throws Exception {
+        return fetchEntities(
+                String.format("SELECT * FROM SensorTypes WHERE observationType = '%s'", type),
+                SqlAdapter::sensorTypeFromRow
+        );
+    }
+
+    public List<Sensor> fetchSensorNamesByType(String type) throws Exception {
+        return fetchEntities(
+                String.format("SELECT * FROM Sensors WHERE type IN (SELECT id FROM SensorTypes WHERE name = '%s')", type),
+                SqlAdapter::sensorFromRow
+        );
     }
 
     public Sensor getSensor(String name) {

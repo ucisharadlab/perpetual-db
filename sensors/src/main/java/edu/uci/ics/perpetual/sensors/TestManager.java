@@ -6,13 +6,11 @@ import edu.uci.ics.perpetual.util.Pair;
 import org.apache.log4j.BasicConfigurator;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAmount;
 import java.util.LinkedList;
 import java.util.List;
 
 public class TestManager {
-    static SensorManager manager = new SensorManager();
+    static DbSensorManager manager = new DbSensorManager();
 
     public static void main(String[] args) throws Exception {
         BasicConfigurator.configure();
@@ -27,7 +25,8 @@ public class TestManager {
 //        testPredicateQuery();
 //        testCreate50Sensors();
 //        storeMillionRows();
-        testPredicate_OccupancyOverlap();
+//        testPredicate_OccupancyOverlap();
+        TestCacheManager.testCachedSensorType();
     }
 
     public static void testCreateTypes() throws Exception {
