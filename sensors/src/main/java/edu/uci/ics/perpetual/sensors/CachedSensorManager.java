@@ -137,7 +137,7 @@ public class CachedSensorManager implements SensorManager {
         return dbManager.getAvailableSensors(location, start, end);
     }
 
-    LoadingCache<String, ObservationType> cachedObservationTypes = CacheBuilder.newBuilder()
+    static LoadingCache<String, ObservationType> cachedObservationTypes = CacheBuilder.newBuilder()
             .maximumSize(10000)
             .expireAfterWrite(5, TimeUnit.MINUTES)
             .build(new CacheLoader<String, ObservationType>() {
@@ -147,7 +147,7 @@ public class CachedSensorManager implements SensorManager {
                 }
             });
 
-    LoadingCache<String, List<String>> cachedObservationsByAttribute = CacheBuilder.newBuilder()
+    static LoadingCache<String, List<String>> cachedObservationsByAttribute = CacheBuilder.newBuilder()
             .maximumSize(10000)
             .expireAfterWrite(5, TimeUnit.MINUTES)
             .build(new CacheLoader<String, List<String>>() {
@@ -157,7 +157,7 @@ public class CachedSensorManager implements SensorManager {
                 }
             });
 
-    LoadingCache<String, SensorType> cachedSensorTypes = CacheBuilder.newBuilder()
+    static LoadingCache<String, SensorType> cachedSensorTypes = CacheBuilder.newBuilder()
             .maximumSize(10000)
             .expireAfterWrite(5, TimeUnit.MINUTES)
             .build(new CacheLoader<String, SensorType>() {
@@ -167,7 +167,7 @@ public class CachedSensorManager implements SensorManager {
                 }
             });
 
-    LoadingCache<String, List<SensorType>> cachedSensorTypesByObservation = CacheBuilder.newBuilder()
+    static LoadingCache<String, List<SensorType>> cachedSensorTypesByObservation = CacheBuilder.newBuilder()
             .maximumSize(10000)
             .expireAfterWrite(5, TimeUnit.MINUTES)
             .build(new CacheLoader<String, List<SensorType>>() {
@@ -177,7 +177,7 @@ public class CachedSensorManager implements SensorManager {
                 }
             });
 
-    LoadingCache<String, Sensor> cachedSensors = CacheBuilder.newBuilder()
+    static LoadingCache<String, Sensor> cachedSensors = CacheBuilder.newBuilder()
             .maximumSize(1000000)
             .expireAfterWrite(5, TimeUnit.MINUTES)
             .build(new CacheLoader<String, Sensor>() {
@@ -187,7 +187,7 @@ public class CachedSensorManager implements SensorManager {
                 }
             });
 
-    LoadingCache<String, Platform> cachedPlatforms = CacheBuilder.newBuilder()
+    static LoadingCache<String, Platform> cachedPlatforms = CacheBuilder.newBuilder()
             .maximumSize(1000000)
             .expireAfterWrite(5, TimeUnit.MINUTES)
             .build(new CacheLoader<String, Platform>() {
@@ -197,7 +197,7 @@ public class CachedSensorManager implements SensorManager {
                 }
             });
 
-    LoadingCache<String, List<Sensor>> cachedSensorsByType = CacheBuilder.newBuilder()
+    static LoadingCache<String, List<Sensor>> cachedSensorsByType = CacheBuilder.newBuilder()
             .maximumSize(1000000)
             .expireAfterWrite(5, TimeUnit.MINUTES)
             .build(new CacheLoader<String, List<Sensor>>() {
