@@ -18,9 +18,10 @@ public class TestManager {
        // testGetSpace();
        // testGetParent();
        // testGetShape();
-       //  testIntersect();
+       //  testIntersects();
        // testGetArea();
        // testGetDistance();
+       // testContains();
 
     }
 
@@ -36,7 +37,8 @@ public class TestManager {
         System.out.println(coordSys);
 
     }
-    private static void testRemoveSpace() {
+    private static void testRemoveSpace() throws Exception {
+        manager.removeSpace("dbh2081");
 
     }
     private static void testGetSpace() {
@@ -51,8 +53,8 @@ public class TestManager {
         String shape = manager.getSpaceShape("uci");
         System.out.println(shape);
     }
-    private static void testIntersect(){
-        Boolean flag = manager.intersect("dbh2092","test");
+    private static void testIntersects(){
+        Boolean flag = manager.intersects("dbh2092","test");
         System.out.println(flag);
     }
     private static void testGetArea(){
@@ -62,6 +64,10 @@ public class TestManager {
     private static void testGetDistance(){
         Double distance = manager.getDistance("dbh2092","test");
         System.out.println(distance);
+    }
+    private static void testContains(){
+        Boolean flag = manager.contains("dbh2092","test");
+        System.out.println(flag);
     }
 
 

@@ -31,9 +31,10 @@ public class SpaceManager {
         return repo.getShape(spaceName);
     }
     public void removeSpace(String spaceName) throws Exception {repo.deleteSpace(spaceName); }
-    public Boolean intersect(String spaceName1, String spaceName2) {
+    public Boolean intersects(String spaceName1, String spaceName2) {
         return repo.intersect(spaceName1, spaceName2);
     }
     public double getArea(String spaceName) { return repo.getArea(spaceName);}
     public double getDistance(String spaceName1, String spaceName2) {return repo.getDistance(spaceName1, spaceName2);}
+    public Boolean contains(String spaceName1, String spaceName2) {return repo.contains(spaceName1, spaceName2);}
 }

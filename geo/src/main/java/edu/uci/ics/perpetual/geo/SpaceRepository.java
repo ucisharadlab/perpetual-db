@@ -135,7 +135,16 @@ public class SpaceRepository {
         }).get(0);
 
     }
+    public Boolean contains(String spaceName1, String spaceName2) {
+        return fetchEntities(String.format("SELECT ST_Covers((SELECT geog FROM geo WHERE space_id::integer = (SELECT space_id FROM space WHERE space_name = '%s')), (SELECT geog FROM geo WHERE space_id::integer = (SELECT space_id FROM space WHERE space_name = '%s')));", spaceName1, spaceName2), (row) -> {
+            try {
+                return row.getBoolean(1);
+            } catch (SQLException e) {
+                return null;
+            }
+        }).get(0);
 
+    }
     public double getArea(String spaceName) {
         return fetchEntities(String.format("SELECT ST_Area((SELECT geog FROM geo WHERE space_id::integer = (SELECT space_id FROM space WHERE space_name = '%s')),true);", spaceName), (row) -> {
             try {
