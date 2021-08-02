@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -23,7 +24,7 @@ public class SpaceRepository {
     }
 
     public Space fetchSpace(String spaceName) {
-        Space space = fetchEntities(String.format("SELECT space_id AS sid, parent_space_id AS psid, coordinate_system_name AS csn, space_shape AS shape from entity WHERE space_name='%s';", spaceName), SqlAdapter::spaceFromRow).get(0);
+        Space space = fetchEntities(String.format("SELECT space_id AS sid, parent_space_id AS psid, coordinate_system_name AS csn, space_shape AS shape from space WHERE space_name='%s';", spaceName), SqlAdapter::spaceFromRow).get(0);
         space.vertices = getSpaceCoordinates(spaceName);
         return space;
     }
@@ -31,7 +32,7 @@ public class SpaceRepository {
     public void insertSpace(Space space) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(
-                     "INSERT INTO entity (space_name, parent_space_id, coordinate_system_name, space_shape, vertices)" +
+                     "INSERT INTO space (space_name, parent_space_id, coordinate_system_name, space_shape, vertices)" +
                      "VALUES ( ?, ?, ?, ?, ?::coordinate[]);")) {
             statement.setString(1, space.space_name);
             statement.setString(2, space.parent_space_id);
@@ -48,7 +49,7 @@ public class SpaceRepository {
 
     public void deleteSpace(String spaceName) throws Exception {
         try (Connection connection = dataSource.getConnection();
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM entity WHERE space_name = '%s'")) {
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM space WHERE space_name = '%s'")) {
             statement.setString(1,spaceName);
 
             if (1 != statement.executeUpdate())
@@ -60,11 +61,11 @@ public class SpaceRepository {
     }
 
     public List<Coordinate> getSpaceCoordinates(String spaceName) { //need to refine the query to check for null vertices column.
-        return fetchEntities(String.format("SELECT csn, (r).* FROM (SELECT coordinate_system_name AS csn, unnest(vertices) AS r from entity WHERE space_name='%s') AS vs", spaceName), SqlAdapter::coordinatesFromRow);
+        return fetchEntities(String.format("SELECT csn, (r).* FROM (SELECT coordinate_system_name AS csn, unnest(vertices) AS r from space WHERE space_name='%s') AS vs", spaceName), SqlAdapter::coordinatesFromRow);
     }
 
     public String getCoordSys(String spaceName) {
-        return fetchEntities(String.format("SELECT coordinate_system_name FROM entity WHERE space_name='%s'", spaceName), (row) -> {
+        return fetchEntities(String.format("SELECT coordinate_system_name FROM space WHERE space_name='%s'", spaceName), (row) -> {
             try {
                 return row.getString("coordinate_system_name");
             } catch (SQLException e) {
@@ -73,12 +74,33 @@ public class SpaceRepository {
         }).get(0);
     }
 
-    public String getParentSpace(String spaceName) {
+    public  Space getParentSpace(String spaceName) {
 
-        return fetchEntities(String.format("SELECT space_name FROM entity WHERE space_id" +
-                "= (SELECT parent_space_id FROM entity WHERE space_name = '%s')", spaceName), (row) -> {
+        return fetchEntities(String.format("SELECT space_id, space_name, space_shape, coordinate_system_name, parent_space_id, vertices  FROM space WHERE space_id" +
+                "= (SELECT parent_space_id FROM space WHERE space_name = '%s')::integer", spaceName), (row) -> {
             try {
-                return row.getString("space_name");
+                List<Coordinate> coordinates = new LinkedList<Coordinate>();
+                String parentSpaceName = row.getString("space_name");
+                int spaceId = row.getInt("space_id");
+                String parentShape = row.getString("space_shape");
+                String parentCoordinateSystem = row.getString("coordinate_system_name");
+                String parent_space_id = row.getString("parent_space_id");
+                if (row.getArray("vertices")!= null) {
+                Object[] vertices = (Object[]) row.getArray("vertices").getArray();
+                for (Object vertex : vertices) {
+                    String[] coordinate = vertex.toString().replaceAll("[\\(\\)]", "").split(",");
+                    Coordinate coord;
+                    if (coordinate.length == 3) {
+                        coord = new Coordinate(coordinate[0], coordinate[1], coordinate[2]);
+                    } else {
+                        coord = new Coordinate(coordinate[0], coordinate[1]);
+                    }
+                    coordinates.add(coord);
+                }
+                }
+                Space parentSpace = new Space(Integer.toString(spaceId),parentSpaceName, parent_space_id, parentCoordinateSystem, parentShape, coordinates);
+                return parentSpace;
+
             } catch (SQLException e) {
                 return null;
             }
@@ -86,7 +108,7 @@ public class SpaceRepository {
 
     }
     public String getShape(String spaceName) {
-        return fetchEntities(String.format("SELECT space_shape FROM entity WHERE space_name='%s'", spaceName), (row) -> {
+        return fetchEntities(String.format("SELECT space_shape FROM space WHERE space_name='%s'", spaceName), (row) -> {
             try {
                 return row.getString("space_shape");
             } catch (SQLException e) {
@@ -95,7 +117,7 @@ public class SpaceRepository {
         }).get(0);
     }
     public double getDistance(String spaceName1, String spaceName2) {
-        return fetchEntities(String.format("SELECT ST_Distance((SELECT geog FROM geo WHERE space_name = '%'), (SELECT geog FROM geo WHERE space_name = '%'))", spaceName1, spaceName2), (row) -> {
+        return fetchEntities(String.format("SELECT ST_Distance((SELECT geog FROM geo WHERE space_id::integer = (SELECT space_id FROM space WHERE space_name = '%s')), (SELECT geog FROM geo WHERE space_id::integer = (SELECT space_id FROM space WHERE space_name = '%s')));", spaceName1, spaceName2), (row) -> {
             try {
                 return row.getDouble(1);
             } catch (SQLException e) {
@@ -104,7 +126,7 @@ public class SpaceRepository {
         }).get(0);
     }
     public Boolean intersect(String spaceName1, String spaceName2) {
-        return fetchEntities(String.format("SELECT ST_Intersects((SELECT geog FROM geo WHERE space_name = '%'), (SELECT geog FROM geo WHERE space_name = '%'))", spaceName1, spaceName2), (row) -> {
+        return fetchEntities(String.format("SELECT ST_Intersects((SELECT geog FROM geo WHERE space_id::integer = (SELECT space_id FROM space WHERE space_name = '%s')), (SELECT geog FROM geo WHERE space_id::integer = (SELECT space_id FROM space WHERE space_name = '%s')));", spaceName1, spaceName2), (row) -> {
             try {
                 return row.getBoolean(1);
             } catch (SQLException e) {
@@ -115,7 +137,7 @@ public class SpaceRepository {
     }
 
     public double getArea(String spaceName) {
-        return fetchEntities(String.format("SELECT ST_Area((SELECT geog FROM geo WHERE space_name = '%'))", spaceName), (row) -> {
+        return fetchEntities(String.format("SELECT ST_Area((SELECT geog FROM geo WHERE space_id::integer = (SELECT space_id FROM space WHERE space_name = '%s')),true);", spaceName), (row) -> {
             try {
                 return row.getDouble(1);
             } catch (SQLException e) {
@@ -138,7 +160,7 @@ public class SpaceRepository {
                     entities.add(entity);
             }
         } catch (SQLException ignored) {
-            String message = ignored.getMessage();
+            System.out.println(ignored.getMessage());
         }
 
         return entities;

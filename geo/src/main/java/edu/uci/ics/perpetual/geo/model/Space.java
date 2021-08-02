@@ -37,10 +37,11 @@ public class Space {
 	}
 	@Override
 	public String toString() {
-		String space ="{space_id: " + this.space_name + ", parent_space_id: " + this.parent_space_id + ", coordinate_system_name: "
+		String space ="{space_id: "+ this.space_id + ", space_name: " + this.space_name + ", parent_space_id: " + this.parent_space_id + ", coordinate_system_name: "
 				+ this.coordinate_system_name + ", space_shape: " + this.space_shape + ", vertices: {";
+		if (this.vertices.size() == 0) { space += "},";};
 		for (Coordinate vertex : this.vertices) {
-			space = space + vertex.toString() + ", ";
+			space = space + vertex.toString() + ",";
 		}
 		space = space.substring(0, space.length()-1) + "}}";
 		return space;

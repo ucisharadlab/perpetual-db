@@ -17,36 +17,23 @@ public class SpaceManager {
         }
         repo.insertSpace(new Space(spaceName, parentSpaceId, coordinateSystemName, spaceShape, coordinates));
     }
-
-    public void removeSpace(String spaceName) throws Exception {
-        repo.deleteSpace(spaceName);
-    }
-
-    public List<Coordinate> getSpaceCoordinates(String spaceName) {
-        //List<List<String>> coordinates = new LinkedList<List<String>>() ;
-        return repo.getSpaceCoordinates(spaceName);
-    }
-
+    public List<Coordinate> getSpaceCoordinates(String spaceName) {return repo.getSpaceCoordinates(spaceName);}
     public Space getSpace(String spaceName) {
         return repo.fetchSpace(spaceName);
     }
     public String getCoordinateSystem(String spaceName) {
        return repo.getCoordSys(spaceName);
     }
-
-    public String getParentSpace(String spaceName) {
+    public Space getParentSpace(String spaceName) {
         return repo.getParentSpace(spaceName);
     }
-
     public String getSpaceShape(String spaceName) {
         return repo.getShape(spaceName);
     }
-
+    public void removeSpace(String spaceName) throws Exception {repo.deleteSpace(spaceName); }
     public Boolean intersect(String spaceName1, String spaceName2) {
         return repo.intersect(spaceName1, spaceName2);
     }
-
     public double getArea(String spaceName) { return repo.getArea(spaceName);}
-
     public double getDistance(String spaceName1, String spaceName2) {return repo.getDistance(spaceName1, spaceName2);}
 }
